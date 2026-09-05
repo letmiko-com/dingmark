@@ -98,6 +98,13 @@ struct SplitRootView: View {
                 store.query = searchText
             }
             .refreshable { await store.refresh() }
+            .safeAreaInset(edge: .top) {
+                if store.isOffline, let lastSync = store.lastSync {
+                    OfflineBanner(lastSync: lastSync).padding(.top, 8)
+                } else if let error = store.loadError, !store.bookmarks.isEmpty {
+                    RefreshErrorBanner(error: error).padding(.top, 8)
+                }
+            }
             .overlay { contentOverlay }
             .navigationSplitViewColumnWidth(min: 320, ideal: 380)
         } detail: {

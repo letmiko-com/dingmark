@@ -135,6 +135,33 @@ struct ServerErrorView: View {
     }
 }
 
+/// Footnote line above the cached list when the server answered but refused
+/// the refresh (revoked token, server error): the cache would otherwise look
+/// current for ever.
+struct RefreshErrorBanner: View {
+    let error: LinkdingError
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "exclamationmark.triangle")
+            Text(message)
+        }
+        .font(.footnote)
+        .foregroundStyle(.secondary)
+        .padding(.horizontal, Metrics.screenMargin + 4)
+        .padding(.bottom, 8)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .transition(.opacity)
+    }
+
+    private var message: String {
+        switch error {
+        case .unauthorized: String(localized: "Jeton refusé · vérifiez Réglages › Intégrations")
+        default: String(localized: "Synchronisation impossible · \(error.userMessage)")
+        }
+    }
+}
+
 /// Footnote line above the cached list when the server is unreachable.
 struct OfflineBanner: View {
     let lastSync: Date

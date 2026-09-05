@@ -21,6 +21,8 @@ struct BookmarkListScreen: View {
                 QuickFilterBar(selection: $store.filter, counts: store.counts)
                 if store.isOffline, let lastSync = store.lastSync {
                     OfflineBanner(lastSync: lastSync)
+                } else if let error = store.loadError, !store.bookmarks.isEmpty {
+                    RefreshErrorBanner(error: error)
                 }
                 listBody
             }

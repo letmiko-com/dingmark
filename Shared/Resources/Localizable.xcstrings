@@ -255,16 +255,6 @@
         }
       }
     },
-    "Aucune réponse en 10 s. Vérifiez l’adresse (http:// pour un serveur sans TLS) ou le VPN.": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No response after 10 s. Check the address (http:// for a server without TLS) or the VPN."
-          }
-        }
-      }
-    },
     "Réessayer": {
       "localizations": {
         "en": {
@@ -1235,6 +1225,36 @@
           "stringUnit": {
             "state": "translated",
             "value": "All your active bookmarks carry at least one tag."
+          }
+        }
+      }
+    },
+    "Aucune réponse en 10 s. Vérifiez l’adresse (http:// pour un serveur sans TLS) ou le VPN.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No response after 10 s. Check the address (http:// for a server without TLS) or the VPN."
+          }
+        }
+      }
+    },
+    "Jeton refusé · vérifiez Réglages › Intégrations": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Token rejected · check Settings › Integrations"
+          }
+        }
+      }
+    },
+    "Synchronisation impossible · %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sync failed · %@"
           }
         }
       }
