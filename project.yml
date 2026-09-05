@@ -1,0 +1,190 @@
+# XcodeGen project definition, the source of truth. Dingmark.xcodeproj is NOT
+# committed: run `xcodegen` after cloning and after any change here or when
+# Swift files are added/removed.
+name: Dingmark
+options:
+  bundleIdPrefix: app.letmiko
+  deploymentTarget:
+    iOS: "26.0"
+  developmentLanguage: fr
+  createIntermediateGroups: true
+  xcodeVersion: "26.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "5.10"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    # Julien's personal Apple Developer team (paid account).
+    DEVELOPMENT_TEAM: QKSEMG475K
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_USER_SCRIPT_SANDBOXING: "YES"
+    SWIFT_EMIT_LOC_STRINGS: "YES"
+    GENERATE_INFOPLIST_FILE: "NO"
+
+targets:
+  Dingmark:
+    type: application
+    platform: iOS
+    sources:
+      - path: Dingmark
+        excludes: ["**/*.md"]
+      - path: Shared
+        excludes: ["**/*.md"]
+    dependencies:
+      - target: DingmarkShare
+      - target: DingmarkWidgets
+      - sdk: SafariServices.framework
+    info:
+      path: Dingmark/Info.plist
+      properties:
+        CFBundleDisplayName: Dingmark
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleDevelopmentRegion: fr
+        CFBundleLocalizations: [fr, en]
+        LSRequiresIPhoneOS: true
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UIUserInterfaceStyle: Automatic
+        # HTTPS only (plus plain HTTP on the local network for homelab
+        # instances): no proprietary crypto, so no export compliance prompt.
+        ITSAppUsesNonExemptEncryption: false
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: true
+        CFBundleURLTypes:
+          - CFBundleURLName: app.letmiko.dingmark
+            CFBundleURLSchemes: [dingmark]
+    entitlements:
+      path: Dingmark/Dingmark.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.app.letmiko.dingmark
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.letmiko.dingmark
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        SUPPORTS_MACCATALYST: "NO"
+
+  DingmarkShare:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: DingmarkShare
+        excludes: ["**/*.md"]
+      - path: Shared
+        excludes: ["**/*.md"]
+    info:
+      path: DingmarkShare/Info.plist
+      properties:
+        CFBundleDisplayName: Dingmark
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleDevelopmentRegion: fr
+        CFBundleLocalizations: [fr, en]
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.share-services
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ShareViewController
+          NSExtensionAttributes:
+            NSExtensionActivationRule:
+              NSExtensionActivationSupportsWebURLWithMaxCount: 1
+              NSExtensionActivationSupportsWebPageWithMaxCount: 1
+              NSExtensionActivationSupportsText: true
+    entitlements:
+      path: DingmarkShare/DingmarkShare.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.app.letmiko.dingmark
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.letmiko.dingmark.share
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        SKIP_INSTALL: "YES"
+
+  DingmarkWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: DingmarkWidgets
+        excludes: ["**/*.md"]
+      - path: Shared
+        excludes: ["**/*.md"]
+    info:
+      path: DingmarkWidgets/Info.plist
+      properties:
+        CFBundleDisplayName: Dingmark
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleDevelopmentRegion: fr
+        CFBundleLocalizations: [fr, en]
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    entitlements:
+      path: DingmarkWidgets/DingmarkWidgets.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.app.letmiko.dingmark
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.letmiko.dingmark.widgets
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        SKIP_INSTALL: "YES"
+
+  DingmarkTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: DingmarkTests
+    dependencies:
+      - target: Dingmark
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.letmiko.dingmark.tests
+        GENERATE_INFOPLIST_FILE: "YES"
+        BUNDLE_LOADER: $(TEST_HOST)
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/Dingmark.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Dingmark
+
+  DingmarkUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: DingmarkUITests
+    dependencies:
+      - target: Dingmark
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.letmiko.dingmark.uitests
+        GENERATE_INFOPLIST_FILE: "YES"
+        TEST_TARGET_NAME: Dingmark
+
+schemes:
+  Dingmark:
+    build:
+      targets:
+        Dingmark: all
+        DingmarkTests: [test]
+        DingmarkUITests: [test]
+    run:
+      config: Debug
+    test:
+      targets:
+        - DingmarkTests
+        - DingmarkUITests
+      gatherCoverageData: true
+    archive:
+      config: Release
