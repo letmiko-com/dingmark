@@ -129,3 +129,33 @@ struct LinkdingClientCancellationTests {
         }
     }
 }
+
+@Suite("LinkdingClient TLS failures", .serialized)
+struct LinkdingClientTLSTests {
+    private func makeClient(store: TrustStore) -> LinkdingClient {
+        MockURLProtocol.reset()
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [MockURLProtocol.self]
+        return LinkdingClient(baseURL: URL(string: "https://links.example.org")!, token: "t", trustStore: store, configuration: configuration)
+    }
+
+    @Test("a handshake failure with no rejected certificate is an unreachable server")
+    func plainHTTPBehindHTTPS() async {
+        let client = makeClient(store: TrustStore(defaults: UserDefaults(suiteName: "tests.tls.\(UUID().uuidString)")!))
+        MockURLProtocol.handler = { _ in throw URLError(.secureConnectionFailed) }
+        await #expect(throws: LinkdingError.unreachable(host: "links.example.org")) {
+            _ = try await client.testConnection()
+        }
+    }
+
+    @Test("a certificate the delegate rejected can be trusted")
+    func rejectedCertificate() async {
+        let store = TrustStore(defaults: UserDefaults(suiteName: "tests.tls.\(UUID().uuidString)")!)
+        store.setPending(fingerprint: "ab", for: "links.example.org")
+        let client = makeClient(store: store)
+        MockURLProtocol.handler = { _ in throw URLError(.serverCertificateUntrusted) }
+        await #expect(throws: LinkdingError.untrustedCertificate(host: "links.example.org")) {
+            _ = try await client.testConnection()
+        }
+    }
+}

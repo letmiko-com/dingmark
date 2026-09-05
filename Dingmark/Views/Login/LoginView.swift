@@ -162,7 +162,7 @@ struct LoginErrorCard: View {
         case .invalidURL: String(localized: "L’adresse doit commencer par https:// et pointer vers la racine de linkding.")
         case .unauthorized: String(localized: "Le serveur a répondu 401. Vérifiez le jeton dans Réglages › Intégrations.")
         case .untrustedCertificate(let host): String(localized: "Le certificat de \(host) est auto-signé.")
-        case .unreachable: String(localized: "Aucune réponse en 10 s. Vérifiez le VPN ou l’adresse.")
+        case .unreachable: String(localized: "Aucune réponse en 10 s. Vérifiez l’adresse (http:// pour un serveur sans TLS) ou le VPN.")
         }
     }
 

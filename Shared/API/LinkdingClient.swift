@@ -6,6 +6,7 @@ final class LinkdingClient: LinkdingAPI, @unchecked Sendable {
     private let token: String
     private let session: URLSession
     private let trustDelegate: ServerTrustDelegate
+    private let trustStore: TrustStore
     private let pageSize = 100
     /// Safety net against a runaway pagination loop.
     private let maxPages = 200
@@ -17,6 +18,7 @@ final class LinkdingClient: LinkdingAPI, @unchecked Sendable {
         self.token = token.trimmingCharacters(in: .whitespacesAndNewlines)
         configuration.timeoutIntervalForRequest = 10
         configuration.waitsForConnectivity = false
+        self.trustStore = trustStore
         trustDelegate = ServerTrustDelegate(store: trustStore)
         session = URLSession(configuration: configuration, delegate: trustDelegate, delegateQueue: nil)
     }
@@ -152,7 +154,11 @@ final class LinkdingClient: LinkdingAPI, @unchecked Sendable {
         switch error.code {
         case .serverCertificateUntrusted, .serverCertificateHasBadDate, .serverCertificateHasUnknownRoot,
              .serverCertificateNotYetValid, .clientCertificateRejected, .secureConnectionFailed:
-            return .untrustedCertificate(host: host)
+            // Only a certificate the delegate actually rejected can be
+            // trusted. Any other TLS failure (a plain-HTTP server reached
+            // over https, a protocol mismatch) is reported as unreachable,
+            // otherwise the login screen offers a pin that cannot help.
+            return trustStore.pendingFingerprint(for: host) != nil ? .untrustedCertificate(host: host) : .unreachable(host: host)
         case .badURL, .unsupportedURL:
             return .invalidURL
         default:

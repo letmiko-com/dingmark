@@ -255,12 +255,12 @@
         }
       }
     },
-    "Aucune réponse en 10 s. Vérifiez le VPN ou l’adresse.": {
+    "Aucune réponse en 10 s. Vérifiez l’adresse (http:// pour un serveur sans TLS) ou le VPN.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No response after 10 s. Check VPN or address."
+            "value": "No response after 10 s. Check the address (http:// for a server without TLS) or the VPN."
           }
         }
       }
