@@ -67,12 +67,17 @@ struct BookmarkListScreen: View {
             .sheet(item: $router.addRequest) { request in
                 AddBookmarkSheet(prefillURL: request.url, prefillTitle: request.title)
             }
-            .onChange(of: router.pendingBookmarkID) { _, id in
-                guard let id else { return }
-                path = [id]
-                router.pendingBookmarkID = nil
-            }
+            .onChange(of: router.pendingBookmarkID) { _, _ in consumePendingBookmark() }
+            .onAppear { consumePendingBookmark() }
         }
+    }
+
+    /// `dingmark://bookmark/<id>` can arrive before this screen exists (cold
+    /// launch from a widget): consume it on appear as well as on change.
+    private func consumePendingBookmark() {
+        guard let id = router.pendingBookmarkID else { return }
+        path = [id]
+        router.pendingBookmarkID = nil
     }
 
     private var title: Text {

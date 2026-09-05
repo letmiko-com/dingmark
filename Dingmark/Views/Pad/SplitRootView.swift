@@ -123,11 +123,14 @@ struct SplitRootView: View {
                     }
             }
         }
-        .onChange(of: router.pendingBookmarkID) { _, id in
-            guard let id else { return }
-            selectedID = id
-            router.pendingBookmarkID = nil
-        }
+        .onChange(of: router.pendingBookmarkID) { _, _ in consumePendingBookmark() }
+        .onAppear { consumePendingBookmark() }
+    }
+
+    private func consumePendingBookmark() {
+        guard let id = router.pendingBookmarkID else { return }
+        selectedID = id
+        router.pendingBookmarkID = nil
     }
 
     private var listTitle: Text {
