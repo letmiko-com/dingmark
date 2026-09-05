@@ -40,7 +40,9 @@ struct SettingsForm: View {
                     }
                 }
                 .padding(.vertical, 4)
-                Button("Changer de serveur") { confirmSignOut = true }
+                if !session.isDemo {
+                    Button("Changer de serveur") { confirmSignOut = true }
+                }
             }
 
             Section("Ajout") {
@@ -97,7 +99,7 @@ struct SettingsForm: View {
     }
 
     private var subtitle: String {
-        let count = session.bookmarkCount ?? store.counts.all
+        let count = store.hasLoadedOnce ? store.counts.all : (session.bookmarkCount ?? 0)
         return session.isDemo ? String(localized: "Démonstration · \(count) favoris") : String(localized: "linkding · \(count) favoris")
     }
 
