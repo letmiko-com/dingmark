@@ -13,7 +13,12 @@ struct DingmarkApp: App {
         let demo = process.arguments.contains("-demo") || process.environment["DINGMARK_DEMO"] == "1"
         let session = Session(demo: demo)
         _session = State(initialValue: session)
-        _store = State(initialValue: BookmarkStore(api: session.makeAPI()))
+        // The demo keeps its cache to itself: the App Group file feeds the
+        // widgets and the offline list of the real server.
+        let cache = demo
+            ? BookmarkCache(fileURL: FileManager.default.temporaryDirectory.appendingPathComponent("dingmark-demo-cache.json"))
+            : BookmarkCache.shared
+        _store = State(initialValue: BookmarkStore(api: session.makeAPI(), cache: cache))
     }
 
     var body: some Scene {

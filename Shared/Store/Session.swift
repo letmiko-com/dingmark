@@ -84,7 +84,7 @@ final class Session {
 
     func recordBookmarkCount(_ count: Int) {
         bookmarkCount = count
-        AppGroup.defaults.set(count, forKey: SettingsKey.bookmarkCount)
+        if !isDemo { AppGroup.defaults.set(count, forKey: SettingsKey.bookmarkCount) }
     }
 
     func signOut() {
