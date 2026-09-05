@@ -1,0 +1,50 @@
+Dingmark Source-Available License
+
+Copyright (c) 2026 Letmiko. All rights reserved.
+
+This is not an open-source license. The source code of Dingmark is published
+so that anyone can read it, audit what the app does with their data, build it
+for themselves and propose improvements. It is not published for reuse.
+
+1. Permitted
+
+   You may view, download and study this source code; fork the repository on
+   the platform that hosts it; build the app from source and run it on devices
+   you own or control, for personal, non-commercial purposes; and submit
+   changes to the original repository.
+
+2. Not permitted
+
+   Without prior written permission from Letmiko, you may not:
+
+   - redistribute this source code or any compiled form of it, modified or not;
+   - publish this app, or an app derived from it, on the App Store or any
+     other distribution channel;
+   - use this source code, in whole or in part, in another product or for a
+     commercial purpose;
+   - remove or alter this notice.
+
+3. Contributions
+
+   By submitting a change (pull request, patch, issue with code) you grant
+   Letmiko a perpetual, worldwide, irrevocable, royalty-free licence to use,
+   modify, relicense and distribute that change as part of Dingmark or any
+   other Letmiko product. You confirm that you have the right to grant it.
+
+4. Trademarks
+
+   "Dingmark", the Ribbon icon and the Letmiko name are not licensed. They may
+   not be used to identify a build that does not come from Letmiko.
+
+5. Third-party software
+
+   Dingmark is a client for linkding, a separate project by Sascha Ißbrücker
+   distributed under its own (MIT) license. Nothing here applies to linkding.
+
+6. No warranty
+
+   THIS SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+   LETMIKO BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM
+   OR IN CONNECTION WITH THE SOFTWARE OR ITS USE.
