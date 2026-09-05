@@ -25,8 +25,8 @@ final class AppRouter {
         guard url.scheme?.lowercased() == "dingmark" else { return }
         switch url.host()?.lowercased() {
         case "add":
-            let shared = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems?.first { $0.name == "url" }?.value
-            showAdd(url: shared)
+            let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems ?? []
+            showAdd(url: items.first { $0.name == "url" }?.value, title: items.first { $0.name == "title" }?.value)
         case "bookmark":
             if let id = Int(url.lastPathComponent) {
                 tab = .bookmarks
