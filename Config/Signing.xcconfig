@@ -1,0 +1,6 @@
+// Code signing for local device builds and archives.
+//
+// The development team is not committed: copy Signing.local.xcconfig.example
+// to Signing.local.xcconfig (ignored by git) and set DEVELOPMENT_TEAM there.
+// The simulator needs no team, and Xcode Cloud manages signing itself.
+#include? "Signing.local.xcconfig"

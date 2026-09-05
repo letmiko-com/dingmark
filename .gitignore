@@ -21,7 +21,8 @@ Package.resolved
 ## Local tooling
 .claude/
 
-## Never commit credentials
+## Never commit credentials or the local signing team
+Config/Signing.local.xcconfig
 *.p8
 *.p12
 *.mobileprovision

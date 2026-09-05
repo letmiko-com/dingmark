@@ -1,6 +1,7 @@
-# XcodeGen project definition, the source of truth. Dingmark.xcodeproj is NOT
-# committed: run `xcodegen` after cloning and after any change here or when
-# Swift files are added/removed.
+# XcodeGen project definition, the source of truth. Dingmark.xcodeproj is
+# generated from it and committed (Xcode Cloud needs it in the repository):
+# run `xcodegen` after any change here or when Swift files are added or
+# removed, and commit the regenerated project with the change.
 name: Dingmark
 options:
   bundleIdPrefix: app.letmiko
@@ -15,12 +16,16 @@ settings:
     SWIFT_VERSION: "5.10"
     MARKETING_VERSION: "1.0"
     CURRENT_PROJECT_VERSION: "1"
-    # Julien's personal Apple Developer team (paid account).
-    DEVELOPMENT_TEAM: QKSEMG475K
+    # The development team lives in Config/Signing.local.xcconfig (ignored by
+    # git), included by Config/Signing.xcconfig below.
     CODE_SIGN_STYLE: Automatic
     ENABLE_USER_SCRIPT_SANDBOXING: "YES"
     SWIFT_EMIT_LOC_STRINGS: "YES"
     GENERATE_INFOPLIST_FILE: "NO"
+
+configFiles:
+  Debug: Config/Signing.xcconfig
+  Release: Config/Signing.xcconfig
 
 targets:
   Dingmark:
