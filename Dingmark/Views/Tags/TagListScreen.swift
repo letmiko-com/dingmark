@@ -32,7 +32,7 @@ struct TagListScreen: View {
             }
             .listStyle(.plain)
             .navigationTitle("Tags")
-            .searchable(text: $query, prompt: Text("Rechercher un tag"))
+            .searchable(text: $query, placement: .navigationBarDrawer(displayMode: .always), prompt: Text("Rechercher un tag"))
             .overlay {
                 if tags.isEmpty {
                     if query.isEmpty {
