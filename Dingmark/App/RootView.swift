@@ -6,6 +6,7 @@ struct RootView: View {
     @Environment(Session.self) private var session
     @Environment(BookmarkStore.self) private var store
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         Group {
@@ -27,6 +28,14 @@ struct RootView: View {
             } else {
                 store.configure(api: nil)
                 store.reset()
+            }
+        }
+        .onChange(of: scenePhase) { _, phase in
+            // Back in the foreground: pick up what the share extension, a
+            // widget or another device saved meanwhile. The initial load
+            // is still running at launch, refresh() ignores the overlap.
+            if phase == .active, session.isConnected, store.hasLoadedOnce {
+                Task { await store.refresh() }
             }
         }
         .overlay(alignment: .top) { ToastView() }
