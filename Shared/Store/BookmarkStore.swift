@@ -165,7 +165,6 @@ final class BookmarkStore {
         Task {
             do {
                 try await api.delete(id: bookmark.id)
-                self.successCount += 1
                 self.persist()
             } catch {
                 if let removedIndex, removedIndex <= self.bookmarks.count {

@@ -183,7 +183,6 @@ struct ShareSheetView: View {
                 WidgetCenter.shared.reloadAllTimelines()
             }
             saved = true
-            UINotificationFeedbackGenerator().notificationOccurred(.success)
             try? await Task.sleep(for: .milliseconds(250))
             onFinish()
         }
