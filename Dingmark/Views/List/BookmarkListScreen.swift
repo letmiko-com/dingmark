@@ -31,14 +31,14 @@ struct BookmarkListScreen: View {
                         Button {
                             withAnimation { store.tagFilter = nil }
                         } label: {
-                            Label {
-                                HStack(spacing: 4) {
-                                    Text(tag)
-                                    Image(systemName: "xmark").font(.caption2.weight(.semibold))
-                                }
-                            } icon: {
+                            // Not a `Label`: the toolbar would keep only its
+                            // icon, and the chip must read "tag name ×".
+                            HStack(spacing: 5) {
                                 Image(systemName: "tag")
+                                Text(tag).lineLimit(1)
+                                Image(systemName: "xmark").font(.caption2.weight(.semibold))
                             }
+                            .padding(.horizontal, 4)
                         }
                         .accessibilityLabel(Text("Retirer le filtre \(tag)"))
                     }
