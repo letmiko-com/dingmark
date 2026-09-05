@@ -47,7 +47,10 @@ struct LoginView: View {
                 HStack(spacing: 12) {
                     Text("Jeton API").frame(width: 96, alignment: .leading)
                     SecureField("••••••••••••••••", text: $token)
-                        .textContentType(.password)
+                        // Not `.password`: iOS would offer to save an API
+                        // token in Passwords after the login. `.oneTimeCode`
+                        // is the documented way to opt out of that prompt.
+                        .textContentType(.oneTimeCode)
                         .focused($focusedField, equals: .token)
                         .submitLabel(.go)
                         .onSubmit { test() }
