@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import WidgetKit
 
 /// Compact form of the share extension: header (Cancel / mark + name /
 /// Save), link card, tag field with the default tags, then toggles and notes
@@ -179,6 +180,7 @@ struct ShareSheetView: View {
                 snapshot.bookmarks.insert(bookmark, at: 0)
                 for tag in bookmark.tagNames where !snapshot.tags.contains(tag) { snapshot.tags.append(tag) }
                 BookmarkCache.shared.save(snapshot)
+                WidgetCenter.shared.reloadAllTimelines()
             }
             saved = true
             UINotificationFeedbackGenerator().notificationOccurred(.success)
