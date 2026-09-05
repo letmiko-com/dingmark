@@ -95,6 +95,8 @@ final class BookmarkStore {
             loadError = nil
             hasLoadedOnce = true
             persist()
+        } catch is CancellationError {
+            return
         } catch let error as LinkdingError {
             if error.isNetwork {
                 isOffline = true
@@ -103,6 +105,7 @@ final class BookmarkStore {
                 loadError = error
             }
         } catch {
+            if Task.isCancelled { return }
             if bookmarks.isEmpty { loadError = .unreachable(host: "") }
             isOffline = true
         }
