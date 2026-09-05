@@ -1,4 +1,5 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
 /// Add / edit form: URL (with paste button and inline fetch spinner), title,
 /// description, tags, toggles, Markdown notes. Presented as a sheet by the
@@ -80,7 +81,7 @@ struct BookmarkFormSections: View {
                 if model.isFetching {
                     ProgressView().controlSize(.small)
                 } else if model.showsPasteButton {
-                    PasteButton(payloadType: URL.self) { urls in model.paste(urls) }
+                    PasteButton(supportedContentTypes: [.url, .plainText]) { providers in model.paste(providers) }
                         .labelStyle(.titleAndIcon)
                         .buttonBorderShape(.capsule)
                         .controlSize(.small)

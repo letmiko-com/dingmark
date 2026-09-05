@@ -1,6 +1,21 @@
 import Foundation
 
 enum URLDomain {
+    /// First web link found in free text (a URL copied with surrounding
+    /// words, a message, a note). A link typed without a scheme comes back as
+    /// typed, so the caller applies its own default (https), not the
+    /// detector's http. `nil` when the text holds no web link.
+    static func firstURL(in text: String) -> String? {
+        guard let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue) else { return nil }
+        let whole = NSRange(text.startIndex..., in: text)
+        for match in detector.matches(in: text, range: whole) {
+            guard let url = match.url, let scheme = url.scheme?.lowercased(), scheme == "http" || scheme == "https" else { continue }
+            let typed = (text as NSString).substring(with: match.range)
+            return typed.contains("://") ? url.absoluteString : typed
+        }
+        return nil
+    }
+
     /// Host of a URL without a leading `www.`, or the raw string when it is
     /// not a URL. Used for the row subtitle and the favicon letter.
     static func domain(of urlString: String) -> String {

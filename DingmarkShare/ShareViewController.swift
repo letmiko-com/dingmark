@@ -95,9 +95,5 @@ enum SharedItemReader {
         return result
     }
 
-    static func firstURL(in text: String) -> String? {
-        guard let detector = try? NSDataDetector(types: NSTextCheckingResult.CheckingType.link.rawValue) else { return nil }
-        let range = NSRange(text.startIndex..., in: text)
-        return detector.firstMatch(in: text, range: range)?.url?.absoluteString
-    }
+    static func firstURL(in text: String) -> String? { URLDomain.firstURL(in: text) }
 }

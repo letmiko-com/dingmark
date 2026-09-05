@@ -37,6 +37,9 @@ struct AddBookmarkSheet: View {
                 unreadByDefault: unreadByDefault,
                 prefillURL: prefillURL,
                 prefillTitle: prefillTitle)
+            // A URL handed over by a deep link or the widget is checked
+            // like a typed one: metadata, duplicate detection, auto tags.
+            model?.urlDidChange()
         }
     }
 }

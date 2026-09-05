@@ -1,5 +1,6 @@
 import Foundation
 import Observation
+import UniformTypeIdentifiers
 
 /// State of the add / edit form, shared by the app sheet and the share
 /// extension. Talks to the API directly; the caller merges the saved bookmark
@@ -89,9 +90,33 @@ final class BookmarkFormModel {
         }
     }
 
-    func paste(_ urls: [URL]) {
-        guard let first = urls.first else { return }
-        url = first.absoluteString
+    /// Paste button payload: a `public.url` item, or plain text that holds a
+    /// link (URLs copied from Notes, Messages or a terminal are text).
+    func paste(_ providers: [NSItemProvider]) {
+        guard let provider = providers.first else { return }
+        Task { @MainActor [weak self] in
+            var pasted: String?
+            if provider.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
+                let item = try? await provider.loadItem(forTypeIdentifier: UTType.url.identifier)
+                if let url = item as? URL { pasted = url.absoluteString }
+                else if let data = item as? Data { pasted = String(data: data, encoding: .utf8) }
+            }
+            if pasted == nil, provider.hasItemConformingToTypeIdentifier(UTType.plainText.identifier) {
+                let item = try? await provider.loadItem(forTypeIdentifier: UTType.plainText.identifier)
+                if let text = item as? String { pasted = text }
+                else if let data = item as? Data { pasted = String(data: data, encoding: .utf8) }
+            }
+            guard let self, let pasted else { return }
+            self.applyPasted(pasted)
+        }
+    }
+
+    /// Keeps the first link of the pasted text, or the text itself when it
+    /// is a bare host (`links.example.org`), then runs the check.
+    func applyPasted(_ text: String) {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        url = URLDomain.firstURL(in: trimmed) ?? trimmed
         urlDidChange()
     }
 

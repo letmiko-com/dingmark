@@ -48,6 +48,16 @@ struct URLDomainTests {
         #expect(URLDomain.domain(of: "not a url") == "not a url")
     }
 
+    @Test("first URL in pasted text, bare hosts and non-web links excluded")
+    func firstURL() {
+        #expect(URLDomain.firstURL(in: "voir https://immich.app/docs?x=1 et rien d’autre") == "https://immich.app/docs?x=1")
+        #expect(URLDomain.firstURL(in: "https://a.example\nhttps://b.example") == "https://a.example")
+        #expect(URLDomain.firstURL(in: "mailto:me@example.org") == nil)
+        // Typed without a scheme: returned as typed, the caller defaults to https.
+        #expect(URLDomain.firstURL(in: "links.example.org/x") == "links.example.org/x")
+        #expect(URLDomain.firstURL(in: "pas de lien") == nil)
+    }
+
     @Test("server normalisation keeps the origin and a mount prefix, drops linkding pages")
     func normalizeServer() {
         #expect(URLDomain.normalizeServer("links.example.org")?.absoluteString == "https://links.example.org")
