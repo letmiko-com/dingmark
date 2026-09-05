@@ -7,6 +7,7 @@ struct BookmarkDetailView: View {
     @Environment(Session.self) private var session
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
+    @Environment(\.horizontalSizeClass) private var sizeClass
     @AppStorage(SettingsKey.openLinksInApp, store: AppGroup.defaults) private var openInApp = true
 
     @State private var editing = false
@@ -51,7 +52,11 @@ struct BookmarkDetailView: View {
                                 Button {
                                     store.tagFilter = tag
                                     store.filter = .all
-                                    dismiss()
+                                    // Pushed on a phone: go back to the
+                                    // filtered list. In the split view the
+                                    // detail column stays (dismiss would
+                                    // clear the selection).
+                                    if sizeClass != .regular { dismiss() }
                                 } label: {
                                     TagChip(name: tag, style: .detail)
                                 }
