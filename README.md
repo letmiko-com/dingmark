@@ -1,91 +1,126 @@
 # Dingmark
 
-Client iOS et iPadOS natif pour [linkding](https://github.com/sissbruecker/linkding), le gestionnaire de favoris self-hosted. Éditeur : Letmiko.
+A native iOS and iPadOS client for [linkding](https://github.com/sissbruecker/linkding), the self-hosted bookmark manager.
 
-Connexion à une instance par son adresse et un jeton d'API, liste avec recherche et filtres rapides, tags, détail, ajout et modification, share extension depuis Safari, widgets (écran d'accueil et écran verrouillé), réglages. Aucun compte, aucun cloud : les favoris ne quittent jamais le serveur de l'utilisateur.
+Dingmark talks to your own linkding server and to nothing else. No account, no cloud, no analytics: your bookmarks never leave the server you run.
 
-## Prérequis
+| Sign in | Bookmarks | Detail | Add |
+|---|---|---|---|
+| ![](docs/screenshots/iphone-connexion.png) | ![](docs/screenshots/iphone-liste.png) | ![](docs/screenshots/iphone-detail.png) | ![](docs/screenshots/iphone-ajout.png) |
 
-- Xcode 26 (SDK iOS 26), cible iOS et iPadOS 26.0 minimum.
-- [XcodeGen](https://github.com/yonaskolb/XcodeGen) : `brew install xcodegen`.
-- Une instance linkding joignable (ou le mode démonstration, voir plus bas).
+| Tags | Settings | Dark | iPad |
+|---|---|---|---|
+| ![](docs/screenshots/iphone-tags.png) | ![](docs/screenshots/iphone-reglages.png) | ![](docs/screenshots/iphone-liste-sombre.png) | ![](docs/screenshots/ipad-split-view.png) |
 
-## Commandes
+## Features
 
-Le projet Xcode n'est pas versionné : il est régénéré depuis `project.yml`.
+- **Bookmarks list** with search, quick filters (all, unread, archived, untagged) and per-tag filtering. Search and filters run on a local cache, so they work offline.
+- **Detail** with Markdown notes, tags, unread toggle, in-app Safari or system Safari, copy and share.
+- **Add and edit** with a paste button, metadata fetched from your server (title, description, suggested tags) and duplicate detection: adding a URL you already saved updates that bookmark instead of creating another.
+- **Share extension**: save any page from Safari or another app in two taps, with your default tags.
+- **Widgets**: unread bookmarks on the Home Screen and the Lock Screen, with an add shortcut.
+- **iPad**: three-column layout (filters and tags, list, detail).
+- **Offline**: the last synchronised state stays readable; changes are applied optimistically and rolled back if the server refuses them.
+- **Self-signed certificates**: refused by default, then trusted per server after you confirm the certificate fingerprint.
+- French and English.
+
+## Requirements
+
+- iOS or iPadOS 26.0 or later.
+- A linkding instance you can reach from the device, with its REST API enabled (any recent version; the duplicate check uses `/api/bookmarks/check/`). Plain HTTP is accepted for servers on your local network.
+
+## Getting started
+
+1. Install Dingmark. The app is free; the App Store link will be added here once it is published.
+2. In linkding, open **Settings › Integrations › REST API** and create an API token.
+3. In Dingmark, enter your server address (`links.example.org`, or a full URL such as `https://home.example.org/linkding`) and paste the token. **Test Connection** checks both, then the app loads your bookmarks.
+
+If your server uses a self-signed certificate, the sign-in screen offers to trust it after the first failed attempt. If it speaks plain HTTP on your local network, type the address with `http://`.
+
+## Privacy
+
+Dingmark sends requests only to the linkding server you configure. It has no analytics, no crash reporting, no third-party SDK. The API token is stored in the Keychain and shared with the extensions through an App Group; it never appears in preferences or logs. The app's privacy manifest (`Dingmark/PrivacyInfo.xcprivacy`) declares no tracking and no data collection.
+
+## Building from source
+
+Requirements: Xcode 26 with the iOS 26 SDK, [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`).
+
+`project.yml` is the source of truth; `Dingmark.xcodeproj` is generated from it and committed so that Xcode Cloud can build the project. Run `xcodegen` after cloning, after editing `project.yml`, and whenever Swift files are added or removed, then commit the regenerated project with your change.
 
 ```sh
-# après un clone, après une modification de project.yml, ou quand des
-# fichiers Swift sont ajoutés ou supprimés
 xcodegen
 open Dingmark.xcodeproj
+```
 
-# compilation Debug pour le simulateur
+To build for a device, put your Apple Developer team in a local, git-ignored signing file:
+
+```sh
+cp Config/Signing.local.xcconfig.example Config/Signing.local.xcconfig
+# edit DEVELOPMENT_TEAM in Config/Signing.local.xcconfig
+```
+
+The simulator needs no team. Demo mode serves the eleven bookmarks of the design prototype without a server: launch the app with the `-demo` argument (or `DINGMARK_DEMO=1` in the environment). Previews, screenshots and UI tests use it.
+
+```sh
+# Debug build for the simulator
 xcodebuild -project Dingmark.xcodeproj -scheme Dingmark \
   -destination 'generic/platform=iOS Simulator' -configuration Debug build
 
-# tests unitaires
+# unit tests
 xcodebuild -project Dingmark.xcodeproj -scheme Dingmark \
-  -destination 'platform=iOS Simulator,name=iPhone 17' test
+  -destination 'platform=iOS Simulator,name=iPhone 17' -only-testing:DingmarkTests test
 
-# icône : regénérer les PNG du catalogue depuis la géométrie SVG
+# app icon: regenerate the catalog PNGs from the SVG geometry
 swift design/icon/render-icon.swift
 ```
-
-Mode démonstration : lancer l'app avec l'argument `-demo` (ou la variable d'environnement `DINGMARK_DEMO=1`) pour servir les onze favoris du prototype de design sans serveur. C'est ce que consomment les previews, les captures et les tests d'interface.
 
 ## Architecture
 
 ```
-Dingmark/          app (SwiftUI) : écrans, navigation, SFSafariViewController
-DingmarkShare/     share extension (UIHostingController, detents medium et large)
-DingmarkWidgets/   WidgetKit : petit, moyen, circulaire, rectangulaire
-Shared/            compilé dans les trois cibles
-  Models/          Bookmark, DTO de l'API, décodage des dates linkding
-  API/             LinkdingAPI (protocole), LinkdingClient (URLSession), confiance TLS
-  Storage/         App Group, Keychain (jeton), cache JSON, clés de réglages
-  Store/           Session, BookmarkStore (mises à jour optimistes), modèle du formulaire
-  UI/              composants : cellule, chips, champ de tags, FlowLayout, icône vectorielle
-  Demo/            fixtures du prototype et client en mémoire
-DingmarkTests/     tests unitaires (Swift Testing) : client mocké, décodage, filtres, tags
-DingmarkUITests/   captures et parcours exploratoires (démo, iPad, serveur réel)
-scripts/           seed-linkding.py : alimente un linkding jetable pour RealServerTests
-design/icon/       sources SVG de l'icône et script de rendu
+Dingmark/          app (SwiftUI): screens, navigation, SFSafariViewController
+DingmarkShare/     share extension (UIHostingController, medium and large detents)
+DingmarkWidgets/   WidgetKit: small, medium, circular, rectangular
+Shared/            compiled into the three targets
+  Models/          Bookmark, API DTOs, linkding date decoding
+  API/             LinkdingAPI (protocol), LinkdingClient (URLSession), TLS trust
+  Storage/         App Group, Keychain (token), JSON cache, settings keys
+  Store/           Session, BookmarkStore (optimistic updates), form model
+  UI/              components: row, chips, tag field, FlowLayout, vector icon
+  Demo/            prototype fixtures and in-memory client
+DingmarkTests/     unit tests (Swift Testing): mocked client, decoding, filters, tags
+DingmarkUITests/   screenshots and exploratory flows (demo, iPad, real server)
+Config/            signing xcconfig (the local team file is git-ignored)
+scripts/           seed-linkding.py: seeds a throwaway linkding for RealServerTests
+design/icon/       SVG sources of the icon and the rendering script
 ```
 
-Choix structurants :
+Design choices:
 
-- **Technologies Apple uniquement** : SwiftUI, Observation, WidgetKit, App Groups, Keychain, URLSession, SafariServices. Aucune dépendance tierce.
-- **Composants système d'abord** : `List(.plain)`, `.searchable`, `.swipeActions`, `.contextMenu(preview:)`, `ContentUnavailableView`, `.redacted`, `NavigationSplitView`, `Tab`, `.glassProminent`. Trois vues custom, parce qu'aucun contrôle système ne les couvre : la barre de filtres (défilement et compteurs), le champ de tags (chips supprimables et suggestions) et le wrapper `SFSafariViewController`.
-- **Mise à jour optimiste partout** : état local d'abord, requête ensuite, retour arrière silencieux et bannière discrète en cas d'échec.
-- **Cache dans l'App Group** : lecture hors ligne, données des widgets, mise à jour par la share extension.
-- **Jeton dans le Keychain** partagé via l'App Group, jamais dans les préférences ni les journaux.
-- **Certificat auto-signé** : refusé par défaut, empreinte SHA-256 épinglée après confirmation explicite sur l'écran de connexion.
+- **Apple technologies only**: SwiftUI, Observation, WidgetKit, App Groups, Keychain, URLSession, SafariServices. No third-party dependency.
+- **System components first**: `List(.plain)`, `.searchable`, `.swipeActions`, `.contextMenu(preview:)`, `ContentUnavailableView`, `.redacted`, `NavigationSplitView`, `Tab`, `.glassProminent`. Three custom views, because no system control covers them: the filter bar (scrolling, counters), the tag field (removable chips, suggestions) and the `SFSafariViewController` wrapper.
+- **Optimistic updates everywhere**: local state first, request second, silent rollback and a discreet banner on failure.
+- **Cache in the App Group**: offline reading, widget data, updated by the share extension, refreshed when the app returns to the foreground.
+- **Token in the Keychain**, shared through the App Group, never in preferences or logs.
+- **Self-signed certificates**: refused by default; the SHA-256 fingerprint is pinned after an explicit confirmation on the sign-in screen.
 
-## API linkding utilisée
+## linkding API used
 
-`GET/POST /api/bookmarks/`, `GET /api/bookmarks/archived/`, `PATCH/DELETE /api/bookmarks/<id>/`, `POST /api/bookmarks/<id>/archive/` et `unarchive/`, `GET /api/bookmarks/check/?url=`, `GET /api/tags/`. En-tête `Authorization: Token <jeton>`. La recherche et les filtres s'appliquent en local sur le cache complet, ce qui fonctionne hors ligne.
+`GET/POST /api/bookmarks/`, `GET /api/bookmarks/archived/`, `PATCH/DELETE /api/bookmarks/<id>/`, `POST /api/bookmarks/<id>/archive/` and `unarchive/`, `GET /api/bookmarks/check/?url=`, `GET /api/tags/`, with the `Authorization: Token <token>` header.
 
-## Design
+## Tests
 
-Les écrans recréent le handoff Claude Design « Dingmark » (prototype cliquable, planches de spec, icône « Ruban »). Tokens : accent teal `rgb(0,199,190)` clair et `rgb(0,210,224)` sombre, couleurs sémantiques du système, styles de texte Dynamic Type, marges 16 pt, groupes rayon 26, capsules 32 pt pour les filtres, boutons pleins 50 pt.
-
-## Tests d'interface
-
-`DingmarkUITests/` contient, outre les captures, trois parcours exploratoires qui joignent une capture à chaque étape (à relire dans le `.xcresult`) :
-
-- `ExploratoryDemoTests` : le mode démonstration sur iPhone, de bout en bout (filtres, recherche, détail, modification, ajout et doublon, balayages, menu contextuel, tags, réglages, liens profonds).
-- `ExploratoryPadTests` : la vue scindée iPad (ignoré sur iPhone).
-- `RealServerTests` : connexion et erreurs de connexion, pagination, mutations et share extension depuis Safari contre un linkding réel, chaque écriture vérifiée par l'API. Ignoré quand le serveur n'est pas configuré. Serveur jetable :
+- **Unit tests** (`DingmarkTests`, Swift Testing): API client against a mocked `URLProtocol`, JSON and date decoding, filters, tag logic, form model.
+- **Screenshots** (`ScreenshotTests`): the demo app in light, dark and English, plus the sign-in screen. Regenerate with `-only-testing:DingmarkUITests/ScreenshotTests` and export the attachments with `xcrun xcresulttool export attachments`.
+- **Exploratory UI flows**, one screenshot per step: `ExploratoryDemoTests` (iPhone, demo data), `ExploratoryPadTests` (split view, skipped on iPhone) and `RealServerTests`, which exercises sign-in, pagination, every mutation and the share extension against a real linkding and checks the server state through the API. It is skipped unless a server is configured:
 
 ```sh
 docker run -d --name linkding-test -p 9090:9090 \
   -e LD_SUPERUSER_NAME=test -e LD_SUPERUSER_PASSWORD=test sissbruecker/linkding
-# jeton API : modèle ApiToken de linkding (drf_create_token produit un jeton refusé)
+# API token: linkding's ApiToken model (drf_create_token produces a token the API rejects)
 docker exec linkding-test python manage.py shell -c "from bookmarks.models import ApiToken; \
   from django.contrib.auth import get_user_model; \
   print(ApiToken.objects.create(user=get_user_model().objects.get(username='test'), name='tests').key)"
-export DINGMARK_TEST_SERVER=http://127.0.0.1:9090 DINGMARK_TEST_TOKEN=<jeton>
+export DINGMARK_TEST_SERVER=http://127.0.0.1:9090 DINGMARK_TEST_TOKEN=<token>
 python3 scripts/seed-linkding.py
 TEST_RUNNER_DINGMARK_TEST_SERVER=$DINGMARK_TEST_SERVER TEST_RUNNER_DINGMARK_TEST_TOKEN=$DINGMARK_TEST_TOKEN \
   xcodebuild -project Dingmark.xcodeproj -scheme Dingmark \
@@ -93,23 +128,18 @@ TEST_RUNNER_DINGMARK_TEST_SERVER=$DINGMARK_TEST_SERVER TEST_RUNNER_DINGMARK_TEST
   -only-testing:DingmarkUITests/RealServerTests test
 ```
 
-Le simulateur atteint `127.0.0.1` directement. Les tests sont ordonnés : `test01` se connecte, `test05` se déconnecte.
+The simulator reaches `127.0.0.1` directly. The tests run in name order: `test01` signs in, `test05` signs out.
 
-## Captures
+## Design
 
-Prises au simulateur (iPhone 17 et iPad Pro 11", iOS 26.5) par `DingmarkUITests/ScreenshotTests.swift` en mode démonstration. Pour les régénérer :
+The screens follow a design prototype made with Claude Design (clickable prototype, spec boards, the "Ribbon" icon). Tokens: teal accent `rgb(0,199,190)` in light and `rgb(0,210,224)` in dark, system semantic colours, Dynamic Type text styles, 16 pt margins, 26 pt group radius, 32 pt filter capsules, 50 pt filled buttons. The icon sources and their rendering script live in `design/icon/`.
 
-```sh
-xcodebuild -project Dingmark.xcodeproj -scheme Dingmark \
-  -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.5' \
-  -only-testing:DingmarkUITests -resultBundlePath build/ui.xcresult test
-xcrun xcresulttool export attachments --path build/ui.xcresult --output-path build/shots
-```
+## Contributing
 
-| Connexion | Liste | Détail | Ajout |
-|---|---|---|---|
-| ![](docs/screenshots/iphone-connexion.png) | ![](docs/screenshots/iphone-liste.png) | ![](docs/screenshots/iphone-detail.png) | ![](docs/screenshots/iphone-ajout.png) |
+Bug reports and pull requests are welcome. Please open an issue first for anything beyond a small fix. Contributions are accepted under the terms of the [LICENSE](LICENSE), which lets Letmiko keep shipping the app.
 
-| Tags | Réglages | Sombre | iPad |
-|---|---|---|---|
-| ![](docs/screenshots/iphone-tags.png) | ![](docs/screenshots/iphone-reglages.png) | ![](docs/screenshots/iphone-liste-sombre.png) | ![](docs/screenshots/ipad-split-view.png) |
+## License
+
+Dingmark is source-available, not open source: you can read, audit, build and run it for yourself, and propose changes; you may not redistribute it or publish it on an app store. See [LICENSE](LICENSE).
+
+linkding is a project by Sascha Ißbrücker, distributed under the MIT license.
