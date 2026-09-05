@@ -4,7 +4,7 @@ Dingmark : client iOS/iPadOS 26+ pour linkding (SwiftUI, technologies Apple uniq
 
 ## Commandes
 
-`Dingmark.xcodeproj` n'est pas versionné : `xcodegen` le régénère depuis `project.yml`. À relancer après tout ajout ou suppression de fichier Swift, sinon Xcode ne voit pas le fichier.
+`project.yml` est la source de vérité ; `Dingmark.xcodeproj` en est généré par `xcodegen` et **versionné** (Xcode Cloud l'exige dans le dépôt). Relancer `xcodegen` après tout ajout ou suppression de fichier Swift ou modification de `project.yml`, et committer le projet régénéré avec le changement. L'équipe Apple n'est pas dans le dépôt : elle vient de `Config/Signing.local.xcconfig` (ignoré par git, modèle `.example` à côté) ; sans ce fichier, seul le simulateur compile.
 
 ```sh
 xcodegen
