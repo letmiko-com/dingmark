@@ -32,3 +32,13 @@ struct BookmarkFormModelTests {
         #expect(!model.canSave)
     }
 }
+
+@Suite("DemoLinkdingClient")
+struct DemoLinkdingClientTests {
+    @Test("only the exact URL is a duplicate")
+    func duplicateIsExact() async throws {
+        let client = DemoLinkdingClient(latency: .zero)
+        #expect(try await client.check(url: "https://restic.net").bookmark?.id == 5)
+        #expect(try await client.check(url: "https://restic.net/docs").bookmark == nil)
+    }
+}

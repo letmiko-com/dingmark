@@ -46,7 +46,8 @@ final class DemoLinkdingClient: LinkdingAPI, @unchecked Sendable {
     func check(url: String) async throws -> CheckResponse {
         await wait()
         let domain = URLDomain.domain(of: url)
-        let existing = lock.withLock { bookmarks.first { $0.url == url || URLDomain.domain(of: $0.url) == domain } }
+        // Like the server: a duplicate is the same URL, not the same site.
+        let existing = lock.withLock { bookmarks.first { $0.url == url } }
         let meta = Self.metadata[domain].map { CheckResponse.Metadata(title: $0.0, description: $0.1, previewImage: nil) }
             ?? CheckResponse.Metadata(title: domain.capitalized, description: nil, previewImage: nil)
         let auto = domain.contains("docker") || domain.contains("immich") ? ["docker"] : []
