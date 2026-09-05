@@ -145,6 +145,8 @@ struct SplitRootView: View {
             EmptyBookmarksView { router.showAdd() }
         } else if store.filtered.isEmpty && !store.query.isEmpty {
             NoResultsView(query: store.query) { searchText = "" }
+        } else if store.filtered.isEmpty && store.hasLoadedOnce {
+            FilteredEmptyView(filter: store.filter, tag: store.tagFilter)
         }
     }
 }

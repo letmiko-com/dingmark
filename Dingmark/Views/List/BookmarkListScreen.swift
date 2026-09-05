@@ -91,6 +91,8 @@ struct BookmarkListScreen: View {
             EmptyBookmarksView { router.showAdd() }
         } else if list.isEmpty && !store.query.isEmpty {
             NoResultsView(query: store.query) { searchText = "" }
+        } else if list.isEmpty && store.hasLoadedOnce {
+            FilteredEmptyView(filter: store.filter, tag: store.tagFilter)
         } else {
             BookmarkRows(bookmarks: list, density: density, zoom: zoom)
         }

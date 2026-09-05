@@ -47,7 +47,13 @@ final class BookmarkStore {
 
     var filtered: [Bookmark] { BookmarkFilter.apply(bookmarks, filter: filter, tag: tagFilter, query: query) }
 
-    var tagCounts: [(name: String, count: Int)] { BookmarkFilter.tagCounts(bookmarks) }
+    /// Tags of the active bookmarks with their counts: what the Tags screen and
+    /// the iPad sidebar list. A tag filter shows active bookmarks, so a tag
+    /// carried only by archived ones would otherwise open an empty list.
+    var tagCounts: [(name: String, count: Int)] { BookmarkFilter.tagCounts(bookmarks, includeArchived: false) }
+
+    /// Usage across every bookmark, archived included: orders the suggestions.
+    var tagUsage: [(name: String, count: Int)] { BookmarkFilter.tagCounts(bookmarks) }
 
     var allTagNames: [String] {
         var set = Set(knownTags)

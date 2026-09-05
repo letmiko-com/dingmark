@@ -115,7 +115,7 @@ struct DefaultTagsView: View {
         Form {
             Section {
                 TagField(tags: Binding(get: { TagList.parse(defaultTagsRaw) }, set: { defaultTagsRaw = TagList.join($0) }),
-                         suggestionPool: TagSuggestions.pool(usage: store.tagCounts, known: store.knownTags))
+                         suggestionPool: TagSuggestions.pool(usage: store.tagUsage, known: store.knownTags))
             } footer: {
                 Text("Ajoutés à chaque nouveau favori, y compris depuis la share extension.")
             }

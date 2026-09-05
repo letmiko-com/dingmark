@@ -32,7 +32,7 @@ struct AddBookmarkSheet: View {
             model = BookmarkFormModel(
                 api: api,
                 mode: .create,
-                suggestionPool: TagSuggestions.pool(usage: store.tagCounts, known: store.knownTags),
+                suggestionPool: TagSuggestions.pool(usage: store.tagUsage, known: store.knownTags),
                 defaultTags: TagList.parse(defaultTagsRaw),
                 unreadByDefault: unreadByDefault,
                 prefillURL: prefillURL,
@@ -68,7 +68,7 @@ struct EditBookmarkSheet: View {
             model = BookmarkFormModel(
                 api: api,
                 mode: .edit(bookmark),
-                suggestionPool: TagSuggestions.pool(usage: store.tagCounts, known: store.knownTags))
+                suggestionPool: TagSuggestions.pool(usage: store.tagUsage, known: store.knownTags))
         }
     }
 }

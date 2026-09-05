@@ -51,4 +51,16 @@ struct BookmarkFilterTests {
         #expect(counts.first?.count == 4)
         #expect(counts.contains { $0.name == "docker" && $0.count == 2 })
     }
+
+    @Test("active-only tag counts match what a tag filter shows")
+    func activeTagCounts() {
+        let counts = BookmarkFilter.tagCounts(fixtures, includeArchived: false)
+        // Caddy (archived) carries selfhosting, réseau and docker; "lecture" only exists on an archived bookmark.
+        #expect(counts.first { $0.name == "selfhosting" }?.count == BookmarkFilter.apply(fixtures, filter: .all, tag: "selfhosting", query: "").count)
+        #expect(counts.first { $0.name == "docker" }?.count == 1)
+        #expect(!counts.contains { $0.name == "lecture" })
+        for (name, count) in counts {
+            #expect(BookmarkFilter.apply(fixtures, filter: .all, tag: name, query: "").count == count)
+        }
+    }
 }

@@ -1140,6 +1140,86 @@
           }
         }
       }
+    },
+    "Aucun favori avec ce tag": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No bookmark with this tag"
+          }
+        }
+      }
+    },
+    "Rien à lire": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing to read"
+          }
+        }
+      }
+    },
+    "Aucun favori archivé": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No archived bookmark"
+          }
+        }
+      }
+    },
+    "Tout est tagué": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Everything is tagged"
+          }
+        }
+      }
+    },
+    "Aucun favori actif ne porte le tag « %@ » avec ce filtre.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No active bookmark carries the tag “%@” with this filter."
+          }
+        }
+      }
+    },
+    "Les favoris marqués non lus apparaissent ici.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bookmarks marked unread show up here."
+          }
+        }
+      }
+    },
+    "Archivez un favori depuis la liste par un glissement vers la gauche.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Archive a bookmark from the list by swiping left."
+          }
+        }
+      }
+    },
+    "Tous vos favoris actifs portent au moins un tag.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All your active bookmarks carry at least one tag."
+          }
+        }
+      }
     }
   }
 }

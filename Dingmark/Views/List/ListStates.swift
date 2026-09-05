@@ -39,6 +39,42 @@ struct EmptyBookmarksView: View {
     }
 }
 
+/// A quick filter or a tag filter that matches nothing, without a search.
+struct FilteredEmptyView: View {
+    let filter: QuickFilter
+    let tag: String?
+
+    var body: some View {
+        ContentUnavailableView {
+            Label(title, systemImage: symbol)
+        } description: {
+            Text(message)
+        }
+    }
+
+    private var title: LocalizedStringKey {
+        if tag != nil { return "Aucun favori avec ce tag" }
+        switch filter {
+        case .unread: return "Rien à lire"
+        case .archived: return "Aucun favori archivé"
+        case .untagged: return "Tout est tagué"
+        case .all: return "Aucun favori"
+        }
+    }
+
+    private var symbol: String { tag != nil ? "tag" : filter.symbol }
+
+    private var message: String {
+        if let tag { return String(localized: "Aucun favori actif ne porte le tag « \(tag) » avec ce filtre.") }
+        switch filter {
+        case .unread: return String(localized: "Les favoris marqués non lus apparaissent ici.")
+        case .archived: return String(localized: "Archivez un favori depuis la liste par un glissement vers la gauche.")
+        case .untagged: return String(localized: "Tous vos favoris actifs portent au moins un tag.")
+        case .all: return String(localized: "Ajoutez un lien ici ou partagez une page depuis Safari.")
+        }
+    }
+}
+
 struct NoResultsView: View {
     let query: String
     var onClear: () -> Void
