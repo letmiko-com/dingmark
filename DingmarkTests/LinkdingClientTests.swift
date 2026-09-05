@@ -113,3 +113,19 @@ struct LinkdingClientTests {
         #expect(String(data: body, encoding: .utf8) == "{\"unread\":true}")
     }
 }
+
+@Suite("LinkdingClient cancellation", .serialized)
+struct LinkdingClientCancellationTests {
+    @Test("a cancelled request surfaces as CancellationError, not as an unreachable server")
+    func cancelled() async {
+        MockURLProtocol.reset()
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [MockURLProtocol.self]
+        let client = LinkdingClient(baseURL: URL(string: "https://links.example.org")!, token: "t",
+                                    trustStore: TrustStore(defaults: UserDefaults(suiteName: "tests.cancel")!), configuration: configuration)
+        MockURLProtocol.handler = { _ in throw URLError(.cancelled) }
+        await #expect(throws: CancellationError.self) {
+            _ = try await client.testConnection()
+        }
+    }
+}

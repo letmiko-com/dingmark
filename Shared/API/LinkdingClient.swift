@@ -133,6 +133,10 @@ final class LinkdingClient: LinkdingAPI, @unchecked Sendable {
         let response: URLResponse
         do {
             (data, response) = try await session.data(for: req)
+        } catch let error as URLError where error.code == .cancelled {
+            // The caller's task was cancelled (sign out, view gone): not a
+            // server problem, let the cancellation propagate.
+            throw CancellationError()
         } catch let error as URLError {
             throw map(error)
         }
