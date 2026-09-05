@@ -34,12 +34,26 @@ final class BookmarkFormModel {
     private let api: LinkdingAPI
     private var checkTask: Task<Void, Never>?
     private var lastCheckedURL: String?
+    private var checkGeneration = 0
+    /// What the last check wrote into the fields, so a new URL replaces it
+    /// while anything the user typed or changed is kept.
+    private var autoFilled = AutoFilled()
+    private let defaultUnread: Bool
+
+    private struct AutoFilled {
+        var title: String?
+        var description: String?
+        var notes: String?
+        var tags: [String] = []
+        var flagsFromExisting = false
+    }
 
     init(api: LinkdingAPI, mode: Mode, suggestionPool: [String], defaultTags: [String] = [],
          unreadByDefault: Bool = false, prefillURL: String? = nil, prefillTitle: String? = nil) {
         self.api = api
         self.mode = mode
         self.suggestionPool = suggestionPool
+        self.defaultUnread = unreadByDefault
         switch mode {
         case .create:
             url = prefillURL ?? ""
@@ -121,22 +135,48 @@ final class BookmarkFormModel {
     }
 
     private func check(_ target: String) async {
+        checkGeneration += 1
+        let generation = checkGeneration
         isFetching = true
-        defer { isFetching = false }
+        // A newer check owns the spinner once it has started.
+        defer { if generation == checkGeneration { isFetching = false } }
+        guard let response = try? await api.check(url: target), !Task.isCancelled, generation == checkGeneration else { return }
         lastCheckedURL = target
-        guard let response = try? await api.check(url: target), !Task.isCancelled else { return }
+        applyCheck(response)
+    }
+
+    /// Fills the empty fields from the server answer. Values written by a
+    /// previous check are dropped first (unless the user changed them), so
+    /// correcting the URL never leaves the title of another page behind.
+    func applyCheck(_ response: CheckResponse) {
+        if title == autoFilled.title { title = "" }
+        if description == autoFilled.description { description = "" }
+        if notes == autoFilled.notes { notes = "" }
+        tags.removeAll { autoFilled.tags.contains($0) }
+        if autoFilled.flagsFromExisting {
+            unread = defaultUnread
+            shared = false
+        }
+        autoFilled = AutoFilled()
+
         if let found = response.bookmark {
             existing = found
-            if title.isEmpty { title = found.displayTitle }
-            if description.isEmpty { description = found.displayDescription }
-            if notes.isEmpty { notes = found.notes }
-            for tag in found.tagNames where !tags.contains(tag) { tags.append(tag) }
+            if title.isEmpty { title = found.displayTitle; autoFilled.title = title }
+            if description.isEmpty { description = found.displayDescription; autoFilled.description = description }
+            if notes.isEmpty { notes = found.notes; autoFilled.notes = notes }
+            let added = found.tagNames.filter { !tags.contains($0) }
+            tags += added
+            autoFilled.tags = added
             unread = found.unread
             shared = found.shared
+            autoFilled.flagsFromExisting = true
         } else {
             existing = nil
-            if title.isEmpty, let scraped = response.metadata?.title { title = scraped }
-            if description.isEmpty, let scraped = response.metadata?.description { description = scraped }
+            if title.isEmpty, let scraped = response.metadata?.title, !scraped.isEmpty { title = scraped; autoFilled.title = scraped }
+            if description.isEmpty, let scraped = response.metadata?.description, !scraped.isEmpty {
+                description = scraped
+                autoFilled.description = scraped
+            }
         }
         autoTags = response.autoTags ?? []
     }

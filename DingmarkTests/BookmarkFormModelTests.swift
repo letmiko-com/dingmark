@@ -33,6 +33,54 @@ struct BookmarkFormModelTests {
     }
 }
 
+@Suite("BookmarkFormModel check results")
+@MainActor
+struct BookmarkFormModelCheckTests {
+    private func makeModel(unreadByDefault: Bool = true) -> BookmarkFormModel {
+        BookmarkFormModel(api: DemoLinkdingClient(latency: .zero), mode: .create, suggestionPool: [], defaultTags: ["inbox"], unreadByDefault: unreadByDefault)
+    }
+
+    private func existing() -> CheckResponse {
+        CheckResponse(bookmark: Bookmark(id: 5, url: "https://restic.net", title: "Restic", description: "Backups", notes: "n", unread: false, shared: true, tagNames: ["selfhosting", "inbox"]),
+                      metadata: nil, autoTags: nil)
+    }
+
+    private func scraped(_ title: String) -> CheckResponse {
+        CheckResponse(bookmark: nil, metadata: .init(title: title, description: "Scraped \(title)", previewImage: nil), autoTags: ["auto"])
+    }
+
+    @Test("a duplicate pre-fills the form, another URL drops the pre-filled values")
+    func duplicateThenOtherURL() {
+        let model = makeModel()
+        model.applyCheck(existing())
+        #expect(model.existing?.id == 5)
+        #expect(model.title == "Restic" && model.description == "Backups" && model.notes == "n")
+        #expect(model.tags == ["inbox", "selfhosting"])
+        #expect(model.unread == false && model.shared == true)
+
+        model.applyCheck(scraped("Other page"))
+        #expect(model.existing == nil)
+        #expect(model.title == "Other page")
+        #expect(model.description == "Scraped Other page")
+        #expect(model.notes == "")
+        #expect(model.tags == ["inbox"], "tags added by the duplicate must go, the default tag stays")
+        #expect(model.unread == true && model.shared == false, "flags return to the defaults")
+        #expect(model.autoTags == ["auto"])
+    }
+
+    @Test("values typed by the user survive a new check")
+    func userEditsKept() {
+        let model = makeModel()
+        model.applyCheck(scraped("First"))
+        model.title = "Mon titre"
+        model.tags.append("perso")
+        model.applyCheck(scraped("Second"))
+        #expect(model.title == "Mon titre")
+        #expect(model.description == "Scraped Second", "untouched description follows the URL")
+        #expect(model.tags == ["inbox", "perso"])
+    }
+}
+
 @Suite("DemoLinkdingClient")
 struct DemoLinkdingClientTests {
     @Test("only the exact URL is a duplicate")
