@@ -188,7 +188,7 @@ extension LinkdingError {
         case .unreachable: String(localized: "Serveur injoignable")
         case .http(let status): String(localized: "Erreur serveur (\(status))")
         case .decoding: String(localized: "Réponse illisible")
-        case .notConfigured: String(localized: "Dingmark n'est pas connecté")
+        case .notConfigured: String(localized: "Dingmark n’est pas connecté")
         }
     }
 }

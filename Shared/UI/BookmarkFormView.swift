@@ -99,7 +99,7 @@ struct BookmarkFormSections: View {
         }
         Section {
             Toggle("Marquer non lu", isOn: $model.unread)
-            Toggle("Partager sur l'instance", isOn: $model.shared)
+            Toggle("Partager sur l’instance", isOn: $model.shared)
         }
         Section("Notes") {
             ZStack(alignment: .topLeading) {
