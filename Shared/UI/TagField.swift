@@ -59,7 +59,9 @@ struct TagField: View {
                 ForEach(tags, id: \.self) { tag in
                     TagChip(name: tag, style: .editable) { remove(tag) }
                 }
-                TextField(tags.isEmpty ? String(localized: "Ajouter un tag") : "", text: $input)
+                // Always a placeholder: with an empty one the field is invisible
+                // once tags exist and nothing tells the user where to type.
+                TextField(tags.isEmpty ? String(localized: "Ajouter un tag") : String(localized: "Ajouter"), text: $input)
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled()
                     .keyboardType(.asciiCapable)
