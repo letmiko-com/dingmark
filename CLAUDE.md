@@ -26,4 +26,4 @@ Tests contre un linkding réel (`RealServerTests`) : serveur Docker jetable, jet
 - `Shared/` est compilé dans l'app, la share extension et les widgets : pas de `SafariServices` ni de code spécifique à l'app dedans.
 - Un bug corrigé dans la logique (client, filtres, tags, dates) se prouve par un test dans `DingmarkTests/`.
 - Tokens visuels dans `Shared/UI/Theme.swift` (`Metrics`, `Color.dingmarkAccent`) : ne pas coder de valeurs en dur dans les vues.
-- Icône : modifier les SVG ou `design/icon/render-icon.swift`, jamais les PNG.
+- Icône : le paquet en couches `Dingmark/Resources/AppIcon.icon` est la seule source pour l'app (le système dérive sombre, teinté et Clear). Les PNG de `design/icon/out/` ne servent qu'au web et aux stores : voir `design/icon/README.md`.

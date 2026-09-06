@@ -58,6 +58,7 @@
 		7A8FD5920DE575DF5D914611 /* BookmarkFormModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC8685870B3AB7A1893667A /* BookmarkFormModel.swift */; };
 		7DF7BA2621D80157B9DB35CD /* BookmarkFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4088245021E70357117E91E3 /* BookmarkFilter.swift */; };
 		8300A353A9FF9C822EF7116F /* MarkdownNotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC53D83DA3D35DAD1207D96 /* MarkdownNotesView.swift */; };
+		86DCC40E91B45C9B663397B3 /* BookmarkStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE6CE1C3FABFA5325EEB3D65 /* BookmarkStoreTests.swift */; };
 		87ACDC5FB8873A0B9C1B8EE0 /* DemoLinkdingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A1DCD1D1373F083AE0B3C7 /* DemoLinkdingClient.swift */; };
 		889A5F664EABCBEA3E46E476 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4B1D570ACD51904782D739D /* SettingsScreen.swift */; };
 		899273522F04CCA6D65F478C /* URLDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE3EE65655972E72D66623E /* URLDomain.swift */; };
@@ -84,6 +85,7 @@
 		C29618C66F5A3C3F7AA3E981 /* RealServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513B2E69DF93473F7C8A99A8 /* RealServerTests.swift */; };
 		C7106F27FB9047088CC9DD39 /* RibbonMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = A153D5781287DD09D170BF54 /* RibbonMark.swift */; };
 		CB1775A287DA38BCB6A87912 /* FaviconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915572A4448D633ACE2B3826 /* FaviconView.swift */; };
+		CC533DC52B975ED2E6F855AE /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 5787BC083C709D98B4B1F01D /* AppIcon.icon */; };
 		CD30B4550D9882304AD298D3 /* DingmarkShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 46D62A3E989558822B4B5356 /* DingmarkShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CF7041DD129356263EB72100 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 747F47AEE4B2D19F2D7AE2F6 /* Localizable.xcstrings */; };
 		CFAB272FF2E96C324B660949 /* BookmarkRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA04AE2C1D10979703D70DFE /* BookmarkRow.swift */; };
@@ -190,6 +192,7 @@
 		513B2E69DF93473F7C8A99A8 /* RealServerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealServerTests.swift; sourceTree = "<group>"; };
 		522F4AFD3D2F55F3D10C068D /* LinkdingClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkdingClient.swift; sourceTree = "<group>"; };
 		534D578A11FA7C389A7329EB /* BookmarkListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkListScreen.swift; sourceTree = "<group>"; };
+		5787BC083C709D98B4B1F01D /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		58A32E1839CF86AAA23ACAB9 /* BookmarkSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkSheets.swift; sourceTree = "<group>"; };
 		59E56053AA838035BA7C037D /* DingmarkShare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DingmarkShare.entitlements; sourceTree = "<group>"; };
 		6B82A7322184835162AD9F0C /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -227,6 +230,7 @@
 		D4C7BCF58BFB2B378EF6EF62 /* RelativeAge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeAge.swift; sourceTree = "<group>"; };
 		D750C4F088D33BA6A4AE5615 /* DingmarkWidgets.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = DingmarkWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDC8685870B3AB7A1893667A /* BookmarkFormModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkFormModel.swift; sourceTree = "<group>"; };
+		DE6CE1C3FABFA5325EEB3D65 /* BookmarkStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkStoreTests.swift; sourceTree = "<group>"; };
 		E3657C8BCA226CC0101228FF /* DingmarkApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DingmarkApp.swift; sourceTree = "<group>"; };
 		EA04AE2C1D10979703D70DFE /* BookmarkRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkRow.swift; sourceTree = "<group>"; };
 		EB309178A235941609312DBB /* TagField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagField.swift; sourceTree = "<group>"; };
@@ -278,6 +282,7 @@
 		4A58D2D4B2A25EDD79E38D6D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				5787BC083C709D98B4B1F01D /* AppIcon.icon */,
 				38306DC5FFD7447173D05A24 /* Assets.xcassets */,
 			);
 			path = Resources;
@@ -310,6 +315,7 @@
 				F2D3AE8FFD84934AF03949CF /* BookmarkDecodingTests.swift */,
 				A484E54C6623B6A34018D0E6 /* BookmarkFilterTests.swift */,
 				FA2807DA69A599E1FB40044D /* BookmarkFormModelTests.swift */,
+				DE6CE1C3FABFA5325EEB3D65 /* BookmarkStoreTests.swift */,
 				34D27D48E271B90B2EE96F4F /* LinkdingClientTests.swift */,
 				346F7E99A743999AAE995399 /* LinkdingDateTests.swift */,
 				9621BD9F82D0D759C519B660 /* MockURLProtocol.swift */,
@@ -684,6 +690,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC533DC52B975ED2E6F855AE /* AppIcon.icon in Resources */,
 				D744D024285018B1C9B2E108 /* Assets.xcassets in Resources */,
 				CF7041DD129356263EB72100 /* Localizable.xcstrings in Resources */,
 				FE7C14DA44D1F775D557071F /* PrivacyInfo.xcprivacy in Resources */,
@@ -764,6 +771,7 @@
 				F8DAB2CE6753D0B79C4CD7F5 /* BookmarkDecodingTests.swift in Sources */,
 				D0C12316B931F6956E567584 /* BookmarkFilterTests.swift in Sources */,
 				A84A6255231D152BF4976A5E /* BookmarkFormModelTests.swift in Sources */,
+				86DCC40E91B45C9B663397B3 /* BookmarkStoreTests.swift in Sources */,
 				2FD05CA68391C945C6CDB114 /* LinkdingClientTests.swift in Sources */,
 				44EE8FB30243ECDEB0318E1F /* LinkdingDateTests.swift in Sources */,
 				3C2E6399CEBA3362ECB4F1AA /* MockURLProtocol.swift in Sources */,

@@ -14,19 +14,47 @@ Géométrie (grille 1024) : bande 220 de large, pli à 45°, échancrure 90, mar
 150 en haut et 234 en bas. Les fichiers sont carrés pleins : iOS applique
 lui-même le masque squircle.
 
-## Rendu des PNG du catalogue
+## Icône de l'app : le paquet en couches
 
-`Dingmark/Resources/Assets.xcassets/AppIcon.appiconset/` contient trois PNG
-1024×1024 (light, dark, tinted) rendus par CoreGraphics depuis la même
-géométrie. Ne jamais retoucher les PNG : modifier le script, puis
+`Dingmark/Resources/AppIcon.icon/` est la seule source de l'icône de l'app
+(format Icon Composer, Xcode 26). Il contient `icon.json` et deux couches
+vectorielles dans `Assets/` :
+
+| Couche | Contenu |
+|---|---|
+| `band.svg` | la bande, blanche par défaut, teal `#00C7BE` en apparence sombre |
+| `fold.svg` | le pli, `#007F7A` dans toutes les apparences |
+
+Le fond n'est pas une image mais le `fill` de l'icône : teal `#00C7BE` par
+défaut, `#0A2E2C` en apparence sombre. Le système fabrique lui-même les
+rendus sombre, teinté et Clear à partir de ces couches, et applique le relief
+Liquid Glass (ombre et reflet spéculaire) : aucun PNG d'apparence à fournir.
+`ASSETCATALOG_COMPILER_APPICON_NAME` vaut `AppIcon`, le nom du paquet.
+
+Modifier l'icône = modifier `icon.json` ou les deux SVG de `Assets/`, puis
+rebuilder. Le paquet s'ouvre aussi dans Icon Composer (Xcode > Open Developer
+Tool). Vérifier après coup que les trois apparences sont bien compilées :
+
+```sh
+xcrun assetutil --info <build>/Dingmark.app/Assets.car | grep -A1 "Icon Image"
+# attendu : une rendition par défaut, une UIAppearanceDark, une ISAppearanceTintable
+```
+
+Piège constaté le 2026-09-06 : le SpringBoard du simulateur garde les icônes
+en cache et n'affiche pas le variant sombre même après désinstallation et
+réinstallation (il a même affiché un mélange de deux icônes). La preuve du
+rendu par apparence se lit dans le `.car`, pas sur l'écran d'accueil du
+simulateur.
+
+## Rendu des PNG hors app
+
+`design/icon/render-icon.swift` produit trois PNG 1024 dans `design/icon/out/`
+(ignoré par git) pour les usages hors app : site web, fiche de store, aperçu
+social. Ils ne sont plus l'icône de l'app.
 
 ```sh
 swift design/icon/render-icon.swift
 ```
-
-L'icône light est opaque (App Store Connect refuse un canal alpha sur l'icône
-principale). L'icône tinted est un glyphe gris sur transparence : le système
-fournit le fond et applique la teinte.
 
 Dans l'app, le même dessin est tracé en SwiftUI (`Shared/UI/RibbonMark.swift`)
 pour l'écran de connexion, l'en-tête de la share extension et les widgets :

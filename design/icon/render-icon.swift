@@ -1,7 +1,9 @@
-// Renders the Dingmark "Ruban" icon to the three 1024x1024 PNGs of the asset
-// catalog (light, dark, tinted) with CoreGraphics. The geometry is the one of
-// the SVG sources next to this file (grid 1024: band 220 wide, 45 degree fold).
-// Run from the repo root:  swift design/icon/render-icon.swift
+// Renders the Dingmark "Ruban" icon to 1024x1024 PNGs (light, dark, tinted)
+// with CoreGraphics, from the same geometry as the SVG sources next to this
+// file (grid 1024: band 220 wide, 45 degree fold). These PNGs are NOT the app
+// icon any more: the app icon is the layered AppIcon.icon package, and these
+// renders exist for the places that need a bitmap (web site, store listing,
+// social preview). Run from the repo root:  swift design/icon/render-icon.swift
 import Foundation
 import CoreGraphics
 import ImageIO
@@ -9,7 +11,7 @@ import UniformTypeIdentifiers
 
 let size = 1024
 let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
-let outDir = root.appendingPathComponent("Dingmark/Resources/Assets.xcassets/AppIcon.appiconset")
+let outDir = root.appendingPathComponent("design/icon/out")
 
 let fold: [CGPoint] = [(556,150),(756,350),(756,600),(556,400)].map { CGPoint(x: $0.0, y: $0.1) }
 let band: [CGPoint] = [(336,150),(556,150),(556,790),(446,700),(336,790)].map { CGPoint(x: $0.0, y: $0.1) }
@@ -50,10 +52,9 @@ func render(name: String, background: CGColor?, foldColor: CGColor, bandColor: C
 
 try FileManager.default.createDirectory(at: outDir, withIntermediateDirectories: true)
 // Default appearance: teal ground, white band, deep teal fold. Fully opaque
-// (App Store Connect rejects an alpha channel on the primary icon).
-try render(name: "AppIcon-light.png", background: color(0x00C7BE), foldColor: color(0x007F7A), bandColor: color(0xFFFFFF))
+// (an icon uploaded to a store or used as a social preview takes no alpha).
+try render(name: "icon-light.png", background: color(0x00C7BE), foldColor: color(0x007F7A), bandColor: color(0xFFFFFF))
 // Dark appearance: deep green ground, teal band.
-try render(name: "AppIcon-dark.png", background: color(0x0A2E2C), foldColor: color(0x007F7A), bandColor: color(0x00C7BE))
-// Tinted appearance: grayscale glyph on transparency, the system supplies the
-// tinted ground and maps luminance to the user's tint.
-try render(name: "AppIcon-tinted.png", background: nil, foldColor: color(0x8C8C8C), bandColor: color(0xFFFFFF))
+try render(name: "icon-dark.png", background: color(0x0A2E2C), foldColor: color(0x007F7A), bandColor: color(0x00C7BE))
+// Monochrome glyph on transparency, for a tinted or single-colour context.
+try render(name: "icon-mono.png", background: nil, foldColor: color(0x8C8C8C), bandColor: color(0xFFFFFF))
