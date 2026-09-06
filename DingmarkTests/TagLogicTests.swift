@@ -71,14 +71,37 @@ struct URLDomainTests {
 
 @Suite("RelativeAge")
 struct RelativeAgeTests {
+    // The units, not the rendered strings: Xcode Cloud runs the simulator in
+    // English, where the same age reads "2mo" instead of "2 mois".
     @Test("compact units")
     func units() {
         let now = Date(timeIntervalSince1970: 1_800_000_000)
-        #expect(RelativeAge.string(from: now.addingTimeInterval(-30), now: now) == "maint.")
-        #expect(RelativeAge.string(from: now.addingTimeInterval(-3 * 3600), now: now) == "3 h")
-        #expect(RelativeAge.string(from: now.addingTimeInterval(-2 * 86_400), now: now) == "2 j")
-        #expect(RelativeAge.string(from: now.addingTimeInterval(-8 * 86_400), now: now) == "1 sem.")
-        #expect(RelativeAge.string(from: now.addingTimeInterval(-65 * 86_400), now: now) == "2 mois")
-        #expect(RelativeAge.string(from: now.addingTimeInterval(-400 * 86_400), now: now) == "1 an")
+        #expect(RelativeAge.unit(from: now.addingTimeInterval(-30), now: now) == .now)
+        #expect(RelativeAge.unit(from: now.addingTimeInterval(-3 * 3600), now: now) == .hours(3))
+        #expect(RelativeAge.unit(from: now.addingTimeInterval(-2 * 86_400), now: now) == .days(2))
+        #expect(RelativeAge.unit(from: now.addingTimeInterval(-8 * 86_400), now: now) == .weeks(1))
+        #expect(RelativeAge.unit(from: now.addingTimeInterval(-65 * 86_400), now: now) == .months(2))
+        #expect(RelativeAge.unit(from: now.addingTimeInterval(-400 * 86_400), now: now) == .years(1))
+    }
+
+    @Test("thresholds sit on the right side of each boundary")
+    func boundaries() {
+        let now = Date(timeIntervalSince1970: 1_800_000_000)
+        #expect(RelativeAge.unit(from: now.addingTimeInterval(-59 * 60), now: now) == .now)
+        #expect(RelativeAge.unit(from: now.addingTimeInterval(-60 * 60), now: now) == .hours(1))
+        #expect(RelativeAge.unit(from: now.addingTimeInterval(-6 * 86_400), now: now) == .days(6))
+        #expect(RelativeAge.unit(from: now.addingTimeInterval(-7 * 86_400), now: now) == .weeks(1))
+        #expect(RelativeAge.unit(from: now.addingTimeInterval(-29 * 86_400), now: now) == .weeks(4))
+        #expect(RelativeAge.unit(from: now.addingTimeInterval(-30 * 86_400), now: now) == .months(1))
+        #expect(RelativeAge.unit(from: now.addingTimeInterval(-364 * 86_400), now: now) == .months(12))
+        #expect(RelativeAge.unit(from: now.addingTimeInterval(-365 * 86_400), now: now) == .years(1))
+    }
+
+    @Test("a rendered age is never empty and carries its number")
+    func rendering() {
+        let now = Date(timeIntervalSince1970: 1_800_000_000)
+        let twoDays = RelativeAge.string(from: now.addingTimeInterval(-2 * 86_400), now: now)
+        #expect(twoDays.contains("2"))
+        #expect(!RelativeAge.string(from: now.addingTimeInterval(-30), now: now).isEmpty)
     }
 }
