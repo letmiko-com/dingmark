@@ -3,8 +3,8 @@ import Observation
 import UniformTypeIdentifiers
 
 /// State of the add / edit form, shared by the app sheet and the share
-/// extension. Talks to the API directly; the caller merges the saved bookmark
-/// into its own store.
+/// extension. The app injects the store's ordered API; the extension uses
+/// its own client and merges the saved bookmark into the shared cache.
 @MainActor @Observable
 final class BookmarkFormModel {
     enum Mode: Equatable {
@@ -208,6 +208,9 @@ final class BookmarkFormModel {
             }
             saveError = nil
             return saved
+        } catch is CancellationError {
+            saveError = nil
+            throw CancellationError()
         } catch let error as LinkdingError {
             saveError = error
             throw error

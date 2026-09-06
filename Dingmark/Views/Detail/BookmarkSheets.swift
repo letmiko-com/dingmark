@@ -1,12 +1,11 @@
 import SwiftUI
 
-/// Builds the form model from the session and the store, then hands the
-/// saved bookmark back to the store.
+/// Builds the form model with the store's session-bound API, so saving uses
+/// the same ordered writes as list actions.
 struct AddBookmarkSheet: View {
     var prefillURL: String?
     var prefillTitle: String?
 
-    @Environment(Session.self) private var session
     @Environment(BookmarkStore.self) private var store
     @Environment(\.dismiss) private var dismiss
     @AppStorage(SettingsKey.defaultTags, store: AppGroup.defaults) private var defaultTagsRaw = ""
@@ -17,8 +16,7 @@ struct AddBookmarkSheet: View {
     var body: some View {
         Group {
             if let model {
-                BookmarkFormView(model: model) { saved in
-                    store.upsert(saved)
+                BookmarkFormView(model: model) { _ in
                     dismiss()
                 } onCancel: {
                     dismiss()
@@ -28,7 +26,7 @@ struct AddBookmarkSheet: View {
             }
         }
         .task {
-            guard model == nil, let api = session.makeAPI() else { return }
+            guard model == nil, let api = store.makeFormAPI() else { return }
             model = BookmarkFormModel(
                 api: api,
                 mode: .create,
@@ -47,7 +45,6 @@ struct AddBookmarkSheet: View {
 struct EditBookmarkSheet: View {
     let bookmark: Bookmark
 
-    @Environment(Session.self) private var session
     @Environment(BookmarkStore.self) private var store
     @Environment(\.dismiss) private var dismiss
 
@@ -56,8 +53,7 @@ struct EditBookmarkSheet: View {
     var body: some View {
         Group {
             if let model {
-                BookmarkFormView(model: model) { saved in
-                    store.upsert(saved)
+                BookmarkFormView(model: model) { _ in
                     dismiss()
                 } onCancel: {
                     dismiss()
@@ -67,7 +63,7 @@ struct EditBookmarkSheet: View {
             }
         }
         .task {
-            guard model == nil, let api = session.makeAPI() else { return }
+            guard model == nil, let api = store.makeFormAPI() else { return }
             model = BookmarkFormModel(
                 api: api,
                 mode: .edit(bookmark),

@@ -20,7 +20,7 @@ Dingmark talks to your own linkding server and to nothing else. No account, no c
 - **Share extension**: save any page from Safari or another app in two taps, with your default tags.
 - **Widgets**: unread bookmarks on the Home Screen and the Lock Screen, with an add shortcut.
 - **iPad**: three-column layout (filters and tags, list, detail).
-- **Offline**: the last synchronised state stays readable; changes are applied optimistically and rolled back if the server refuses them.
+- **Offline**: the last confirmed server state stays readable; changes appear immediately in the app and are rolled back if the server refuses them. Pending changes are not stored in the offline cache.
 - **Self-signed certificates**: refused by default, then trusted per server after you confirm the certificate fingerprint.
 - French and English.
 
@@ -98,7 +98,8 @@ Design choices:
 
 - **Apple technologies only**: SwiftUI, Observation, WidgetKit, App Groups, Keychain, URLSession, SafariServices. No third-party dependency.
 - **System components first**: `List(.plain)`, `.searchable`, `.swipeActions`, `.contextMenu(preview:)`, `ContentUnavailableView`, `.redacted`, `NavigationSplitView`, `Tab`, `.glassProminent`. Three custom views, because no system control covers them: the filter bar (scrolling, counters), the tag field (removable chips, suggestions) and the `SFSafariViewController` wrapper.
-- **Optimistic updates everywhere**: local state first, request second, silent rollback and a discreet banner on failure.
+- **Ordered optimistic updates**: list actions and form edits appear immediately. Writes to the same bookmark run in order; a failed write rolls back only its own change, preserving later actions. Creates also wait for earlier writes because linkding may return an existing bookmark for a duplicate URL.
+- **Refresh and session isolation**: refreshes wait for pending writes and retry if a write overlaps a fetched snapshot. Signing out cancels pending work and invalidates late responses, including open forms. The cache and widgets contain confirmed server values only.
 - **Cache in the App Group**: offline reading, widget data, updated by the share extension, refreshed when the app returns to the foreground.
 - **Token in the Keychain**, shared through the App Group, never in preferences or logs.
 - **Self-signed certificates**: refused by default; the SHA-256 fingerprint is pinned after an explicit confirmation on the sign-in screen.
@@ -109,7 +110,9 @@ Design choices:
 
 ## Tests
 
-- **Unit tests** (`DingmarkTests`, Swift Testing): API client against a mocked `URLProtocol`, JSON and date decoding, filters, tag logic, form model.
+The Xcode Cloud workflow runs the `Dingmark` scheme's tests on an iPhone 17 simulator using the selected Xcode's default iOS runtime. The test action is required to pass for the workflow to succeed. Server integration tests are skipped unless a throwaway linkding is configured; iPad-only tests are skipped on iPhone.
+
+- **Unit tests** (`DingmarkTests`, Swift Testing): API client against a mocked `URLProtocol`, JSON and date decoding, filters, tag logic, form model. Store regression tests explicitly control the order of network responses to cover rapid actions, rollback, refresh races, duplicate creation, cancellation and session changes without timing-dependent sleeps.
 - **Screenshots** (`ScreenshotTests`): the demo app in light, dark and English, plus the sign-in screen. Regenerate with `-only-testing:DingmarkUITests/ScreenshotTests` and export the attachments with `xcrun xcresulttool export attachments`.
 - **Exploratory UI flows**, one screenshot per step: `ExploratoryDemoTests` (iPhone, demo data), `ExploratoryPadTests` (split view, skipped on iPhone) and `RealServerTests`, which exercises sign-in, pagination, every mutation and the share extension against a real linkding and checks the server state through the API. It is skipped unless a server is configured:
 

@@ -23,6 +23,7 @@ struct RootView: View {
                 store.configure(api: session.makeAPI())
                 store.loadFromCache()
                 await store.refresh()
+                guard !Task.isCancelled, session.isConnected else { return }
                 let active = store.bookmarks.filter { !$0.isArchived }.count
                 if store.loadError == nil, active > 0 { session.recordBookmarkCount(active) }
             } else {
