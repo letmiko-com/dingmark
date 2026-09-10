@@ -103,13 +103,13 @@ final class DemoLinkdingClient: LinkdingAPI, @unchecked Sendable {
     }
 
     private func apply(_ draft: BookmarkDraft, to b: inout Bookmark) {
-        b.title = draft.title
-        b.description = draft.description
-        b.notes = draft.notes
-        b.isArchived = draft.isArchived
+        if !draft.title.isEmpty { b.title = draft.title }
+        if !draft.description.isEmpty { b.description = draft.description }
+        if !draft.notes.isEmpty { b.notes = draft.notes }
+        if draft.isArchived { b.isArchived = true }
         b.unread = draft.unread
-        b.shared = draft.shared
-        b.tagNames = draft.tagNames
+        if draft.shared { b.shared = true }
+        if !draft.tagNames.isEmpty { b.tagNames = draft.tagNames }
         b.dateModified = .now
         tags.formUnion(draft.tagNames)
     }

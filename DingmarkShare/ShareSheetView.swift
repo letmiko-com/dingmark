@@ -110,7 +110,6 @@ struct ShareSheetView: View {
                                 .keyboardType(.URL)
                                 .textInputAutocapitalization(.never)
                                 .autocorrectionDisabled()
-                                .onChange(of: model.url) { _, _ in model.urlDidChange() }
                         }
                         if model.isFetching { ProgressView().controlSize(.small) }
                     }

@@ -99,6 +99,20 @@ struct BookmarkDraft: Codable, Hashable, Sendable {
     var unread: Bool = false
     var shared: Bool = false
     var tagNames: [String] = []
+
+    // POST can become an update when another client creates this URL between
+    // our check and our save. Omit empty/default fields that need not erase it.
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(url, forKey: .url)
+        if !title.isEmpty { try container.encode(title, forKey: .title) }
+        if !description.isEmpty { try container.encode(description, forKey: .description) }
+        if !notes.isEmpty { try container.encode(notes, forKey: .notes) }
+        if isArchived { try container.encode(true, forKey: .isArchived) }
+        try container.encode(unread, forKey: .unread)
+        if shared { try container.encode(true, forKey: .shared) }
+        if !tagNames.isEmpty { try container.encode(tagNames, forKey: .tagNames) }
+    }
 }
 
 /// Body of `PATCH /api/bookmarks/<id>/`: only the provided fields change.

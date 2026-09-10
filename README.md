@@ -16,7 +16,7 @@ Dingmark talks to your own linkding server and to nothing else. No account, no c
 
 - **Bookmarks list** with search, quick filters (all, unread, archived, untagged) and per-tag filtering. Search and filters run on a local cache, so they work offline.
 - **Detail** with Markdown notes, tags, unread toggle, in-app Safari or system Safari, copy and share.
-- **Add and edit** with a paste button, metadata fetched from your server (title, description, suggested tags) and duplicate detection: adding a URL you already saved updates that bookmark instead of creating another.
+- **Add and edit** with a paste button, metadata fetched from your server (title, description, suggested tags) and a duplicate check required before saving: adding a URL you already saved updates that bookmark instead of creating another.
 - **Share extension**: save any page from Safari or another app in two taps, with your default tags.
 - **Widgets**: unread bookmarks on the Home Screen and the Lock Screen, with an add shortcut.
 - **iPad**: three-column layout (filters and tags, list, detail).
@@ -98,6 +98,7 @@ Design choices:
 
 - **Apple technologies only**: SwiftUI, Observation, WidgetKit, App Groups, Keychain, URLSession, SafariServices. No third-party dependency.
 - **System components first**: `List(.plain)`, `.searchable`, `.swipeActions`, `.contextMenu(preview:)`, `ContentUnavailableView`, `.redacted`, `NavigationSplitView`, `Tab`, `.glassProminent`. Three custom views, because no system control covers them: the filter bar (scrolling, counters), the tag field (removable chips, suggestions) and the `SFSafariViewController` wrapper.
+- **Safe form writes**: URL changes immediately invalidate duplicate data. Saving waits for a successful check of the current URL; failed checks do not become creates. Edits send only changed fields. Empty/default create fields are omitted where possible, but the linkding API does not offer an atomic create-if-absent operation across devices.
 - **Complete snapshots**: a pagination limit or an empty intermediate page is reported as an incomplete sync and leaves the confirmed cache intact.
 - **Ordered optimistic updates**: list actions and form edits appear immediately. Writes to the same bookmark run in order; a failed write rolls back only its own change, preserving later actions. Creates also wait for earlier writes because linkding may return an existing bookmark for a duplicate URL.
 - **Refresh and session isolation**: refreshes wait for pending writes and retry if a write overlaps a fetched snapshot. Signing out cancels pending work and invalidates late responses, including open forms. The cache and widgets contain confirmed server values only.

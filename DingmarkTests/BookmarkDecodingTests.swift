@@ -69,10 +69,10 @@ struct BookmarkDecodingTests {
 
     @Test("drafts and patches are sent in snake_case, nil fields omitted")
     func encodesPayloads() throws {
-        let draft = BookmarkDraft(url: "https://a.b", title: "T", unread: true, tagNames: ["x"])
+        let draft = BookmarkDraft(url: "https://a.b", title: "T", isArchived: true, unread: true, tagNames: ["x"])
         let draftJSON = try #require(String(data: LinkdingJSON.makeEncoder().encode(draft), encoding: .utf8))
         #expect(draftJSON.contains("\"tag_names\":[\"x\"]"))
-        #expect(draftJSON.contains("\"is_archived\":false"))
+        #expect(draftJSON.contains("\"is_archived\":true"))
 
         let patch = BookmarkPatch(unread: false)
         let patchJSON = try #require(String(data: LinkdingJSON.makeEncoder().encode(patch), encoding: .utf8))
