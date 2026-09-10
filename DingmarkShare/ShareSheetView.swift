@@ -172,15 +172,12 @@ struct ShareSheetView: View {
         Task {
             defer { saving = false }
             guard let bookmark = try? await model.save() else { return }
-            // Keep the app and the widgets in sync without waiting for the
-            // next refresh.
-            if var snapshot = BookmarkCache.shared.load() {
-                snapshot.bookmarks.removeAll { $0.id == bookmark.id }
-                snapshot.bookmarks.insert(bookmark, at: 0)
-                for tag in bookmark.tagNames where !snapshot.tags.contains(tag) { snapshot.tags.append(tag) }
-                BookmarkCache.shared.save(snapshot)
-                WidgetCenter.shared.reloadAllTimelines()
+            guard let sessionID = session.cacheSessionID,
+                  BookmarkCache.shared.update(sessionID: sessionID, { $0.upsert(bookmark) }) != nil else {
+                model.saveError = .notConfigured
+                return
             }
+            WidgetCenter.shared.reloadAllTimelines()
             saved = true
             try? await Task.sleep(for: .milliseconds(250))
             onFinish()

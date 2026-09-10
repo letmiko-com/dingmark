@@ -18,7 +18,7 @@ struct DingmarkApp: App {
         let cache = demo
             ? BookmarkCache(fileURL: FileManager.default.temporaryDirectory.appendingPathComponent("dingmark-demo-cache.json"))
             : BookmarkCache.shared
-        _store = State(initialValue: BookmarkStore(api: session.makeAPI(), cache: cache))
+        _store = State(initialValue: BookmarkStore(api: session.makeAPI(), cache: cache, cacheSessionID: session.cacheSessionID))
     }
 
     var body: some Scene {

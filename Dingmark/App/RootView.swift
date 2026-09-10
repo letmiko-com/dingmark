@@ -20,7 +20,7 @@ struct RootView: View {
         }
         .task(id: session.isConnected) {
             if session.isConnected {
-                store.configure(api: session.makeAPI())
+                store.configure(api: session.makeAPI(), cacheSessionID: session.cacheSessionID)
                 store.loadFromCache()
                 await store.refresh()
                 guard !Task.isCancelled, session.isConnected else { return }

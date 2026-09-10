@@ -17,6 +17,7 @@ enum AppGroup {
 /// Keys of the App Group defaults (`@AppStorage(_, store: AppGroup.defaults)`).
 enum SettingsKey {
     static let serverURL = "serverURL"
+    static let cacheSessionID = "cacheSessionID"
     static let openLinksInApp = "openLinksInApp"
     static let unreadByDefault = "unreadByDefault"
     static let listDensity = "listDensity"

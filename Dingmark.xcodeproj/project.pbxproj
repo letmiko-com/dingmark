@@ -110,6 +110,7 @@
 		F154FB1B6DD062EDAC98C63A /* BookmarkStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F262CCED9206E94C2E87392C /* BookmarkStore.swift */; };
 		F21DCF0D95A8C17CBE9A17FA /* BookmarkFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4088245021E70357117E91E3 /* BookmarkFilter.swift */; };
 		F25F11CA5E8B753BA4A13B35 /* DingmarkWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D750C4F088D33BA6A4AE5615 /* DingmarkWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F2741B0AD491F27121A297DE /* BookmarkCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C205D0DEF42F56D756EC3497 /* BookmarkCacheTests.swift */; };
 		F435D5743E404708F578B86D /* DemoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29BD49BF6FC662B419729241 /* DemoData.swift */; };
 		F4C649EE231D44A89A53689F /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 747F47AEE4B2D19F2D7AE2F6 /* Localizable.xcstrings */; };
 		F4E1C5DAEC5610B58705F231 /* BookmarkFormModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC8685870B3AB7A1893667A /* BookmarkFormModel.swift */; };
@@ -223,6 +224,7 @@
 		B4B1D570ACD51904782D739D /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
 		BADA777E2E7CE3D7BA4F0550 /* QuickFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickFilterBar.swift; sourceTree = "<group>"; };
 		BBA401EC5EC399A870A162C4 /* DingmarkTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = DingmarkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C205D0DEF42F56D756EC3497 /* BookmarkCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkCacheTests.swift; sourceTree = "<group>"; };
 		C777482AE447EE4D8BC38C1A /* DingmarkUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = DingmarkUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C79685D7370451C074B9A285 /* TagChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChip.swift; sourceTree = "<group>"; };
 		C9F570E7DF494CB2843C0D37 /* ShareSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheetView.swift; sourceTree = "<group>"; };
@@ -312,6 +314,7 @@
 		5B81E94B560E5377A5D4490A /* DingmarkTests */ = {
 			isa = PBXGroup;
 			children = (
+				C205D0DEF42F56D756EC3497 /* BookmarkCacheTests.swift */,
 				F2D3AE8FFD84934AF03949CF /* BookmarkDecodingTests.swift */,
 				A484E54C6623B6A34018D0E6 /* BookmarkFilterTests.swift */,
 				FA2807DA69A599E1FB40044D /* BookmarkFormModelTests.swift */,
@@ -768,6 +771,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F2741B0AD491F27121A297DE /* BookmarkCacheTests.swift in Sources */,
 				F8DAB2CE6753D0B79C4CD7F5 /* BookmarkDecodingTests.swift in Sources */,
 				D0C12316B931F6956E567584 /* BookmarkFilterTests.swift in Sources */,
 				A84A6255231D152BF4976A5E /* BookmarkFormModelTests.swift in Sources */,

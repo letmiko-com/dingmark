@@ -102,7 +102,7 @@ Design choices:
 - **Complete snapshots**: a pagination limit or an empty intermediate page is reported as an incomplete sync and leaves the confirmed cache intact.
 - **Ordered optimistic updates**: list actions and form edits appear immediately. Writes to the same bookmark run in order; a failed write rolls back only its own change, preserving later actions. Creates also wait for earlier writes because linkding may return an existing bookmark for a duplicate URL.
 - **Refresh and session isolation**: refreshes wait for pending writes and retry if a write overlaps a fetched snapshot. Signing out cancels pending work and invalidates late responses, including open forms. The cache and widgets contain confirmed server values only.
-- **Cache in the App Group**: offline reading, widget data, updated by the share extension, refreshed when the app returns to the foreground.
+- **Cache in the App Group**: a file lock coordinates app and extension transactions. Confirmed mutations merge into the latest disk snapshot; refreshes retry if another writer changes it. The app reloads the cache before a foreground refresh, including offline. A login identity rejects late writes from a signed-out extension.
 - **Token in the Keychain**, shared through the App Group, never in preferences or logs.
 - **Self-signed certificates**: refused by default; the SHA-256 fingerprint is pinned after an explicit confirmation on the sign-in screen.
 

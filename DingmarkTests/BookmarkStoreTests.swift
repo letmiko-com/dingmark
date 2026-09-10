@@ -353,6 +353,71 @@ struct BookmarkStoreTests {
         await refresh.value
         #expect(store.bookmarks == [second, first])
     }
+
+    @Test("an app mutation merges a share even before a foreground refresh")
+    func mutationPreservesShare() async throws {
+        let api = ControlledStoreAPI()
+        var events = api.events.makeAsyncIterator()
+        let (store, cache) = makeStore(api, bookmarks: [first])
+        defer { cache.clear() }
+        let extensionCache = BookmarkCache(fileURL: cache.fileURL)
+        extensionCache.update(sessionID: nil) { $0.upsert(second) }
+        let toggle = try #require(store.toggleUnread(first))
+        var saved = first
+        saved.unread = true
+        await api.succeed(try #require(await events.next()), with: .bookmark(saved))
+        _ = try await toggle.value
+        #expect(store.bookmarks.map(\.id) == [2, 1])
+        #expect(cache.load()?.bookmarks.map(\.id) == [2, 1])
+    }
+
+    @Test("foreground refresh loads a shared bookmark even when offline")
+    func offlineShare() async throws {
+        let api = ControlledStoreAPI()
+        var events = api.events.makeAsyncIterator()
+        let (store, cache) = makeStore(api, bookmarks: [first])
+        defer { cache.clear() }
+        BookmarkCache(fileURL: cache.fileURL).update(sessionID: nil) { $0.upsert(second) }
+        let refresh = Task { await store.refresh() }
+        await api.fail(try #require(await events.next()), error: .unreachable(host: "example.org"))
+        await refresh.value
+        #expect(store.isOffline)
+        #expect(store.bookmarks == [second, first])
+    }
+
+    @Test("a share completed during a GET invalidates that snapshot")
+    func shareDuringRefresh() async throws {
+        let api = ControlledStoreAPI()
+        var events = api.events.makeAsyncIterator()
+        let (store, cache) = makeStore(api, bookmarks: [first])
+        defer { cache.clear() }
+        let refresh = Task { await store.refresh() }
+        let request = try #require(await events.next())
+        BookmarkCache(fileURL: cache.fileURL).update(sessionID: nil) { $0.upsert(second) }
+        await api.succeed(request, with: .bookmarks([first]))
+        let retry = try #require(await events.next())
+        #expect(retry.kind == .fetch)
+        await api.fail(retry)
+        await refresh.value
+        #expect(store.bookmarks == [second, first])
+        #expect(cache.load()?.bookmarks == [second, first])
+    }
+
+    @Test("incomplete pagination preserves the confirmed cache")
+    func incompleteRefresh() async throws {
+        let api = ControlledStoreAPI()
+        var events = api.events.makeAsyncIterator()
+        let (store, cache) = makeStore(api, bookmarks: [first, second])
+        defer { cache.clear() }
+        let before = cache.load()?.revision
+        let refresh = Task { await store.refresh() }
+        await api.fail(try #require(await events.next()), error: .incompletePagination)
+        await refresh.value
+        #expect(store.loadError == .incompletePagination)
+        #expect(store.bookmarks == [first, second])
+        #expect(cache.load()?.revision == before)
+    }
+
 }
 
 /// Requests finish only when the test releases them. Cancellation is
@@ -399,8 +464,8 @@ private actor ControlledStoreAPI: LinkdingAPI {
         pending.removeValue(forKey: request.id)?.resume(returning: response)
     }
 
-    func fail(_ request: Request) {
-        pending.removeValue(forKey: request.id)?.resume(throwing: LinkdingError.http(status: 500))
+    func fail(_ request: Request, error: LinkdingError = .http(status: 500)) {
+        pending.removeValue(forKey: request.id)?.resume(throwing: error)
     }
 
     func testConnection() async throws -> Int { 0 }

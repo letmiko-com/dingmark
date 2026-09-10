@@ -17,6 +17,7 @@ final class Session {
     private let cache: BookmarkCache
     private let trustStore: TrustStore
     private let apiFactory: (URL, String) -> LinkdingAPI
+    private(set) var cacheSessionID: UUID?
     private(set) var serverURL: URL?
     private(set) var hasToken: Bool
     private(set) var bookmarkCount: Int?
@@ -45,6 +46,15 @@ final class Session {
             hasToken = tokenStorage.readToken() != nil
             let count = defaults.integer(forKey: SettingsKey.bookmarkCount)
             bookmarkCount = count > 0 ? count : nil
+            if let serverURL, hasToken {
+                if let stored = defaults.string(forKey: SettingsKey.cacheSessionID).flatMap(UUID.init(uuidString:)) {
+                    cacheSessionID = stored
+                } else {
+                    let id = cache.startSession(serverHost: serverURL.absoluteString, migrating: true)
+                    defaults.set(id.uuidString, forKey: SettingsKey.cacheSessionID)
+                    cacheSessionID = id
+                }
+            }
         }
     }
 
@@ -65,6 +75,9 @@ final class Session {
             defaults.set(url.absoluteString, forKey: SettingsKey.serverURL)
             defaults.set(count, forKey: SettingsKey.bookmarkCount)
             _ = tokenStorage.writeToken(trimmedToken)
+            let id = cache.startSession(serverHost: url.absoluteString)
+            cacheSessionID = id
+            defaults.set(id.uuidString, forKey: SettingsKey.cacheSessionID)
             pendingLogin = (url, count)
             return nil
         } catch let error as LinkdingError {
@@ -103,7 +116,9 @@ final class Session {
         tokenStorage.deleteToken()
         defaults.removeObject(forKey: SettingsKey.serverURL)
         defaults.removeObject(forKey: SettingsKey.bookmarkCount)
-        cache.clear()
+        defaults.removeObject(forKey: SettingsKey.cacheSessionID)
+        cache.clear(sessionID: cacheSessionID)
+        cacheSessionID = nil
         serverURL = nil
         hasToken = false
         bookmarkCount = nil

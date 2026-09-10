@@ -30,6 +30,7 @@ final class BookmarkStore {
 
     private var api: LinkdingAPI?
     private let cache: BookmarkCache
+    private var cacheSessionID: UUID?
     private var refreshTask: Task<Void, Never>?
     private var refreshID: UUID?
     private var sessionID = UUID()
@@ -89,14 +90,16 @@ final class BookmarkStore {
         let date = Date.now
     }
 
-    init(api: LinkdingAPI?, cache: BookmarkCache = .shared) {
+    init(api: LinkdingAPI?, cache: BookmarkCache = .shared, cacheSessionID: UUID? = nil) {
         self.api = api
         self.cache = cache
+        self.cacheSessionID = cacheSessionID
     }
 
-    func configure(api: LinkdingAPI?) {
+    func configure(api: LinkdingAPI?, cacheSessionID: UUID? = nil) {
         invalidateRequests()
         self.api = api
+        self.cacheSessionID = cacheSessionID
         publishBookmarks()
     }
 
@@ -137,7 +140,7 @@ final class BookmarkStore {
     // MARK: Loading
 
     func loadFromCache() {
-        guard let snapshot = cache.load() else { return }
+        guard let snapshot = cache.load(sessionID: cacheSessionID) else { return }
         confirmed = snapshot.bookmarks
         publishBookmarks()
         knownTags = snapshot.tags
@@ -147,6 +150,7 @@ final class BookmarkStore {
 
     func refresh() async {
         guard let api, !isLoading else { return }
+        loadFromCache()
         let id = UUID()
         let session = sessionID
         refreshID = id
@@ -174,7 +178,7 @@ final class BookmarkStore {
         tagFilter = nil
         query = ""
         toast = nil
-        cache.clear()
+        cache.clear(sessionID: cacheSessionID)
         WidgetCenter.shared.reloadAllTimelines()
     }
 
@@ -234,6 +238,7 @@ final class BookmarkStore {
             guard session == sessionID, !Task.isCancelled else { return }
             if !writes.isEmpty { continue }
             let startRevision = revision
+            let diskRevision = cache.load(sessionID: cacheSessionID)?.revision
             do {
                 async let fetched = api.fetchAllBookmarks()
                 async let tags = api.fetchTags()
@@ -242,6 +247,16 @@ final class BookmarkStore {
                 // A write during the GET makes this snapshot obsolete, even
                 // if the write has already completed. Fetch again after it.
                 if revision != startRevision { continue }
+                let snapshot = CacheSnapshot(bookmarks: list, tags: names, syncedAt: .now,
+                                             serverHost: cache.load(sessionID: cacheSessionID)?.serverHost,
+                                             sessionID: cacheSessionID)
+                switch cache.replace(snapshot, ifUnchangedSince: diskRevision) {
+                case .changed:
+                    loadFromCache()
+                    continue
+                case .invalidSession: return
+                case .saved, .unavailable: break
+                }
                 confirmed = list
                 knownTags = names
                 lastSync = .now
@@ -249,7 +264,7 @@ final class BookmarkStore {
                 loadError = nil
                 hasLoadedOnce = true
                 publishBookmarks()
-                persist()
+                WidgetCenter.shared.reloadAllTimelines()
                 return
             } catch {
                 guard session == sessionID, !Task.isCancelled else { return }
@@ -305,7 +320,7 @@ final class BookmarkStore {
                     operation.apply(to: &self.confirmed, at: write.date)
                 }
                 self.finish(write)
-                self.persist()
+                self.persist(operation, saved: saved)
                 if fromForm {
                     self.successCount += 1
                     self.show(String(localized: "Enregistré"))
@@ -340,10 +355,17 @@ final class BookmarkStore {
         bookmarks = list
     }
 
-    private func persist() {
-        // Pending intents stay in memory. Killing the app mid-request must
-        // not leave an unconfirmed change in the offline cache or widgets.
-        cache.save(CacheSnapshot(bookmarks: confirmed, tags: knownTags, syncedAt: lastSync ?? .now, serverHost: nil))
+    private func persist(_ operation: Write, saved: Bookmark?) {
+        // Read/modify/write is one interprocess transaction. An extension's
+        // unrelated bookmark must survive an app mutation with an old list.
+        if let snapshot = cache.update(sessionID: cacheSessionID, { snapshot in
+            if let saved { snapshot.upsert(saved) }
+            else { operation.apply(to: &snapshot.bookmarks, at: .now) }
+        }) {
+            confirmed = snapshot.bookmarks
+            knownTags = snapshot.tags
+            publishBookmarks()
+        }
         WidgetCenter.shared.reloadAllTimelines()
     }
 
