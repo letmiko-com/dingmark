@@ -73,7 +73,7 @@ final class Session {
             case .unauthorized: return .unauthorized
             case .untrustedCertificate(let host): return .untrustedCertificate(host: host)
             case .unreachable(let host): return .unreachable(host: host)
-            case .http, .decoding, .notConfigured: return .unreachable(host: url.host() ?? "")
+            case .http, .decoding, .incompletePagination, .notConfigured: return .unreachable(host: url.host() ?? "")
             }
         } catch {
             return .unreachable(host: url.host() ?? "")

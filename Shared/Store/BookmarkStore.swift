@@ -260,6 +260,7 @@ final class BookmarkStore {
                         isOffline = true
                         if bookmarks.isEmpty { loadError = error }
                     } else {
+                        isOffline = false
                         loadError = error
                     }
                 } else {

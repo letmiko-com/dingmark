@@ -7,13 +7,17 @@ final class LinkdingClient: LinkdingAPI, @unchecked Sendable {
     private let session: URLSession
     private let trustDelegate: ServerTrustDelegate
     private let trustStore: TrustStore
-    private let pageSize = 100
+    private let pageSize: Int
     /// Safety net against a runaway pagination loop.
-    private let maxPages = 200
+    private let maxPages: Int
 
     var host: String { baseURL.host() ?? baseURL.absoluteString }
 
-    init(baseURL: URL, token: String, trustStore: TrustStore = .shared, configuration: URLSessionConfiguration = .default) {
+    init(baseURL: URL, token: String, trustStore: TrustStore = .shared, configuration: URLSessionConfiguration = .default,
+         pageSize: Int = 100, maxPages: Int = 200) {
+        precondition(pageSize > 0 && maxPages > 0)
+        self.pageSize = pageSize
+        self.maxPages = maxPages
         self.baseURL = baseURL
         self.token = token.trimmingCharacters(in: .whitespacesAndNewlines)
         configuration.timeoutIntervalForRequest = 10
@@ -51,9 +55,12 @@ final class LinkdingClient: LinkdingAPI, @unchecked Sendable {
             let page: Page<TagDTO> = try await get("api/tags/", query: [("limit", "\(pageSize)"), ("offset", "\(offset)")])
             names += page.results.map(\.name)
             offset += page.results.count
-            if page.next == nil || page.results.isEmpty { break }
+            if page.next == nil {
+                return Array(Set(names)).sorted { $0.localizedStandardCompare($1) == .orderedAscending }
+            }
+            if page.results.isEmpty { throw LinkdingError.incompletePagination }
         }
-        return Array(Set(names)).sorted { $0.localizedStandardCompare($1) == .orderedAscending }
+        throw LinkdingError.incompletePagination
     }
 
     func check(url: String) async throws -> CheckResponse {
@@ -89,9 +96,10 @@ final class LinkdingClient: LinkdingAPI, @unchecked Sendable {
             let page: Page<Bookmark> = try await get(path, query: [("limit", "\(pageSize)"), ("offset", "\(offset)")])
             items += page.results
             offset += page.results.count
-            if page.next == nil || page.results.isEmpty { break }
+            if page.next == nil { return items }
+            if page.results.isEmpty { throw LinkdingError.incompletePagination }
         }
-        return items
+        throw LinkdingError.incompletePagination
     }
 
     private func get<T: Decodable>(_ path: String, query: [(String, String)] = []) async throws -> T {

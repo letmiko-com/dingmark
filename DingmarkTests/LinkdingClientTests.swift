@@ -112,6 +112,37 @@ struct LinkdingClientTests {
         } ?? Data()
         #expect(String(data: body, encoding: .utf8) == "{\"unread\":true}")
     }
+
+    @Test("a pagination limit never returns an apparently complete collection", arguments: [false, true])
+    func paginationLimit(tags: Bool) async throws {
+        MockURLProtocol.reset()
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [MockURLProtocol.self]
+        let client = LinkdingClient(baseURL: URL(string: "https://links.example.org")!, token: UUID().uuidString,
+                                    configuration: config, pageSize: 1, maxPages: 2)
+        MockURLProtocol.handler = { request in
+            let results = tags ? "{\"id\": 1, \"name\": \"tag\"}" : self.bookmark(1)
+            if request.url!.path.contains("archived") {
+                return MockURLProtocol.json(200, "{\"count\":0,\"next\":null,\"results\":[]}", for: request)
+            }
+            return MockURLProtocol.json(200, "{\"count\":3,\"next\":\"more\",\"results\":[\(results)]}", for: request)
+        }
+        await #expect(throws: LinkdingError.incompletePagination) {
+            if tags { _ = try await client.fetchTags() }
+            else { _ = try await client.fetchAllBookmarks() }
+        }
+    }
+
+    @Test("an empty page with a next link is an incomplete response")
+    func emptyIntermediatePage() async {
+        MockURLProtocol.reset()
+        let client = makeClient()
+        MockURLProtocol.handler = { request in
+            MockURLProtocol.json(200, "{\"count\":12,\"next\":\"more\",\"results\":[]}", for: request)
+        }
+        await #expect(throws: LinkdingError.incompletePagination) { _ = try await client.fetchTags() }
+    }
+
 }
 
 @Suite("LinkdingClient cancellation", .serialized)

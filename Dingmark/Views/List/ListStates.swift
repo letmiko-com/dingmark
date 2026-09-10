@@ -112,6 +112,7 @@ struct ServerErrorView: View {
         switch error {
         case .unauthorized: "Jeton refusé"
         case .untrustedCertificate: "Certificat non reconnu"
+        case .incompletePagination: "Synchronisation incomplète"
         default: "Serveur injoignable"
         }
     }

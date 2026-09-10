@@ -14,6 +14,8 @@ enum LinkdingError: Error, Equatable, Sendable {
     case http(status: Int)
     /// The body did not decode.
     case decoding
+    /// Pagination stopped before the server reported its final page.
+    case incompletePagination
     /// No server or token configured yet.
     case notConfigured
 
