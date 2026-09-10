@@ -67,8 +67,20 @@ final class TrustStore: @unchecked Sendable {
 /// `serverCertificateUntrusted` error the UI turns into a "trust" offer.
 final class ServerTrustDelegate: NSObject, URLSessionDelegate {
     private let store: TrustStore
+    private let pinnedOrigin: URL?
 
-    init(store: TrustStore) { self.store = store }
+    init(store: TrustStore, pinnedOrigin: URL? = nil) {
+        self.store = store
+        self.pinnedOrigin = pinnedOrigin
+    }
+
+    func permitsPin(host: String, port: Int, scheme: String?) -> Bool {
+        guard let pinnedOrigin else { return true }
+        return pinnedOrigin.host()?.lowercased() == host.lowercased()
+            && (pinnedOrigin.port ?? 443) == port
+            && scheme?.lowercased() == "https"
+            && pinnedOrigin.scheme?.lowercased() == "https"
+    }
 
     func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge,
                     completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
@@ -78,6 +90,10 @@ final class ServerTrustDelegate: NSObject, URLSessionDelegate {
             return
         }
         let host = challenge.protectionSpace.host
+        guard permitsPin(host: host, port: challenge.protectionSpace.port, scheme: challenge.protectionSpace.protocol) else {
+            completionHandler(.performDefaultHandling, nil)
+            return
+        }
         var error: CFError?
         if SecTrustEvaluateWithError(trust, &error) {
             completionHandler(.performDefaultHandling, nil)

@@ -24,6 +24,7 @@
 		166D46BC99DFE4E186FB2F55 /* TagListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1351C467CA13422989255E2A /* TagListScreen.swift */; };
 		18752EA9B23F80FC428DAC39 /* LinkdingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F719AFF336541A96693F2DA3 /* LinkdingAPI.swift */; };
 		1E9575B3736C9D7599EE2084 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C9CCF89BA12C7114239456 /* Theme.swift */; };
+		201B70A118146C121302D746 /* ServerImageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68315C487DCE1DF05E867E5B /* ServerImageTests.swift */; };
 		203CA873D502F1724124D0C1 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90776E42A6E741CD8A0B8248 /* AppGroup.swift */; };
 		26EABBF9B80EA9155DF84F73 /* BookmarkFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CC3A32CF87F344204B0261B /* BookmarkFormView.swift */; };
 		27C222B33347EAD59960BF1D /* TagChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79685D7370451C074B9A285 /* TagChip.swift */; };
@@ -71,6 +72,7 @@
 		9AB7E295492E42D0790DABD1 /* BookmarkFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4088245021E70357117E91E3 /* BookmarkFilter.swift */; };
 		9E474B64EDA35CDC11F1FB29 /* ServerTrust.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4A727EA930A5E59BE04961 /* ServerTrust.swift */; };
 		A324968577C4B4952EACEA7B /* URLDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE3EE65655972E72D66623E /* URLDomain.swift */; };
+		A47A2E4BEC48BA75E2CEE0CF /* ServerImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2CF3AA9607B454FB0248AF /* ServerImage.swift */; };
 		A84A6255231D152BF4976A5E /* BookmarkFormModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA2807DA69A599E1FB40044D /* BookmarkFormModelTests.swift */; };
 		AD0C55DA182AD2781CED60EC /* LinkdingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 522F4AFD3D2F55F3D10C068D /* LinkdingClient.swift */; };
 		AF6304571878A536243A059F /* ServerTrust.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE4A727EA930A5E59BE04961 /* ServerTrust.swift */; };
@@ -99,6 +101,8 @@
 		DA0F14738A362DDA9641FE60 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90776E42A6E741CD8A0B8248 /* AppGroup.swift */; };
 		DB756919751557A961764BED /* QuickFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = BADA777E2E7CE3D7BA4F0550 /* QuickFilterBar.swift */; };
 		DC93E97C2D551C43FCC71353 /* TagField.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB309178A235941609312DBB /* TagField.swift */; };
+		DD14C738A0B75F10C68F22B4 /* ServerImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2CF3AA9607B454FB0248AF /* ServerImage.swift */; };
+		E0AD9FA4D6D25AE92875EBEE /* ServerImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D2CF3AA9607B454FB0248AF /* ServerImage.swift */; };
 		E10D55B279A5A14FA64E36F4 /* TagField.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB309178A235941609312DBB /* TagField.swift */; };
 		E514C6C830B0B31874F91B29 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8A032B8E0CEE7393FBDCEFB /* SafariServices.framework */; };
 		E5D1F7CA174097BF4E43140A /* BookmarkCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A579029A1AA43E4789B2F5E /* BookmarkCache.swift */; };
@@ -175,6 +179,7 @@
 /* Begin PBXFileReference section */
 		08A1DCD1D1373F083AE0B3C7 /* DemoLinkdingClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoLinkdingClient.swift; sourceTree = "<group>"; };
 		0C45210FF404804FDCBC8B1B /* SplitRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitRootView.swift; sourceTree = "<group>"; };
+		0D2CF3AA9607B454FB0248AF /* ServerImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerImage.swift; sourceTree = "<group>"; };
 		0FF5B49D8864E91AE7F64659 /* SessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionTests.swift; sourceTree = "<group>"; };
 		1351C467CA13422989255E2A /* TagListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagListScreen.swift; sourceTree = "<group>"; };
 		15769A23D32A4E838A306130 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -198,6 +203,7 @@
 		5787BC083C709D98B4B1F01D /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		58A32E1839CF86AAA23ACAB9 /* BookmarkSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkSheets.swift; sourceTree = "<group>"; };
 		59E56053AA838035BA7C037D /* DingmarkShare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DingmarkShare.entitlements; sourceTree = "<group>"; };
+		68315C487DCE1DF05E867E5B /* ServerImageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerImageTests.swift; sourceTree = "<group>"; };
 		6B82A7322184835162AD9F0C /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		6D37695D7C82B0E9028F0A50 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		707EA9E4327E2C113ED58098 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
@@ -324,6 +330,7 @@
 				34D27D48E271B90B2EE96F4F /* LinkdingClientTests.swift */,
 				346F7E99A743999AAE995399 /* LinkdingDateTests.swift */,
 				9621BD9F82D0D759C519B660 /* MockURLProtocol.swift */,
+				68315C487DCE1DF05E867E5B /* ServerImageTests.swift */,
 				0FF5B49D8864E91AE7F64659 /* SessionTests.swift */,
 				9CAA4990CD9E75212F5D89A0 /* TagLogicTests.swift */,
 			);
@@ -416,6 +423,7 @@
 				FAC53D83DA3D35DAD1207D96 /* MarkdownNotesView.swift */,
 				D4C7BCF58BFB2B378EF6EF62 /* RelativeAge.swift */,
 				A153D5781287DD09D170BF54 /* RibbonMark.swift */,
+				0D2CF3AA9607B454FB0248AF /* ServerImage.swift */,
 				C79685D7370451C074B9A285 /* TagChip.swift */,
 				EB309178A235941609312DBB /* TagField.swift */,
 				D0C9CCF89BA12C7114239456 /* Theme.swift */,
@@ -758,6 +766,7 @@
 				06FDB41BB5DB755474AE0CFD /* RibbonMark.swift in Sources */,
 				0568F310A6D655A3481A03C3 /* RootView.swift in Sources */,
 				EA344C36C6C6A708D9BF9EDE /* SafariView.swift in Sources */,
+				E0AD9FA4D6D25AE92875EBEE /* ServerImage.swift in Sources */,
 				D13A28ACB75F203E1464C265 /* ServerTrust.swift in Sources */,
 				401CF59210FA887CCEFA18B4 /* Session.swift in Sources */,
 				889A5F664EABCBEA3E46E476 /* SettingsScreen.swift in Sources */,
@@ -782,6 +791,7 @@
 				2FD05CA68391C945C6CDB114 /* LinkdingClientTests.swift in Sources */,
 				44EE8FB30243ECDEB0318E1F /* LinkdingDateTests.swift in Sources */,
 				3C2E6399CEBA3362ECB4F1AA /* MockURLProtocol.swift in Sources */,
+				201B70A118146C121302D746 /* ServerImageTests.swift in Sources */,
 				68B4EFBE621DA768C2545189 /* SessionTests.swift in Sources */,
 				035EA11465966E25356A0C33 /* TagLogicTests.swift in Sources */,
 			);
@@ -810,6 +820,7 @@
 				122C17819FECADD3B94731E5 /* MarkdownNotesView.swift in Sources */,
 				0E6D0635F5F1E567C4214528 /* RelativeAge.swift in Sources */,
 				C7106F27FB9047088CC9DD39 /* RibbonMark.swift in Sources */,
+				A47A2E4BEC48BA75E2CEE0CF /* ServerImage.swift in Sources */,
 				AF6304571878A536243A059F /* ServerTrust.swift in Sources */,
 				9703495B56C9F401093364D6 /* Session.swift in Sources */,
 				E7BC3603C4028C2DF93E92B8 /* ShareSheetView.swift in Sources */,
@@ -856,6 +867,7 @@
 				3FD504FF102A090FEA46B2FB /* MarkdownNotesView.swift in Sources */,
 				F57507B70AE633B59FF0DC43 /* RelativeAge.swift in Sources */,
 				06D1ACAE76E528AB18E06D38 /* RibbonMark.swift in Sources */,
+				DD14C738A0B75F10C68F22B4 /* ServerImage.swift in Sources */,
 				9E474B64EDA35CDC11F1FB29 /* ServerTrust.swift in Sources */,
 				B64ABF980B718A141A0949BA /* Session.swift in Sources */,
 				C1682D9ADA8ECB4B9F048D1B /* TagChip.swift in Sources */,

@@ -25,7 +25,7 @@ struct BookmarkDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 if let image = bookmark.previewImage {
-                    AsyncImage(url: image) { phase in
+                    ServerImage(url: image) { phase in
                         if let img = phase.image {
                             img.resizable().scaledToFill()
                         } else {

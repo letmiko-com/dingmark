@@ -104,7 +104,7 @@ Design choices:
 - **Refresh and session isolation**: refreshes wait for pending writes and retry if a write overlaps a fetched snapshot. Signing out cancels pending work and invalidates late responses, including open forms. The cache and widgets contain confirmed server values only.
 - **Cache in the App Group**: a file lock coordinates app and extension transactions. Confirmed mutations merge into the latest disk snapshot; refreshes retry if another writer changes it. The app reloads the cache before a foreground refresh, including offline. A login identity rejects late writes from a signed-out extension.
 - **Token in the Keychain**, shared through the App Group, never in preferences or logs.
-- **Self-signed certificates**: refused by default; the sign-in screen shows the SHA-256 fingerprint before approval, and the previous fingerprint when it changes.
+- **Self-signed certificates**: refused by default; the sign-in screen shows the SHA-256 fingerprint before approval, and the previous fingerprint when it changes. Images on the configured server use the same approved certificate; external images retain system trust and receive no API token.
 
 ## linkding API used
 

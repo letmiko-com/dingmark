@@ -9,7 +9,7 @@ struct FaviconView: View {
     var body: some View {
         Group {
             if let url = bookmark.favicon {
-                AsyncImage(url: url) { phase in
+                ServerImage(url: url) { phase in
                     if let image = phase.image {
                         image.resizable().scaledToFit().padding(size * 0.12).background(Color(.systemBackground))
                     } else {
