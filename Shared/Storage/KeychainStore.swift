@@ -56,3 +56,17 @@ enum KeychainStore {
         return query
     }
 }
+
+/// Injectable boundary for session tests; production credentials still go
+/// exclusively through KeychainStore.
+protocol TokenStorage {
+    func readToken() -> String?
+    func writeToken(_ token: String) -> Bool
+    func deleteToken()
+}
+
+struct KeychainTokenStorage: TokenStorage {
+    func readToken() -> String? { KeychainStore.readToken() }
+    func writeToken(_ token: String) -> Bool { KeychainStore.writeToken(token) }
+    func deleteToken() { KeychainStore.deleteToken() }
+}

@@ -12,6 +12,11 @@ final class Session {
         case unreachable(host: String)
     }
 
+    private let defaults: UserDefaults
+    private let tokenStorage: TokenStorage
+    private let cache: BookmarkCache
+    private let trustStore: TrustStore
+    private let apiFactory: (URL, String) -> LinkdingAPI
     private(set) var serverURL: URL?
     private(set) var hasToken: Bool
     private(set) var bookmarkCount: Int?
@@ -22,24 +27,31 @@ final class Session {
     var isConnected: Bool { isDemo || (serverURL != nil && hasToken) }
     var host: String? { isDemo ? DemoData.host : serverURL?.host() }
 
-    init(demo: Bool = false) {
+    init(demo: Bool = false, defaults: UserDefaults = AppGroup.defaults,
+         tokenStorage: TokenStorage = KeychainTokenStorage(), cache: BookmarkCache = .shared,
+         trustStore: TrustStore = .shared, apiFactory: ((URL, String) -> LinkdingAPI)? = nil) {
+        self.defaults = defaults
+        self.tokenStorage = tokenStorage
+        self.cache = cache
+        self.trustStore = trustStore
+        self.apiFactory = apiFactory ?? { LinkdingClient(baseURL: $0, token: $1, trustStore: trustStore) }
         isDemo = demo
         if demo {
             serverURL = URL(string: "https://\(DemoData.host)")
             hasToken = true
             bookmarkCount = DemoData.bookmarks.filter { !$0.isArchived }.count
         } else {
-            serverURL = AppGroup.defaults.string(forKey: SettingsKey.serverURL).flatMap(URL.init(string:))
-            hasToken = KeychainStore.readToken() != nil
-            let count = AppGroup.defaults.integer(forKey: SettingsKey.bookmarkCount)
+            serverURL = defaults.string(forKey: SettingsKey.serverURL).flatMap(URL.init(string:))
+            hasToken = tokenStorage.readToken() != nil
+            let count = defaults.integer(forKey: SettingsKey.bookmarkCount)
             bookmarkCount = count > 0 ? count : nil
         }
     }
 
     func makeAPI() -> LinkdingAPI? {
         if isDemo { return DemoLinkdingClient.shared }
-        guard let serverURL, let token = KeychainStore.readToken() else { return nil }
-        return LinkdingClient(baseURL: serverURL, token: token)
+        guard let serverURL, let token = tokenStorage.readToken() else { return nil }
+        return apiFactory(serverURL, token)
     }
 
     /// Tests the credentials against the server, persists them on success.
@@ -47,12 +59,12 @@ final class Session {
         guard let url = URLDomain.normalizeServer(urlString) else { return .invalidURL }
         let trimmedToken = token.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedToken.isEmpty else { return .unauthorized }
-        let client = LinkdingClient(baseURL: url, token: trimmedToken)
+        let client = apiFactory(url, trimmedToken)
         do {
             let count = try await client.testConnection()
-            AppGroup.defaults.set(url.absoluteString, forKey: SettingsKey.serverURL)
-            AppGroup.defaults.set(count, forKey: SettingsKey.bookmarkCount)
-            KeychainStore.writeToken(trimmedToken)
+            defaults.set(url.absoluteString, forKey: SettingsKey.serverURL)
+            defaults.set(count, forKey: SettingsKey.bookmarkCount)
+            _ = tokenStorage.writeToken(trimmedToken)
             pendingLogin = (url, count)
             return nil
         } catch let error as LinkdingError {
@@ -61,10 +73,10 @@ final class Session {
             case .unauthorized: return .unauthorized
             case .untrustedCertificate(let host): return .untrustedCertificate(host: host)
             case .unreachable(let host): return .unreachable(host: host)
-            case .http, .decoding, .notConfigured: return .unreachable(host: client.host)
+            case .http, .decoding, .notConfigured: return .unreachable(host: url.host() ?? "")
             }
         } catch {
-            return .unreachable(host: client.host)
+            return .unreachable(host: url.host() ?? "")
         }
     }
 
@@ -79,19 +91,19 @@ final class Session {
 
     /// Pins the certificate the last connection attempt rejected.
     func trustPendingCertificate(for host: String) {
-        TrustStore.shared.pinPending(for: host)
+        trustStore.pinPending(for: host)
     }
 
     func recordBookmarkCount(_ count: Int) {
         bookmarkCount = count
-        if !isDemo { AppGroup.defaults.set(count, forKey: SettingsKey.bookmarkCount) }
+        if !isDemo { defaults.set(count, forKey: SettingsKey.bookmarkCount) }
     }
 
     func signOut() {
-        KeychainStore.deleteToken()
-        AppGroup.defaults.removeObject(forKey: SettingsKey.serverURL)
-        AppGroup.defaults.removeObject(forKey: SettingsKey.bookmarkCount)
-        BookmarkCache.shared.clear()
+        tokenStorage.deleteToken()
+        defaults.removeObject(forKey: SettingsKey.serverURL)
+        defaults.removeObject(forKey: SettingsKey.bookmarkCount)
+        cache.clear()
         serverURL = nil
         hasToken = false
         bookmarkCount = nil
