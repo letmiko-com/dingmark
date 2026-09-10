@@ -50,6 +50,7 @@
 		5FB55C63AB0AD1B9DA2D26A7 /* DingmarkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3657C8BCA226CC0101228FF /* DingmarkApp.swift */; };
 		64AC526A8612BACD3A5320FB /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B8CDB7E07328C780991843 /* KeychainStore.swift */; };
 		650DF11997014C4117A94421 /* RelativeAge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C7BCF58BFB2B378EF6EF62 /* RelativeAge.swift */; };
+		68B4EFBE621DA768C2545189 /* SessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF5B49D8864E91AE7F64659 /* SessionTests.swift */; };
 		6CCFF9262E7613C82388CD81 /* DemoLinkdingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A1DCD1D1373F083AE0B3C7 /* DemoLinkdingClient.swift */; };
 		6E59AFDE59410517C2D78ADD /* ExploratoryPadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F41264DD11F339B0E5E7B2 /* ExploratoryPadTests.swift */; };
 		7524157C5FF1BF723C2411F1 /* BookmarkListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534D578A11FA7C389A7329EB /* BookmarkListScreen.swift */; };
@@ -174,6 +175,7 @@
 /* Begin PBXFileReference section */
 		08A1DCD1D1373F083AE0B3C7 /* DemoLinkdingClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoLinkdingClient.swift; sourceTree = "<group>"; };
 		0C45210FF404804FDCBC8B1B /* SplitRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitRootView.swift; sourceTree = "<group>"; };
+		0FF5B49D8864E91AE7F64659 /* SessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionTests.swift; sourceTree = "<group>"; };
 		1351C467CA13422989255E2A /* TagListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagListScreen.swift; sourceTree = "<group>"; };
 		15769A23D32A4E838A306130 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1BF29C5743DD0F7C64E364EB /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
@@ -322,6 +324,7 @@
 				34D27D48E271B90B2EE96F4F /* LinkdingClientTests.swift */,
 				346F7E99A743999AAE995399 /* LinkdingDateTests.swift */,
 				9621BD9F82D0D759C519B660 /* MockURLProtocol.swift */,
+				0FF5B49D8864E91AE7F64659 /* SessionTests.swift */,
 				9CAA4990CD9E75212F5D89A0 /* TagLogicTests.swift */,
 			);
 			path = DingmarkTests;
@@ -779,6 +782,7 @@
 				2FD05CA68391C945C6CDB114 /* LinkdingClientTests.swift in Sources */,
 				44EE8FB30243ECDEB0318E1F /* LinkdingDateTests.swift in Sources */,
 				3C2E6399CEBA3362ECB4F1AA /* MockURLProtocol.swift in Sources */,
+				68B4EFBE621DA768C2545189 /* SessionTests.swift in Sources */,
 				035EA11465966E25356A0C33 /* TagLogicTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

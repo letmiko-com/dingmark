@@ -155,6 +155,7 @@ struct LoginErrorCard: View {
         switch failure {
         case .invalidURL: "URL invalide"
         case .unauthorized: "Jeton refusé"
+        case .credentialStorage: "Jeton non enregistré"
         case .untrustedCertificate: "Certificat non reconnu"
         case .unreachable: "Serveur injoignable"
         }
@@ -164,6 +165,7 @@ struct LoginErrorCard: View {
         switch failure {
         case .invalidURL: String(localized: "L’adresse doit commencer par https:// et pointer vers la racine de linkding.")
         case .unauthorized: String(localized: "Le serveur a répondu 401. Vérifiez le jeton dans Réglages › Intégrations.")
+        case .credentialStorage: String(localized: "Le trousseau n’a pas pu enregistrer le jeton. Réessayez pour terminer la connexion.")
         case .untrustedCertificate(let host): String(localized: "Le certificat de \(host) est auto-signé.")
         case .unreachable: String(localized: "Aucune réponse en 10 s. Vérifiez l’adresse (http:// pour un serveur sans TLS) ou le VPN.")
         }

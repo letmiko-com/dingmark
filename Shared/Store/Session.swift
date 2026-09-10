@@ -8,6 +8,7 @@ final class Session {
     enum LoginFailure: Equatable {
         case invalidURL
         case unauthorized
+        case credentialStorage
         case untrustedCertificate(host: String)
         case unreachable(host: String)
     }
@@ -17,6 +18,7 @@ final class Session {
     private let cache: BookmarkCache
     private let trustStore: TrustStore
     private let apiFactory: (URL, String) -> LinkdingAPI
+    private var loginGeneration = UUID()
     private(set) var cacheSessionID: UUID?
     private(set) var serverURL: URL?
     private(set) var hasToken: Bool
@@ -69,15 +71,19 @@ final class Session {
         guard let url = URLDomain.normalizeServer(urlString) else { return .invalidURL }
         let trimmedToken = token.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedToken.isEmpty else { return .unauthorized }
+        let generation = UUID()
+        loginGeneration = generation
+        pendingLogin = nil
         let client = apiFactory(url, trimmedToken)
         do {
             let count = try await client.testConnection()
-            defaults.set(url.absoluteString, forKey: SettingsKey.serverURL)
-            defaults.set(count, forKey: SettingsKey.bookmarkCount)
-            _ = tokenStorage.writeToken(trimmedToken)
+            guard generation == loginGeneration, !Task.isCancelled else { return .unreachable(host: url.host() ?? "") }
+            guard tokenStorage.writeToken(trimmedToken) else { return .credentialStorage }
             let id = cache.startSession(serverHost: url.absoluteString)
             cacheSessionID = id
             defaults.set(id.uuidString, forKey: SettingsKey.cacheSessionID)
+            defaults.set(url.absoluteString, forKey: SettingsKey.serverURL)
+            defaults.set(count, forKey: SettingsKey.bookmarkCount)
             pendingLogin = (url, count)
             return nil
         } catch let error as LinkdingError {
@@ -113,6 +119,8 @@ final class Session {
     }
 
     func signOut() {
+        loginGeneration = UUID()
+        pendingLogin = nil
         tokenStorage.deleteToken()
         defaults.removeObject(forKey: SettingsKey.serverURL)
         defaults.removeObject(forKey: SettingsKey.bookmarkCount)

@@ -1259,6 +1259,26 @@
         }
       }
     },
+    "Jeton non enregistré": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Token not saved"
+          }
+        }
+      }
+    },
+    "Le trousseau n’a pas pu enregistrer le jeton. Réessayez pour terminer la connexion.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keychain could not save the token. Try again to complete sign-in."
+          }
+        }
+      }
+    },
     "Synchronisation incomplète": {
       "localizations": {
         "en": {

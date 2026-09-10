@@ -24,16 +24,20 @@ enum KeychainStore {
 
     @discardableResult
     static func writeToken(_ token: String) -> Bool {
-        deleteToken()
         for group in candidateGroups {
-            var add = baseQuery(accessGroup: group)
-            add[kSecValueData as String] = Data(token.utf8)
-            add[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlock
-            let status = SecItemAdd(add as CFDictionary, nil)
+            let query = baseQuery(accessGroup: group)
+            let value = [kSecValueData as String: Data(token.utf8)]
+            var status = SecItemUpdate(query as CFDictionary, value as CFDictionary)
+            if status == errSecItemNotFound {
+                var add = query
+                add[kSecValueData as String] = Data(token.utf8)
+                add[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlock
+                status = SecItemAdd(add as CFDictionary, nil)
+            }
             if status == errSecSuccess { return true }
-            // -34018 errSecMissingEntitlement: the access group is not
-            // available (unit tests, simulator without the entitlement).
-            // Fall through to the plain keychain.
+            // Only a missing entitlement justifies the simulator fallback.
+            // Other errors must preserve the old token and fail the login.
+            if status != errSecMissingEntitlement { return false }
         }
         return false
     }
