@@ -74,7 +74,7 @@ struct UnreadWidgetView: View {
 }
 
 /// Icon + counter, the latest unread bookmark on two lines, an add button.
-/// Small widgets accept a single link: the bookmark when there is one.
+/// The background opens the latest bookmark; Add has its own destination.
 struct SmallUnreadView: View {
     let entry: UnreadEntry
 
@@ -98,12 +98,14 @@ struct SmallUnreadView: View {
                     .foregroundStyle(.secondary)
             }
             Spacer(minLength: 4)
-            Label("Ajouter", systemImage: "plus")
-                .font(.footnote.weight(.semibold))
-                .frame(maxWidth: .infinity)
-                .frame(height: 30)
-                .foregroundStyle(.white)
-                .background(Color.accentColor, in: Capsule())
+            Link(destination: DeepLink.add) {
+                Label("Ajouter", systemImage: "plus")
+                    .font(.footnote.weight(.semibold))
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 30)
+                    .foregroundStyle(.white)
+                    .background(Color.accentColor, in: Capsule())
+            }
         }
         .widgetURL(entry.unread.first.map { DeepLink.bookmark($0.id) } ?? DeepLink.add)
     }
