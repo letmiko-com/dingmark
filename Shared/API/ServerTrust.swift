@@ -20,12 +20,13 @@ final class TrustStore: @unchecked Sendable {
     func pendingFingerprint(for host: String) -> String? { read(pendingKey)[host] }
 
     func pin(fingerprint: String, for host: String) {
-        var pinned = read(pinnedKey)
+        lock.lock(); defer { lock.unlock() }
+        var pinned = dictionary(pinnedKey)
         pinned[host] = fingerprint
-        write(pinned, key: pinnedKey)
-        var pending = read(pendingKey)
-        pending.removeValue(forKey: host)
-        write(pending, key: pendingKey)
+        defaults.set(pinned, forKey: pinnedKey)
+        var pending = dictionary(pendingKey)
+        if pending[host] == fingerprint { pending.removeValue(forKey: host) }
+        defaults.set(pending, forKey: pendingKey)
     }
 
     /// Promotes the last rejected certificate of `host` to trusted.
@@ -37,25 +38,26 @@ final class TrustStore: @unchecked Sendable {
     }
 
     func setPending(fingerprint: String, for host: String) {
-        var pending = read(pendingKey)
+        lock.lock(); defer { lock.unlock() }
+        var pending = dictionary(pendingKey)
         pending[host] = fingerprint
-        write(pending, key: pendingKey)
+        defaults.set(pending, forKey: pendingKey)
     }
 
     func unpin(host: String) {
-        var pinned = read(pinnedKey)
+        lock.lock(); defer { lock.unlock() }
+        var pinned = dictionary(pinnedKey)
         pinned.removeValue(forKey: host)
-        write(pinned, key: pinnedKey)
+        defaults.set(pinned, forKey: pinnedKey)
     }
 
     private func read(_ key: String) -> [String: String] {
         lock.lock(); defer { lock.unlock() }
-        return defaults.dictionary(forKey: key) as? [String: String] ?? [:]
+        return dictionary(key)
     }
 
-    private func write(_ value: [String: String], key: String) {
-        lock.lock(); defer { lock.unlock() }
-        defaults.set(value, forKey: key)
+    private func dictionary(_ key: String) -> [String: String] {
+        defaults.dictionary(forKey: key) as? [String: String] ?? [:]
     }
 }
 

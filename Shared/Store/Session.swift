@@ -9,8 +9,14 @@ final class Session {
         case invalidURL
         case unauthorized
         case credentialStorage
-        case untrustedCertificate(host: String)
+        case untrustedCertificate(CertificateReview)
         case unreachable(host: String)
+    }
+
+    struct CertificateReview: Equatable {
+        let host: String
+        let fingerprint: String
+        let previousFingerprint: String?
     }
 
     private let defaults: UserDefaults
@@ -90,7 +96,10 @@ final class Session {
             switch error {
             case .invalidURL: return .invalidURL
             case .unauthorized: return .unauthorized
-            case .untrustedCertificate(let host): return .untrustedCertificate(host: host)
+            case .untrustedCertificate(let host):
+                guard let fingerprint = trustStore.pendingFingerprint(for: host) else { return .unreachable(host: host) }
+                return .untrustedCertificate(CertificateReview(host: host, fingerprint: fingerprint,
+                                                               previousFingerprint: trustStore.pinnedFingerprint(for: host)))
             case .unreachable(let host): return .unreachable(host: host)
             case .http, .decoding, .incompletePagination, .notConfigured: return .unreachable(host: url.host() ?? "")
             }
@@ -108,9 +117,10 @@ final class Session {
         pendingLogin = nil
     }
 
-    /// Pins the certificate the last connection attempt rejected.
-    func trustPendingCertificate(for host: String) {
-        trustStore.pinPending(for: host)
+    /// Pin the exact fingerprint shown in the error card, even if another
+    /// request has since recorded a different pending certificate.
+    func trustCertificate(_ review: CertificateReview) {
+        trustStore.pin(fingerprint: review.fingerprint, for: review.host)
     }
 
     func recordBookmarkCount(_ count: Int) {

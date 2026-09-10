@@ -1259,6 +1259,36 @@
         }
       }
     },
+    "Empreinte SHA-256": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SHA-256 fingerprint"
+          }
+        }
+      }
+    },
+    "Empreinte précédemment approuvée": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Previously approved fingerprint"
+          }
+        }
+      }
+    },
+    "Comparez cette empreinte avec celle de votre serveur avant de l’approuver.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compare this fingerprint with your server’s fingerprint before approving it."
+          }
+        }
+      }
+    },
     "Jeton non enregistré": {
       "localizations": {
         "en": {
@@ -1269,12 +1299,32 @@
         }
       }
     },
+    "Le certificat du serveur a changé": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The server certificate has changed"
+          }
+        }
+      }
+    },
     "Le trousseau n’a pas pu enregistrer le jeton. Réessayez pour terminer la connexion.": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Keychain could not save the token. Try again to complete sign-in."
+          }
+        }
+      }
+    },
+    "Le certificat de %@ n’a pas pu être validé.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The certificate for %@ could not be validated."
           }
         }
       }

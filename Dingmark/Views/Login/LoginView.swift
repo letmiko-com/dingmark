@@ -63,8 +63,8 @@ struct LoginView: View {
                 Section {
                     LoginErrorCard(failure: failure) {
                         switch failure {
-                        case .untrustedCertificate(let host):
-                            session.trustPendingCertificate(for: host)
+                        case .untrustedCertificate(let review):
+                            session.trustCertificate(review)
                             test()
                         case .unreachable:
                             test()
@@ -138,6 +138,22 @@ struct LoginErrorCard: View {
             VStack(alignment: .leading, spacing: 3) {
                 Text(title).font(.subheadline.weight(.semibold))
                 Text(body_).font(.footnote).foregroundStyle(.secondary)
+                if case .untrustedCertificate(let review) = failure {
+                    Text("Empreinte SHA-256").font(.caption.weight(.semibold))
+                    Text(review.fingerprint)
+                        .font(.caption.monospaced())
+                        .textSelection(.enabled)
+                        .fixedSize(horizontal: false, vertical: true)
+                    if let previous = review.previousFingerprint {
+                        Text("Empreinte précédemment approuvée").font(.caption.weight(.semibold))
+                        Text(previous)
+                            .font(.caption.monospaced())
+                            .textSelection(.enabled)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    Text("Comparez cette empreinte avec celle de votre serveur avant de l’approuver.")
+                        .font(.footnote).foregroundStyle(.secondary)
+                }
                 if let actionTitle {
                     Button(action: action) {
                         Text(actionTitle).font(.subheadline.weight(.medium))
@@ -156,7 +172,8 @@ struct LoginErrorCard: View {
         case .invalidURL: "URL invalide"
         case .unauthorized: "Jeton refusé"
         case .credentialStorage: "Jeton non enregistré"
-        case .untrustedCertificate: "Certificat non reconnu"
+        case .untrustedCertificate(let review):
+            review.previousFingerprint == nil ? "Certificat non reconnu" : "Le certificat du serveur a changé"
         case .unreachable: "Serveur injoignable"
         }
     }
@@ -166,7 +183,7 @@ struct LoginErrorCard: View {
         case .invalidURL: String(localized: "L’adresse doit commencer par https:// et pointer vers la racine de linkding.")
         case .unauthorized: String(localized: "Le serveur a répondu 401. Vérifiez le jeton dans Réglages › Intégrations.")
         case .credentialStorage: String(localized: "Le trousseau n’a pas pu enregistrer le jeton. Réessayez pour terminer la connexion.")
-        case .untrustedCertificate(let host): String(localized: "Le certificat de \(host) est auto-signé.")
+        case .untrustedCertificate(let review): String(localized: "Le certificat de \(review.host) n’a pas pu être validé.")
         case .unreachable: String(localized: "Aucune réponse en 10 s. Vérifiez l’adresse (http:// pour un serveur sans TLS) ou le VPN.")
         }
     }

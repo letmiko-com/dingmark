@@ -2,7 +2,7 @@ import Foundation
 import Testing
 @testable import Dingmark
 
-@Suite("Session credentials")
+@Suite("Session credentials and certificate review")
 @MainActor
 struct SessionTests {
     private func fixture(api: LinkdingAPI = SessionTestAPI()) -> (Session, UserDefaults, MemoryTokens, BookmarkCache, TrustStore) {
@@ -71,6 +71,24 @@ struct SessionTests {
         #expect(tokens.readToken() == nil && cache.load() == nil)
     }
 
+    @Test("certificate approval pins the displayed fingerprint, not a later rejection")
+    func exactCertificateApproval() async throws {
+        let host = "example.org"
+        let (session, _, _, cache, trust) = fixture(api: SessionTestAPI(failure: .untrustedCertificate(host: host)))
+        defer { cache.clear() }
+        let previous = String(repeating: "11", count: 32)
+        let reviewed = String(repeating: "22", count: 32)
+        let later = String(repeating: "33", count: 32)
+        trust.pin(fingerprint: previous, for: host)
+        trust.setPending(fingerprint: reviewed, for: host)
+        let failure = await session.connect(urlString: "https://example.org", token: UUID().uuidString)
+        guard case .untrustedCertificate(let review) = failure else { Issue.record("Missing certificate review"); return }
+        #expect(review.fingerprint == reviewed && review.previousFingerprint == previous)
+        trust.setPending(fingerprint: later, for: host)
+        session.trustCertificate(review)
+        #expect(trust.pinnedFingerprint(for: host) == reviewed)
+        #expect(trust.pendingFingerprint(for: host) == later)
+    }
 }
 
 private final class MemoryTokens: TokenStorage {

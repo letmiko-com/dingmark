@@ -104,7 +104,7 @@ Design choices:
 - **Refresh and session isolation**: refreshes wait for pending writes and retry if a write overlaps a fetched snapshot. Signing out cancels pending work and invalidates late responses, including open forms. The cache and widgets contain confirmed server values only.
 - **Cache in the App Group**: a file lock coordinates app and extension transactions. Confirmed mutations merge into the latest disk snapshot; refreshes retry if another writer changes it. The app reloads the cache before a foreground refresh, including offline. A login identity rejects late writes from a signed-out extension.
 - **Token in the Keychain**, shared through the App Group, never in preferences or logs.
-- **Self-signed certificates**: refused by default; the SHA-256 fingerprint is pinned after an explicit confirmation on the sign-in screen.
+- **Self-signed certificates**: refused by default; the sign-in screen shows the SHA-256 fingerprint before approval, and the previous fingerprint when it changes.
 
 ## linkding API used
 
@@ -114,7 +114,7 @@ Design choices:
 
 The Xcode Cloud workflow runs the `Dingmark` scheme's tests on an iPhone 17 simulator using the selected Xcode's default iOS runtime. The test action is required to pass for the workflow to succeed. Server integration tests are skipped unless a throwaway linkding is configured; iPad-only tests are skipped on iPhone.
 
-- **Unit tests** (`DingmarkTests`, Swift Testing): API client against a mocked `URLProtocol`, JSON and date decoding, filters, tag logic, form model. Store regression tests explicitly control the order of network responses to cover rapid actions, rollback, refresh races, duplicate creation, cancellation and session changes without timing-dependent sleeps.
+- **Unit tests** (`DingmarkTests`, Swift Testing): API client against a mocked `URLProtocol`, JSON and date decoding, filters, tag logic, form model. Form, cache, session and store regression tests cover duplicate races, failed credential storage, exact certificate approval, concurrent cache writers and login isolation. Store regression tests explicitly control the order of network responses to cover rapid actions, rollback, refresh races, duplicate creation, cancellation and session changes without timing-dependent sleeps.
 - **Screenshots** (`ScreenshotTests`): the demo app in light, dark and English, plus the sign-in screen. Regenerate with `-only-testing:DingmarkUITests/ScreenshotTests` and export the attachments with `xcrun xcresulttool export attachments`.
 - **Exploratory UI flows**, one screenshot per step: `ExploratoryDemoTests` (iPhone, demo data), `ExploratoryPadTests` (split view, skipped on iPhone) and `RealServerTests`, which exercises sign-in, pagination, every mutation and the share extension against a real linkding and checks the server state through the API. It is skipped unless a server is configured:
 
