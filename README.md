@@ -14,12 +14,15 @@ Dingmark talks to your own linkding server and to nothing else. No account, no c
 
 ## Features
 
-- **Bookmarks list** with search, quick filters (all, unread, archived, untagged) and per-tag filtering. Search and filters run on a local cache, so they work offline.
+- **Bookmarks list** with search, quick filters (all, unread, archived, untagged), per-tag filtering and a sort order remembered per filter (date added, modification, title, domain). Search understands linkding's syntax (`#tag`, `!unread`, `!untagged`, `!shared`) and marks the matched terms. Everything runs on a local cache, so it works offline.
+- **Reading queue**: a "To Read" tab lists the unread bookmarks oldest first, with their count and age. Opening one shows the page in Safari Reader when available and marks it read; closing it offers to archive.
 - **Detail** with Markdown notes, tags, unread toggle, in-app Safari or system Safari, copy and share.
 - **Add and edit** with a paste button, metadata fetched from your server (title, description, suggested tags) and a duplicate check required before saving: adding a URL you already saved updates that bookmark instead of creating another.
+- **Multiple selection**: mark read, archive, add tags or delete several bookmarks at once.
 - **Share extension**: save any page from Safari or another app in two taps, with your default tags.
+- **Shortcuts, Siri and the Action button**: "Add to Dingmark" saves a link in the background, "New Bookmark" opens the add form.
 - **Widgets**: unread bookmarks on the Home Screen and the Lock Screen, with an add shortcut.
-- **iPad**: three-column layout (filters and tags, list, detail).
+- **iPad**: three-column layout (reading queue, filters and tags, list, detail).
 - **Offline**: the last confirmed server state stays readable; changes appear immediately in the app and are rolled back if the server refuses them. Pending changes are not stored in the offline cache.
 - **Self-signed certificates**: refused by default, then trusted per server after you confirm the certificate fingerprint.
 - French and English.
@@ -77,14 +80,14 @@ swift design/icon/render-icon.swift
 ## Architecture
 
 ```
-Dingmark/          app (SwiftUI): screens, navigation, SFSafariViewController
+Dingmark/          app (SwiftUI): screens, navigation, SFSafariViewController, App Intents
 DingmarkShare/     share extension (UIHostingController, medium and large detents)
 DingmarkWidgets/   WidgetKit: small, medium, circular, rectangular
 Shared/            compiled into the three targets
   Models/          Bookmark, API DTOs, linkding date decoding
   API/             LinkdingAPI (protocol), LinkdingClient (URLSession), TLS trust
   Storage/         App Group, Keychain (token), JSON cache, settings keys
-  Store/           Session, BookmarkStore (optimistic updates), form model
+  Store/           Session, BookmarkStore (optimistic updates), filters, search, sort, form model, QuickSave
   UI/              components: row, chips, tag field, FlowLayout, vector icon
   Demo/            prototype fixtures and in-memory client
 DingmarkTests/     unit tests (Swift Testing): mocked client, decoding, filters, tags
@@ -97,7 +100,8 @@ design/icon/       SVG sources of the icon and the rendering script
 Design choices:
 
 - **Apple technologies only**: SwiftUI, Observation, WidgetKit, App Groups, Keychain, URLSession, SafariServices. No third-party dependency.
-- **System components first**: `List(.plain)`, `.searchable`, `.swipeActions`, `.contextMenu(preview:)`, `ContentUnavailableView`, `.redacted`, `NavigationSplitView`, `Tab`, `.glassProminent`. Three custom views, because no system control covers them: the filter bar (scrolling, counters), the tag field (removable chips, suggestions) and the `SFSafariViewController` wrapper.
+- **System components first**: `List(.plain)` with edit-mode selection, `.searchable`, `.swipeActions`, `.contextMenu(preview:)`, `ContentUnavailableView`, `.redacted`, `NavigationSplitView`, `Tab`, `.glassProminent`, `Menu` pickers for sort orders. Three custom views, because no system control covers them: the filter bar (scrolling, counters), the tag field (removable chips, suggestions) and the `SFSafariViewController` wrapper.
+- **Reading is a preference, not a mode**: Reader and "mark read on open" are settings, on by default. Opening from the queue, the detail or a menu goes through the same store call, so the behaviour is one thing to test.
 - **Safe form writes**: URL changes immediately invalidate duplicate data. Saving waits for a successful check of the current URL; failed checks do not become creates. Edits send only changed fields. Empty/default create fields are omitted where possible, but the linkding API does not offer an atomic create-if-absent operation across devices.
 - **Complete snapshots**: a pagination limit or an empty intermediate page is reported as an incomplete sync and leaves the confirmed cache intact.
 - **Ordered optimistic updates**: list actions and form edits appear immediately. Writes to the same bookmark run in order; a failed write rolls back only its own change, preserving later actions. Creates also wait for earlier writes because linkding may return an existing bookmark for a duplicate URL.
