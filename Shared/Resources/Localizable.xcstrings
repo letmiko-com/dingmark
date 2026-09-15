@@ -1938,6 +1938,76 @@
           }
         }
       }
+    },
+    "Support": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Support"
+          }
+        }
+      }
+    },
+    "Aide et questions fréquentes": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Help and FAQ"
+          }
+        }
+      }
+    },
+    "Signaler un problème sur GitHub": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Report a Problem on GitHub"
+          }
+        }
+      }
+    },
+    "Écrire à Letmiko": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Email Letmiko"
+          }
+        }
+      }
+    },
+    "Le message pré-rempli indique la version de l’app et d’iOS. Votre jeton d’API n’y figure jamais.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The prefilled message states the app and iOS versions. Your API token is never included."
+          }
+        }
+      }
+    },
+    "Dingmark %@ : problème": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dingmark %@: problem"
+          }
+        }
+      }
+    },
+    "Dingmark %@, iOS %@, %@.\n\nCe qui se passe :\n\nCe que j’attendais :\n": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dingmark %1$@, iOS %2$@, %3$@.\n\nWhat happens:\n\nWhat I expected:\n"
+          }
+        }
+      }
     }
   }
 }

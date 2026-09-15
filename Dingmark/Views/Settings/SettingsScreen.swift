@@ -85,6 +85,28 @@ struct SettingsForm: View {
             }
 
             Section {
+                if let url = URL(string: SupportLinks.help) {
+                    Link(destination: url) {
+                        Label("Aide et questions fréquentes", systemImage: "questionmark.circle")
+                    }
+                }
+                if let url = URL(string: SupportLinks.issues) {
+                    Link(destination: url) {
+                        Label("Signaler un problème sur GitHub", systemImage: "ladybug")
+                    }
+                }
+                if let url = SupportLinks.reportMail(version: version) {
+                    Link(destination: url) {
+                        Label("Écrire à Letmiko", systemImage: "envelope")
+                    }
+                }
+            } header: {
+                Text("Support")
+            } footer: {
+                Text("Le message pré-rempli indique la version de l’app et d’iOS. Votre jeton d’API n’y figure jamais.")
+            }
+
+            Section {
                 LabeledContent("Version", value: version)
                 if let url = URL(string: "https://github.com/sissbruecker/linkding") {
                     Link(destination: url) {
@@ -118,6 +140,26 @@ struct SettingsForm: View {
     private var defaultTagsSummary: String {
         let tags = TagList.parse(defaultTagsRaw)
         return tags.isEmpty ? String(localized: "Aucun") : tags.joined(separator: ", ")
+    }
+}
+
+/// Public support channels: the site's help page, the repository's issues
+/// and a mail whose body carries the app and system versions, nothing else.
+enum SupportLinks {
+    static let help = "https://dingmark.letmiko.app/support"
+    static let issues = "https://github.com/letmiko-com/dingmark/issues"
+    static let contact = "contact@letmiko.com"
+
+    static func reportMail(version: String, system: String = UIDevice.current.systemVersion,
+                           model: String = UIDevice.current.model) -> URL? {
+        var components = URLComponents()
+        components.scheme = "mailto"
+        components.path = contact
+        components.queryItems = [
+            URLQueryItem(name: "subject", value: String(localized: "Dingmark \(version) : problème")),
+            URLQueryItem(name: "body", value: String(localized: "Dingmark \(version), iOS \(system), \(model).\n\nCe qui se passe :\n\nCe que j’attendais :\n")),
+        ]
+        return components.url
     }
 }
 
