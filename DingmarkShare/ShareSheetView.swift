@@ -130,9 +130,10 @@ struct ShareSheetView: View {
                 card {
                     ZStack(alignment: .topLeading) {
                         if model.notes.isEmpty {
-                            Text("Notes").foregroundStyle(.tertiary).padding(.top, 8).padding(.leading, 5)
+                            Text("Notes").foregroundStyle(.tertiary).padding(.top, 8).padding(.leading, 5).accessibilityHidden(true)
                         }
                         TextEditor(text: $model.notes)
+                            .accessibilityLabel(Text("Notes"))
                             .frame(minHeight: 80)
                             .scrollContentBackground(.hidden)
                     }

@@ -2008,6 +2008,26 @@
           }
         }
       }
+    },
+    "Site %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Site %@"
+          }
+        }
+      }
+    },
+    "Serveur %@, %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Server %@, %@"
+          }
+        }
+      }
     }
   }
 }

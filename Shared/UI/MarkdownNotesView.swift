@@ -34,11 +34,14 @@ struct MarkdownNotesView: View {
                 case .heading:
                     Text(inline(line.text)).font(.body.weight(.semibold))
                 case .bullet:
+                    // One element per item: the glyph alone would be a tiny
+                    // selectable target and a meaningless VoiceOver stop.
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
-                        Text("•").foregroundStyle(.tertiary)
+                        Text("•").foregroundStyle(.tertiary).accessibilityHidden(true)
                         Text(inline(line.text))
                     }
                     .padding(.leading, 4)
+                    .accessibilityElement(children: .combine)
                 case .paragraph:
                     Text(inline(line.text))
                 }

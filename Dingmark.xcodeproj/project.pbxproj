@@ -94,6 +94,7 @@
 		BEC663CB77283731F245AABC /* LinkdingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F719AFF336541A96693F2DA3 /* LinkdingAPI.swift */; };
 		C1682D9ADA8ECB4B9F048D1B /* TagChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79685D7370451C074B9A285 /* TagChip.swift */; };
 		C29618C66F5A3C3F7AA3E981 /* RealServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513B2E69DF93473F7C8A99A8 /* RealServerTests.swift */; };
+		C703F52FA8730F9A8B860EA9 /* AccessibilityAuditTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE388342C19F63E5BC473219 /* AccessibilityAuditTests.swift */; };
 		C7106F27FB9047088CC9DD39 /* RibbonMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = A153D5781287DD09D170BF54 /* RibbonMark.swift */; };
 		C84E23BC4B4BEE8FAFDEE3CD /* QuickSave.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DC2AA721DD80431CA490C7 /* QuickSave.swift */; };
 		CB1775A287DA38BCB6A87912 /* FaviconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915572A4448D633ACE2B3826 /* FaviconView.swift */; };
@@ -254,6 +255,7 @@
 		C777482AE447EE4D8BC38C1A /* DingmarkUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = DingmarkUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C79685D7370451C074B9A285 /* TagChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChip.swift; sourceTree = "<group>"; };
 		C9F570E7DF494CB2843C0D37 /* ShareSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheetView.swift; sourceTree = "<group>"; };
+		CE388342C19F63E5BC473219 /* AccessibilityAuditTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityAuditTests.swift; sourceTree = "<group>"; };
 		D0C9CCF89BA12C7114239456 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		D4C7BCF58BFB2B378EF6EF62 /* RelativeAge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeAge.swift; sourceTree = "<group>"; };
 		D5DC2AA721DD80431CA490C7 /* QuickSave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickSave.swift; sourceTree = "<group>"; };
@@ -559,6 +561,7 @@
 		DEFBE2B4BED54E108C98330C /* DingmarkUITests */ = {
 			isa = PBXGroup;
 			children = (
+				CE388342C19F63E5BC473219 /* AccessibilityAuditTests.swift */,
 				95E772800E1DE5C400AE05E0 /* ExploratoryDemoTests.swift */,
 				78F41264DD11F339B0E5E7B2 /* ExploratoryPadTests.swift */,
 				513B2E69DF93473F7C8A99A8 /* RealServerTests.swift */,
@@ -890,6 +893,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C703F52FA8730F9A8B860EA9 /* AccessibilityAuditTests.swift in Sources */,
 				D1D35D412826593C4E6EC877 /* ExploratoryDemoTests.swift in Sources */,
 				6E59AFDE59410517C2D78ADD /* ExploratoryPadTests.swift in Sources */,
 				C29618C66F5A3C3F7AA3E981 /* RealServerTests.swift in Sources */,

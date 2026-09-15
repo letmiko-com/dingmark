@@ -42,6 +42,8 @@ struct SettingsForm: View {
                     }
                 }
                 .padding(.vertical, 4)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(Text("Serveur \(session.host ?? ""), \(subtitle)"))
                 if !session.isDemo {
                     Button("Changer de serveur") { confirmSignOut = true }
                 }

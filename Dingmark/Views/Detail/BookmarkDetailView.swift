@@ -36,6 +36,8 @@ struct BookmarkDetailView: View {
                     .aspectRatio(16 / 9, contentMode: .fit)
                     .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
                     .padding(.horizontal, Metrics.screenMargin)
+                    // Decorative: the title and the domain carry the meaning.
+                    .accessibilityHidden(true)
                 }
 
                 VStack(alignment: .leading, spacing: 8) {
@@ -43,6 +45,8 @@ struct BookmarkDetailView: View {
                         FaviconView(bookmark: bookmark, size: 22)
                         Text(bookmark.domain).font(.subheadline).foregroundStyle(.secondary)
                     }
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(Text("Site \(bookmark.domain)"))
                     Text(bookmark.displayTitle).font(.title2.bold()).textSelection(.enabled)
                     if !bookmark.displayDescription.isEmpty {
                         Text(bookmark.displayDescription).font(.subheadline).foregroundStyle(.secondary).textSelection(.enabled)
@@ -76,7 +80,7 @@ struct BookmarkDetailView: View {
                         Label("Ouvrir", systemImage: "safari")
                             .fontWeight(.semibold)
                             .frame(maxWidth: .infinity)
-                            .frame(height: Metrics.buttonHeight)
+                            .frame(minHeight: Metrics.buttonHeight)
                     }
                     .buttonStyle(.borderedProminent)
                     .buttonBorderShape(.capsule)
@@ -85,16 +89,17 @@ struct BookmarkDetailView: View {
                             UIPasteboard.general.url = url
                             store.show(String(localized: "URL copiée"))
                         } label: {
-                            Image(systemName: "doc.on.doc").frame(width: Metrics.buttonHeight, height: Metrics.buttonHeight)
+                            Image(systemName: "doc.on.doc").frame(minWidth: Metrics.buttonHeight, minHeight: Metrics.buttonHeight)
                         }
                         .buttonStyle(.bordered)
                         .buttonBorderShape(.circle)
                         .accessibilityLabel(Text("Copier l’URL"))
                         ShareLink(item: url) {
-                            Image(systemName: "square.and.arrow.up").frame(width: Metrics.buttonHeight, height: Metrics.buttonHeight)
+                            Image(systemName: "square.and.arrow.up").frame(minWidth: Metrics.buttonHeight, minHeight: Metrics.buttonHeight)
                         }
                         .buttonStyle(.bordered)
                         .buttonBorderShape(.circle)
+                        .accessibilityLabel(Text("Partager…"))
                     }
                 }
                 .padding(.horizontal, Metrics.screenMargin)

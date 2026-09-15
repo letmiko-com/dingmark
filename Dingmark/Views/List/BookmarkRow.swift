@@ -131,6 +131,7 @@ struct BookmarkPreview: View {
                 }
                 .aspectRatio(16 / 9, contentMode: .fit)
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .accessibilityHidden(true)
             }
             Text(bookmark.domain).font(.subheadline).foregroundStyle(.secondary)
             Text(bookmark.displayTitle).font(.body.weight(.semibold))
