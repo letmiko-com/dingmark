@@ -165,40 +165,72 @@ struct BookmarkRows: View {
 }
 
 extension View {
-    /// Trailing swipe: Read/Unread (accent), Archive (orange), Delete (red,
-    /// full swipe). Each one is also exposed as an accessibility action.
-    func bookmarkSwipeActions(_ bookmark: Bookmark) -> some View {
-        modifier(BookmarkSwipeActions(bookmark: bookmark))
+    /// Row swipes as configured in the settings: one action on the right
+    /// (full swipe), the chosen action then the others on the left. Every
+    /// action is also exposed as an accessibility action. `details` adds a
+    /// Details button on the right where a tap does not open the detail.
+    func bookmarkSwipeActions(_ bookmark: Bookmark, details: (() -> Void)? = nil) -> some View {
+        modifier(BookmarkSwipeActions(bookmark: bookmark, details: details))
     }
 }
 
 private struct BookmarkSwipeActions: ViewModifier {
     let bookmark: Bookmark
+    var details: (() -> Void)?
     @Environment(BookmarkStore.self) private var store
+    @AppStorage(SettingsKey.swipeLeading, store: AppGroup.defaults) private var leadingRaw = SwipeConfiguration.default.leading.rawValue
+    @AppStorage(SettingsKey.swipeTrailing, store: AppGroup.defaults) private var trailingRaw = SwipeConfiguration.default.trailing.rawValue
+
+    private var configuration: SwipeConfiguration {
+        SwipeConfiguration(leading: SwipeAction(rawValue: leadingRaw) ?? SwipeConfiguration.default.leading,
+                           trailing: SwipeAction(rawValue: trailingRaw) ?? SwipeConfiguration.default.trailing)
+    }
 
     func body(content: Content) -> some View {
+        let configuration = configuration
         content
+            .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                ForEach(configuration.leadingActions) { button(for: $0) }
+                if let details {
+                    Button(action: details) {
+                        Label("Détails", systemImage: "info.circle")
+                    }
+                    .tint(.indigo)
+                }
+            }
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                Button(role: .destructive) {
-                    store.delete(bookmark)
-                } label: {
-                    Label("Supprimer", systemImage: "trash")
-                }
-                Button {
-                    store.setArchived(bookmark, !bookmark.isArchived)
-                } label: {
-                    Label(bookmark.isArchived ? "Désarchiver" : "Archiver", systemImage: "archivebox")
-                }
-                .tint(.orange)
-                Button {
-                    store.toggleUnread(bookmark)
-                } label: {
-                    Label(bookmark.unread ? "Lu" : "Non lu", systemImage: bookmark.unread ? "envelope.open" : "envelope.badge")
-                }
-                .tint(Color.accentColor)
+                ForEach(configuration.trailingActions) { button(for: $0) }
             }
             .accessibilityAction(named: bookmark.unread ? Text("Marquer lu") : Text("Marquer non lu")) { store.toggleUnread(bookmark) }
             .accessibilityAction(named: bookmark.isArchived ? Text("Désarchiver") : Text("Archiver")) { store.setArchived(bookmark, !bookmark.isArchived) }
             .accessibilityAction(named: Text("Supprimer")) { store.delete(bookmark) }
+    }
+
+    @ViewBuilder
+    private func button(for action: SwipeAction) -> some View {
+        switch action {
+        case .toggleRead:
+            Button {
+                store.toggleUnread(bookmark)
+            } label: {
+                Label(bookmark.unread ? "Lu" : "Non lu", systemImage: bookmark.unread ? "envelope.open" : "envelope.badge")
+            }
+            .tint(Color.accentColor)
+        case .archive:
+            Button {
+                store.setArchived(bookmark, !bookmark.isArchived)
+            } label: {
+                Label(bookmark.isArchived ? "Désarchiver" : "Archiver", systemImage: "archivebox")
+            }
+            .tint(.orange)
+        case .delete:
+            Button(role: .destructive) {
+                store.delete(bookmark)
+            } label: {
+                Label("Supprimer", systemImage: "trash")
+            }
+        case .none:
+            EmptyView()
+        }
     }
 }

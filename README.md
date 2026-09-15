@@ -17,6 +17,7 @@ Dingmark talks to your own linkding server and to nothing else. No account, no c
 - **Bookmarks list** with search, quick filters (all, unread, archived, untagged), per-tag filtering and a sort order remembered per filter (date added, modification, title, domain). Search understands linkding's syntax (`#tag`, `!unread`, `!untagged`, `!shared`) and marks the matched terms. Everything runs on a local cache, so it works offline.
 - **Reading queue**: a "To Read" tab lists the unread bookmarks oldest first, with their count and age. Opening one shows the page in Safari Reader when available and marks it read; closing it offers to archive.
 - **Detail** with Markdown notes, tags, unread toggle, in-app Safari or system Safari, copy and share.
+- **Swipe actions you choose**: one action for a rightward swipe and one for a leftward swipe (read or unread, archive, delete, none), like Mail. The other actions stay one swipe away on the left.
 - **Add and edit** with a paste button, metadata fetched from your server (title, description, suggested tags) and a duplicate check required before saving: adding a URL you already saved updates that bookmark instead of creating another.
 - **Multiple selection**: mark read, archive, add tags or delete several bookmarks at once.
 - **Share extension**: save any page from Safari or another app in two taps, with your default tags.

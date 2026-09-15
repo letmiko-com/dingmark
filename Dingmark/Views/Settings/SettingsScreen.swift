@@ -19,6 +19,8 @@ struct SettingsForm: View {
     @AppStorage(SettingsKey.listDensity, store: AppGroup.defaults) private var densityRaw = ListDensity.comfortable.rawValue
     @AppStorage(SettingsKey.readerMode, store: AppGroup.defaults) private var readerMode = true
     @AppStorage(SettingsKey.markReadOnOpen, store: AppGroup.defaults) private var markReadOnOpen = true
+    @AppStorage(SettingsKey.swipeLeading, store: AppGroup.defaults) private var swipeLeadingRaw = SwipeConfiguration.default.leading.rawValue
+    @AppStorage(SettingsKey.swipeTrailing, store: AppGroup.defaults) private var swipeTrailingRaw = SwipeConfiguration.default.trailing.rawValue
 
     @State private var confirmSignOut = false
 
@@ -70,6 +72,23 @@ struct SettingsForm: View {
                 Text("Lecture")
             } footer: {
                 Text("Le mode lecteur s’applique aux pages ouvertes dans l’app, quand Safari le propose.")
+            }
+
+            Section {
+                Picker("Vers la droite", selection: $swipeLeadingRaw) {
+                    ForEach(SwipeAction.allCases) { action in
+                        Text(action.title).tag(action.rawValue)
+                    }
+                }
+                Picker("Vers la gauche", selection: $swipeTrailingRaw) {
+                    ForEach(SwipeAction.allCases) { action in
+                        Text(action.title).tag(action.rawValue)
+                    }
+                }
+            } header: {
+                Text("Glissements")
+            } footer: {
+                Text("Un glissement complet déclenche l’action choisie. Vers la gauche, les autres actions restent disponibles à côté.")
             }
 
             Section("Affichage") {
@@ -142,6 +161,17 @@ struct SettingsForm: View {
     private var defaultTagsSummary: String {
         let tags = TagList.parse(defaultTagsRaw)
         return tags.isEmpty ? String(localized: "Aucun") : tags.joined(separator: ", ")
+    }
+}
+
+extension SwipeAction {
+    var title: LocalizedStringKey {
+        switch self {
+        case .toggleRead: "Lu / non lu"
+        case .archive: "Archiver"
+        case .delete: "Supprimer"
+        case .none: "Aucune"
+        }
     }
 }
 

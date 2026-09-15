@@ -401,13 +401,35 @@ final class ExploratoryDemoTests: XCTestCase {
         expectGone(app.buttons["Retirer le tag inbox"].firstMatch, "default tag not removed")
         app.navigationBars.buttons.element(boundBy: 0).tap()
 
-        // Density.
+        // Density: the form has grown past one screen, scroll to the control.
+        scrollUntilVisible(app.buttons["Compacte"].firstMatch)
         app.buttons["Compacte"].firstMatch.tap()
+        restoreTabBar()
         tabs.buttons["Favoris"].tap()
         sleep(1)
         shot("05-liste-compacte")
         tabs.buttons["Réglages"].tap()
+        scrollUntilVisible(app.buttons["Avec description"].firstMatch)
         app.buttons["Avec description"].firstMatch.tap()
+    }
+
+    /// Scrolling down minimises the tab bar (iOS 26) to the selected tab only:
+    /// scroll back to the top so every tab button exists again.
+    private func restoreTabBar() {
+        var remaining = 3
+        while !app.tabBars.buttons["Favoris"].exists, remaining > 0 {
+            app.swipeDown()
+            remaining -= 1
+        }
+    }
+
+    /// Lists only materialise visible rows: swipe up until the element exists.
+    private func scrollUntilVisible(_ element: XCUIElement, attempts: Int = 5) {
+        var remaining = attempts
+        while !(element.exists && element.isHittable), remaining > 0 {
+            app.swipeUp()
+            remaining -= 1
+        }
     }
 
     func test06_DeepLinks() {

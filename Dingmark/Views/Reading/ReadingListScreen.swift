@@ -74,15 +74,7 @@ struct ReadingListScreen: View {
                                               bottom: density == .compact ? Metrics.cellPaddingCompact : Metrics.cellPadding,
                                               trailing: Metrics.screenMargin))
                     .alignmentGuide(.listRowSeparatorLeading) { _ in 0 }
-                    .swipeActions(edge: .leading) {
-                        Button {
-                            path = [bookmark.id]
-                        } label: {
-                            Label("Détails", systemImage: "info.circle")
-                        }
-                        .tint(.indigo)
-                    }
-                    .bookmarkSwipeActions(bookmark)
+                    .bookmarkSwipeActions(bookmark) { path = [bookmark.id] }
                     .contextMenu {
                         Button {
                             path = [bookmark.id]

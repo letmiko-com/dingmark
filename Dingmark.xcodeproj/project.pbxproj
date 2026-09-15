@@ -41,6 +41,7 @@
 		3FD504FF102A090FEA46B2FB /* MarkdownNotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC53D83DA3D35DAD1207D96 /* MarkdownNotesView.swift */; };
 		401CF59210FA887CCEFA18B4 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707EA9E4327E2C113ED58098 /* Session.swift */; };
 		40C7EB8F5F992AEF78D78D69 /* AppRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3BFF6068986180DA02B9719 /* AppRouterTests.swift */; };
+		44B1D577B0AD09F2C92E3013 /* SwipeConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE658D7B44E51E9D94E72C8 /* SwipeConfiguration.swift */; };
 		44EE8FB30243ECDEB0318E1F /* LinkdingDateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346F7E99A743999AAE995399 /* LinkdingDateTests.swift */; };
 		48C84ACAD8F6CBF959E9A4DA /* SplitRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C45210FF404804FDCBC8B1B /* SplitRootView.swift */; };
 		4EF30987C5DAF1971D11FFEA /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C9CCF89BA12C7114239456 /* Theme.swift */; };
@@ -54,6 +55,7 @@
 		64AC526A8612BACD3A5320FB /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B8CDB7E07328C780991843 /* KeychainStore.swift */; };
 		650DF11997014C4117A94421 /* RelativeAge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C7BCF58BFB2B378EF6EF62 /* RelativeAge.swift */; };
 		68B4EFBE621DA768C2545189 /* SessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF5B49D8864E91AE7F64659 /* SessionTests.swift */; };
+		6A5631623540D7532CB98502 /* SwipeConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A77C0F302551856417349E3 /* SwipeConfigurationTests.swift */; };
 		6CCFF9262E7613C82388CD81 /* DemoLinkdingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A1DCD1D1373F083AE0B3C7 /* DemoLinkdingClient.swift */; };
 		6E59AFDE59410517C2D78ADD /* ExploratoryPadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F41264DD11F339B0E5E7B2 /* ExploratoryPadTests.swift */; };
 		7524157C5FF1BF723C2411F1 /* BookmarkListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534D578A11FA7C389A7329EB /* BookmarkListScreen.swift */; };
@@ -65,6 +67,7 @@
 		7C5F13ED9F9DD434CFD8B373 /* DingmarkIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D7FD32104C5106F1A4FFAD /* DingmarkIntents.swift */; };
 		7DF7BA2621D80157B9DB35CD /* BookmarkFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4088245021E70357117E91E3 /* BookmarkFilter.swift */; };
 		8300A353A9FF9C822EF7116F /* MarkdownNotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC53D83DA3D35DAD1207D96 /* MarkdownNotesView.swift */; };
+		84C9C663720FDBD247AB8A2E /* SwipeConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE658D7B44E51E9D94E72C8 /* SwipeConfiguration.swift */; };
 		86DCC40E91B45C9B663397B3 /* BookmarkStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE6CE1C3FABFA5325EEB3D65 /* BookmarkStoreTests.swift */; };
 		87ACDC5FB8873A0B9C1B8EE0 /* DemoLinkdingClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A1DCD1D1373F083AE0B3C7 /* DemoLinkdingClient.swift */; };
 		889A5F664EABCBEA3E46E476 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4B1D570ACD51904782D739D /* SettingsScreen.swift */; };
@@ -94,6 +97,7 @@
 		BEC663CB77283731F245AABC /* LinkdingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F719AFF336541A96693F2DA3 /* LinkdingAPI.swift */; };
 		C1682D9ADA8ECB4B9F048D1B /* TagChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79685D7370451C074B9A285 /* TagChip.swift */; };
 		C29618C66F5A3C3F7AA3E981 /* RealServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 513B2E69DF93473F7C8A99A8 /* RealServerTests.swift */; };
+		C686E02AEAAFCDA34FD581BA /* SwipeConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE658D7B44E51E9D94E72C8 /* SwipeConfiguration.swift */; };
 		C703F52FA8730F9A8B860EA9 /* AccessibilityAuditTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE388342C19F63E5BC473219 /* AccessibilityAuditTests.swift */; };
 		C7106F27FB9047088CC9DD39 /* RibbonMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = A153D5781287DD09D170BF54 /* RibbonMark.swift */; };
 		C84E23BC4B4BEE8FAFDEE3CD /* QuickSave.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5DC2AA721DD80431CA490C7 /* QuickSave.swift */; };
@@ -230,6 +234,7 @@
 		80F15B6436F5A2CAD94B355A /* DingmarkWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DingmarkWidgets.swift; sourceTree = "<group>"; };
 		81C8BD7E887B8DCB007CC1F7 /* ReadingListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingListScreen.swift; sourceTree = "<group>"; };
 		83E65F65863963F435B24388 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		8A77C0F302551856417349E3 /* SwipeConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeConfigurationTests.swift; sourceTree = "<group>"; };
 		8D0D6E2076EDBB6FEB19B426 /* BookmarkDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDetailView.swift; sourceTree = "<group>"; };
 		90776E42A6E741CD8A0B8248 /* AppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroup.swift; sourceTree = "<group>"; };
 		913317F994BE073BCFEF0E7B /* Dingmark.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Dingmark.entitlements; sourceTree = "<group>"; };
@@ -245,6 +250,7 @@
 		A484E54C6623B6A34018D0E6 /* BookmarkFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkFilterTests.swift; sourceTree = "<group>"; };
 		AE96CD74A4833EC69E348430 /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		AEE3EE65655972E72D66623E /* URLDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLDomain.swift; sourceTree = "<group>"; };
+		AFE658D7B44E51E9D94E72C8 /* SwipeConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeConfiguration.swift; sourceTree = "<group>"; };
 		B3B8CDB7E07328C780991843 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		B4B1D570ACD51904782D739D /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
 		BADA777E2E7CE3D7BA4F0550 /* QuickFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickFilterBar.swift; sourceTree = "<group>"; };
@@ -374,6 +380,7 @@
 				BD1DA8C25ED46F07BF290AF4 /* QuickSaveTests.swift */,
 				68315C487DCE1DF05E867E5B /* ServerImageTests.swift */,
 				0FF5B49D8864E91AE7F64659 /* SessionTests.swift */,
+				8A77C0F302551856417349E3 /* SwipeConfigurationTests.swift */,
 				9CAA4990CD9E75212F5D89A0 /* TagLogicTests.swift */,
 			);
 			path = DingmarkTests;
@@ -438,6 +445,7 @@
 				F262CCED9206E94C2E87392C /* BookmarkStore.swift */,
 				D5DC2AA721DD80431CA490C7 /* QuickSave.swift */,
 				707EA9E4327E2C113ED58098 /* Session.swift */,
+				AFE658D7B44E51E9D94E72C8 /* SwipeConfiguration.swift */,
 			);
 			path = Store;
 			sourceTree = "<group>";
@@ -824,6 +832,7 @@
 				401CF59210FA887CCEFA18B4 /* Session.swift in Sources */,
 				889A5F664EABCBEA3E46E476 /* SettingsScreen.swift in Sources */,
 				48C84ACAD8F6CBF959E9A4DA /* SplitRootView.swift in Sources */,
+				84C9C663720FDBD247AB8A2E /* SwipeConfiguration.swift in Sources */,
 				28A9EDD0D35B7E35AA019542 /* TagChip.swift in Sources */,
 				75A42D6D348EB67EE0E8C95C /* TagField.swift in Sources */,
 				166D46BC99DFE4E186FB2F55 /* TagListScreen.swift in Sources */,
@@ -848,6 +857,7 @@
 				E1BCF7986789A7C906B7EC4F /* QuickSaveTests.swift in Sources */,
 				201B70A118146C121302D746 /* ServerImageTests.swift in Sources */,
 				68B4EFBE621DA768C2545189 /* SessionTests.swift in Sources */,
+				6A5631623540D7532CB98502 /* SwipeConfigurationTests.swift in Sources */,
 				035EA11465966E25356A0C33 /* TagLogicTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -882,6 +892,7 @@
 				9703495B56C9F401093364D6 /* Session.swift in Sources */,
 				E7BC3603C4028C2DF93E92B8 /* ShareSheetView.swift in Sources */,
 				01C9150749C8766047E833FC /* ShareViewController.swift in Sources */,
+				C686E02AEAAFCDA34FD581BA /* SwipeConfiguration.swift in Sources */,
 				27C222B33347EAD59960BF1D /* TagChip.swift in Sources */,
 				DC93E97C2D551C43FCC71353 /* TagField.swift in Sources */,
 				F6C96055B53F18158B6EE252 /* Theme.swift in Sources */,
@@ -930,6 +941,7 @@
 				DD14C738A0B75F10C68F22B4 /* ServerImage.swift in Sources */,
 				9E474B64EDA35CDC11F1FB29 /* ServerTrust.swift in Sources */,
 				B64ABF980B718A141A0949BA /* Session.swift in Sources */,
+				44B1D577B0AD09F2C92E3013 /* SwipeConfiguration.swift in Sources */,
 				C1682D9ADA8ECB4B9F048D1B /* TagChip.swift in Sources */,
 				E10D55B279A5A14FA64E36F4 /* TagField.swift in Sources */,
 				4EF30987C5DAF1971D11FFEA /* Theme.swift in Sources */,

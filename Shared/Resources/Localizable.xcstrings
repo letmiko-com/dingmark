@@ -2028,6 +2028,66 @@
           }
         }
       }
+    },
+    "Glissements": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Swipes"
+          }
+        }
+      }
+    },
+    "Vers la droite": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Swipe Right"
+          }
+        }
+      }
+    },
+    "Vers la gauche": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Swipe Left"
+          }
+        }
+      }
+    },
+    "Lu / non lu": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Read / Unread"
+          }
+        }
+      }
+    },
+    "Aucune": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "None"
+          }
+        }
+      }
+    },
+    "Un glissement complet déclenche l’action choisie. Vers la gauche, les autres actions restent disponibles à côté.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A full swipe triggers the chosen action. Swiping left, the other actions stay available next to it."
+          }
+        }
+      }
     }
   }
 }
