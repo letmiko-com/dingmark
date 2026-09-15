@@ -24,6 +24,23 @@ enum SettingsKey {
     static let defaultTags = "defaultTags"
     static let bookmarkCount = "bookmarkCount"
     static let demoMode = "demoMode"
+    static let readerMode = "readerMode"
+    static let markReadOnOpen = "markReadOnOpen"
+    static let readingOrder = "readingOrder"
+}
+
+/// Reading preferences with their defaults, for code that has no
+/// `@AppStorage` (the store, the intents).
+enum ReadingSettings {
+    /// Safari Reader is requested whenever the page offers it.
+    static func readerMode(_ defaults: UserDefaults = AppGroup.defaults) -> Bool {
+        defaults.object(forKey: SettingsKey.readerMode) as? Bool ?? true
+    }
+
+    /// Opening an unread bookmark marks it read.
+    static func marksReadOnOpen(_ defaults: UserDefaults = AppGroup.defaults) -> Bool {
+        defaults.object(forKey: SettingsKey.markReadOnOpen) as? Bool ?? true
+    }
 }
 
 enum ListDensity: String, CaseIterable, Identifiable, Sendable {

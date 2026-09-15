@@ -158,6 +158,7 @@ struct BookmarkMenuItems: View {
         }
         if let url = bookmark.resolvedURL {
             Button {
+                store.recordOpen(bookmark)
                 openURL(url)
             } label: {
                 Label("Ouvrir dans Safari", systemImage: "safari")

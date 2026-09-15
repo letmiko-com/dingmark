@@ -17,6 +17,8 @@ struct SettingsForm: View {
     @AppStorage(SettingsKey.unreadByDefault, store: AppGroup.defaults) private var unreadByDefault = true
     @AppStorage(SettingsKey.openLinksInApp, store: AppGroup.defaults) private var openInApp = true
     @AppStorage(SettingsKey.listDensity, store: AppGroup.defaults) private var densityRaw = ListDensity.comfortable.rawValue
+    @AppStorage(SettingsKey.readerMode, store: AppGroup.defaults) private var readerMode = true
+    @AppStorage(SettingsKey.markReadOnOpen, store: AppGroup.defaults) private var markReadOnOpen = true
 
     @State private var confirmSignOut = false
 
@@ -54,11 +56,21 @@ struct SettingsForm: View {
                 Toggle("Non lu par défaut", isOn: $unreadByDefault)
             }
 
-            Section("Affichage") {
+            Section {
                 Picker("Ouvrir les liens", selection: $openInApp) {
                     Text("Dans l’app").tag(true)
                     Text("Safari").tag(false)
                 }
+                Toggle("Mode lecteur automatique", isOn: $readerMode)
+                    .disabled(!openInApp)
+                Toggle("Marquer lu à l’ouverture", isOn: $markReadOnOpen)
+            } header: {
+                Text("Lecture")
+            } footer: {
+                Text("Le mode lecteur s’applique aux pages ouvertes dans l’app, quand Safari le propose.")
+            }
+
+            Section("Affichage") {
                 HStack {
                     Text("Liste")
                     Spacer()

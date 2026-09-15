@@ -1338,6 +1338,46 @@
           }
         }
       }
+    },
+    "Lecture": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reading"
+          }
+        }
+      }
+    },
+    "Mode lecteur automatique": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reader mode automatically"
+          }
+        }
+      }
+    },
+    "Marquer lu à l’ouverture": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mark read when opened"
+          }
+        }
+      }
+    },
+    "Le mode lecteur s’applique aux pages ouvertes dans l’app, quand Safari le propose.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reader mode applies to pages opened in the app, whenever Safari offers it."
+          }
+        }
+      }
     }
   }
 }

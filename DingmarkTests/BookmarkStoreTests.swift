@@ -120,6 +120,33 @@ struct BookmarkStoreTests {
         #expect(store.bookmarks.isEmpty)
     }
 
+    @Test("opening a bookmark marks it read only when the preference allows it")
+    func recordOpen() async throws {
+        let api = ControlledStoreAPI()
+        var events = api.events.makeAsyncIterator()
+        var unread = first
+        unread.unread = true
+        let (store, cache) = makeStore(api, bookmarks: [unread])
+        defer { cache.clear() }
+        let defaults = try #require(UserDefaults(suiteName: "record-open-\(UUID())"))
+        defaults.set(false, forKey: SettingsKey.markReadOnOpen)
+        #expect(store.recordOpen(unread, defaults: defaults) == nil)
+        #expect(store.bookmark(id: 1)?.unread == true)
+        // Default (key absent): on.
+        defaults.removeObject(forKey: SettingsKey.markReadOnOpen)
+        let task = try #require(store.recordOpen(unread, defaults: defaults))
+        #expect(store.bookmark(id: 1)?.unread == false)
+        let request = try #require(await events.next())
+        #expect(request.kind == .patch(1, BookmarkPatch(unread: false)))
+        var saved = unread
+        saved.unread = false
+        await api.succeed(request, with: .bookmark(saved))
+        _ = try await task.value
+        // Already read: nothing to send.
+        #expect(store.recordOpen(saved, defaults: defaults) == nil)
+        #expect(await api.requestCount == 1)
+    }
+
     @Test("failed deletion restores order and leaves the offline cache confirmed")
     func deletionCache() async throws {
         let api = ControlledStoreAPI()

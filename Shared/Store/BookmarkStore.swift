@@ -190,6 +190,21 @@ final class BookmarkStore {
         return enqueue(.patch(current.id, BookmarkPatch(unread: !current.unread)))
     }
 
+    /// Explicit target value: safe when the caller's copy may be stale.
+    @discardableResult
+    func setUnread(_ bookmark: Bookmark, _ unread: Bool) -> Task<Bookmark?, Error>? {
+        guard let current = self.bookmark(id: bookmark.id), api != nil, current.unread != unread else { return nil }
+        return enqueue(.patch(current.id, BookmarkPatch(unread: unread)))
+    }
+
+    /// The user opened the page: an unread bookmark becomes read when the
+    /// "mark read on open" preference is on (default).
+    @discardableResult
+    func recordOpen(_ bookmark: Bookmark, defaults: UserDefaults = AppGroup.defaults) -> Task<Bookmark?, Error>? {
+        guard ReadingSettings.marksReadOnOpen(defaults) else { return nil }
+        return setUnread(bookmark, false)
+    }
+
     @discardableResult
     func setArchived(_ bookmark: Bookmark, _ archived: Bool) -> Task<Bookmark?, Error>? {
         guard self.bookmark(id: bookmark.id) != nil, api != nil else { return nil }

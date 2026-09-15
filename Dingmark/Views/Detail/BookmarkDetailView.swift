@@ -9,6 +9,7 @@ struct BookmarkDetailView: View {
     @Environment(\.openURL) private var openURL
     @Environment(\.horizontalSizeClass) private var sizeClass
     @AppStorage(SettingsKey.openLinksInApp, store: AppGroup.defaults) private var openInApp = true
+    @AppStorage(SettingsKey.readerMode, store: AppGroup.defaults) private var readerMode = true
 
     @State private var editing = false
     @State private var showSafari = false
@@ -149,7 +150,8 @@ struct BookmarkDetailView: View {
         }
         .fullScreenCover(isPresented: $showSafari) {
             if let url = bookmark.resolvedURL {
-                SafariView(url: url).ignoresSafeArea()
+                SafariView(url: url, entersReader: readerMode) { showSafari = false }
+                    .ignoresSafeArea()
             }
         }
     }
@@ -166,6 +168,7 @@ struct BookmarkDetailView: View {
 
     private func open(_ bookmark: Bookmark) {
         guard let url = bookmark.resolvedURL else { return }
+        store.recordOpen(bookmark)
         if openInApp, url.scheme == "https" || url.scheme == "http" {
             showSafari = true
         } else {
