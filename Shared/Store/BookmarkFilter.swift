@@ -5,6 +5,13 @@ enum QuickFilter: String, CaseIterable, Identifiable, Hashable, Sendable {
     var id: String { rawValue }
 }
 
+/// Order of the reading queue ("À lire"): a queue is consumed oldest first
+/// by default, so nothing sinks and disappears.
+enum ReadingOrder: String, CaseIterable, Identifiable, Sendable {
+    case oldestFirst, newestFirst
+    var id: String { rawValue }
+}
+
 struct FilterCounts: Equatable, Sendable {
     var all = 0
     var unread = 0
@@ -47,6 +54,15 @@ enum BookmarkFilter {
         let options: String.CompareOptions = [.caseInsensitive, .diacriticInsensitive]
         return query.split(separator: " ").allSatisfy { term in
             haystack.contains { $0.range(of: term, options: options) != nil }
+        }
+    }
+
+    /// The reading queue: active bookmarks still marked unread.
+    static func readingList(_ bookmarks: [Bookmark], order: ReadingOrder) -> [Bookmark] {
+        let queue = bookmarks.filter { !$0.isArchived && $0.unread }
+        switch order {
+        case .oldestFirst: return queue.sorted { $0.dateAdded < $1.dateAdded }
+        case .newestFirst: return queue.sorted { $0.dateAdded > $1.dateAdded }
         }
     }
 

@@ -47,6 +47,7 @@ struct RootView: View {
 
 struct PhoneRootView: View {
     @Environment(AppRouter.self) private var router
+    @Environment(BookmarkStore.self) private var store
 
     var body: some View {
         @Bindable var router = router
@@ -54,6 +55,10 @@ struct PhoneRootView: View {
             Tab("Favoris", systemImage: "bookmark", value: AppRouter.Tab.bookmarks) {
                 BookmarkListScreen()
             }
+            Tab("À lire", systemImage: "book", value: AppRouter.Tab.reading) {
+                ReadingListScreen()
+            }
+            .badge(store.counts.unread)
             Tab("Tags", systemImage: "tag", value: AppRouter.Tab.tags) {
                 TagListScreen()
             }
@@ -65,7 +70,8 @@ struct PhoneRootView: View {
     }
 }
 
-/// Discreet confirmation banner (saved, archived, deleted, URL copied).
+/// Discreet confirmation banner (saved, archived, deleted, URL copied), with
+/// an optional follow-up button that keeps it on screen a little longer.
 struct ToastView: View {
     @Environment(BookmarkStore.self) private var store
 
@@ -74,6 +80,14 @@ struct ToastView: View {
             HStack(spacing: 8) {
                 Image(systemName: "checkmark.circle.fill").foregroundStyle(Color.accentColor)
                 Text(toast.message).font(.subheadline.weight(.medium))
+                if let title = toast.actionTitle, let action = toast.action {
+                    Button(title) {
+                        store.toast = nil
+                        action()
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .padding(.leading, 6)
+                }
             }
             .padding(.leading, 14)
             .padding(.trailing, 18)
@@ -82,7 +96,7 @@ struct ToastView: View {
             .padding(.top, 8)
             .transition(.scale(scale: 0.96).combined(with: .opacity))
             .task(id: toast.id) {
-                try? await Task.sleep(for: .seconds(1.8))
+                try? await Task.sleep(for: .seconds(toast.actionTitle == nil ? 1.8 : 4))
                 if store.toast?.id == toast.id {
                     withAnimation(.easeOut(duration: 0.2)) { store.toast = nil }
                 }

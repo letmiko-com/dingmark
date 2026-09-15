@@ -55,6 +55,7 @@ struct UnreadWidget: Widget {
 
 enum DeepLink {
     static let add = URL(string: "dingmark://add")!
+    static let reading = URL(string: "dingmark://reading")!
     static func bookmark(_ id: Int) -> URL { URL(string: "dingmark://bookmark/\(id)")! }
 }
 
@@ -74,7 +75,7 @@ struct UnreadWidgetView: View {
 }
 
 /// Icon + counter, the latest unread bookmark on two lines, an add button.
-/// The background opens the latest bookmark; Add has its own destination.
+/// The background opens the reading queue; Add has its own destination.
 struct SmallUnreadView: View {
     let entry: UnreadEntry
 
@@ -107,7 +108,7 @@ struct SmallUnreadView: View {
                     .background(Color.accentColor, in: Capsule())
             }
         }
-        .widgetURL(entry.unread.first.map { DeepLink.bookmark($0.id) } ?? DeepLink.add)
+        .widgetURL(entry.unread.isEmpty ? DeepLink.add : DeepLink.reading)
     }
 }
 
@@ -171,7 +172,7 @@ struct CircularUnreadView: View {
                 Text(count, format: .number).font(.headline)
             }
         }
-        .widgetURL(DeepLink.add)
+        .widgetURL(count == 0 ? DeepLink.add : DeepLink.reading)
     }
 }
 
@@ -191,7 +192,7 @@ struct RectangularUnreadView: View {
                 Text("Aucun favori non lu").font(.footnote).foregroundStyle(.secondary)
             }
         }
-        .widgetURL(entry.unread.first.map { DeepLink.bookmark($0.id) } ?? DeepLink.add)
+        .widgetURL(entry.unread.isEmpty ? DeepLink.add : DeepLink.reading)
     }
 }
 

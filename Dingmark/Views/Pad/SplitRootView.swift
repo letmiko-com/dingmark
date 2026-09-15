@@ -6,29 +6,42 @@ struct SplitRootView: View {
     @Environment(BookmarkStore.self) private var store
     @Environment(AppRouter.self) private var router
     @AppStorage(SettingsKey.listDensity, store: AppGroup.defaults) private var densityRaw = ListDensity.comfortable.rawValue
+    @AppStorage(SettingsKey.readingOrder, store: AppGroup.defaults) private var orderRaw = ReadingOrder.oldestFirst.rawValue
 
     @State private var columns: NavigationSplitViewVisibility = .all
     @State private var selectedID: Int?
     @State private var showSettings = false
     @State private var searchText = ""
+    /// The reading queue is a sidebar destination of its own, not a filter
+    /// of the store: the library keeps its filter while it is shown.
+    @State private var showsReadingQueue = false
 
     private enum SidebarItem: Hashable {
+        case reading
         case filter(QuickFilter)
         case tag(String)
     }
 
     private var density: ListDensity { ListDensity(rawValue: densityRaw) ?? .comfortable }
+    private var readingOrder: ReadingOrder { ReadingOrder(rawValue: orderRaw) ?? .oldestFirst }
+    private var readingQueue: [Bookmark] { BookmarkFilter.readingList(store.bookmarks, order: readingOrder) }
+    private var rows: [Bookmark] { showsReadingQueue ? readingQueue : store.filtered }
 
     private var sidebarSelection: Binding<SidebarItem?> {
         Binding {
+            if showsReadingQueue { return .reading }
             if let tag = store.tagFilter { return .tag(tag) }
             return .filter(store.filter)
         } set: { item in
             switch item {
+            case .reading?:
+                showsReadingQueue = true
             case .filter(let filter)?:
+                showsReadingQueue = false
                 store.filter = filter
                 store.tagFilter = nil
             case .tag(let tag)?:
+                showsReadingQueue = false
                 store.tagFilter = tag
                 store.filter = .all
             case nil:
@@ -41,6 +54,11 @@ struct SplitRootView: View {
         @Bindable var router = router
         NavigationSplitView(columnVisibility: $columns) {
             List(selection: sidebarSelection) {
+                Section {
+                    Label("À lire", systemImage: "book")
+                        .badge(store.counts.unread)
+                        .tag(SidebarItem.reading)
+                }
                 Section {
                     ForEach(QuickFilter.allCases) { filter in
                         Label(filter.title, systemImage: filter.symbol)
@@ -76,7 +94,7 @@ struct SplitRootView: View {
             }
             .navigationSplitViewColumnWidth(min: 240, ideal: 300)
         } content: {
-            List(store.filtered, selection: $selectedID) { bookmark in
+            List(rows, selection: $selectedID) { bookmark in
                 BookmarkRow(bookmark: bookmark, density: density, selected: selectedID == bookmark.id)
                     .tag(bookmark.id)
                     .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16))
@@ -92,6 +110,13 @@ struct SplitRootView: View {
             .listStyle(.plain)
             .navigationTitle(listTitle)
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                if showsReadingQueue {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        ReadingOrderMenu(selection: $orderRaw)
+                    }
+                }
+            }
             .searchable(text: $searchText, prompt: Text("Rechercher"))
             .task(id: searchText) {
                 try? await Task.sleep(for: .milliseconds(200))
@@ -131,16 +156,25 @@ struct SplitRootView: View {
             }
         }
         .onChange(of: router.pendingBookmarkID) { _, _ in consumePendingBookmark() }
-        .onAppear { consumePendingBookmark() }
+        .onChange(of: router.tab) { _, tab in
+            // The phone's tabs map onto the sidebar here.
+            if tab == .reading { showsReadingQueue = true }
+        }
+        .onAppear {
+            consumePendingBookmark()
+            if router.tab == .reading { showsReadingQueue = true }
+        }
     }
 
     private func consumePendingBookmark() {
         guard let id = router.pendingBookmarkID else { return }
+        showsReadingQueue = false
         selectedID = id
         router.pendingBookmarkID = nil
     }
 
     private var listTitle: Text {
+        if showsReadingQueue { return Text("À lire") }
         if let tag = store.tagFilter { return Text(tag) }
         return store.filter == .archived ? Text("Archivés") : Text("Favoris")
     }
@@ -151,6 +185,10 @@ struct SplitRootView: View {
             LoadingPlaceholderList(density: density)
         } else if let error = store.loadError, store.bookmarks.isEmpty {
             ServerErrorView(error: error) { Task { await store.refresh() } }
+        } else if showsReadingQueue {
+            if readingQueue.isEmpty && store.hasLoadedOnce {
+                FilteredEmptyView(filter: .unread, tag: nil)
+            }
         } else if store.hasLoadedOnce && store.counts.all == 0 && store.filter != .archived && store.tagFilter == nil && store.query.isEmpty {
             EmptyBookmarksView { router.showAdd() }
         } else if store.filtered.isEmpty && !store.query.isEmpty {

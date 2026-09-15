@@ -40,12 +40,14 @@
 		3F0EA967B775C4B4EB3BC088 /* BookmarkFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CC3A32CF87F344204B0261B /* BookmarkFormView.swift */; };
 		3FD504FF102A090FEA46B2FB /* MarkdownNotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC53D83DA3D35DAD1207D96 /* MarkdownNotesView.swift */; };
 		401CF59210FA887CCEFA18B4 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707EA9E4327E2C113ED58098 /* Session.swift */; };
+		40C7EB8F5F992AEF78D78D69 /* AppRouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3BFF6068986180DA02B9719 /* AppRouterTests.swift */; };
 		44EE8FB30243ECDEB0318E1F /* LinkdingDateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346F7E99A743999AAE995399 /* LinkdingDateTests.swift */; };
 		48C84ACAD8F6CBF959E9A4DA /* SplitRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C45210FF404804FDCBC8B1B /* SplitRootView.swift */; };
 		4EF30987C5DAF1971D11FFEA /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C9CCF89BA12C7114239456 /* Theme.swift */; };
 		4F98DE2B7BC4C40A802F9AD3 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7CD83FD1EC90245B21F2EE /* Bookmark.swift */; };
 		50203379871F4C32B13FD2F9 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE96CD74A4833EC69E348430 /* FlowLayout.swift */; };
 		51970307DA5A065EBE235188 /* LinkdingJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDBA3C59A16B7F5A866F671 /* LinkdingJSON.swift */; };
+		59AE3AEA34739B1342D1DAFF /* ReadingListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C8BD7E887B8DCB007CC1F7 /* ReadingListScreen.swift */; };
 		5BF527193C5A0052D41FA86F /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2662E2C88AB933B555114700 /* LoginView.swift */; };
 		5F00313CD7C1ABFB7FAEEEC1 /* LinkdingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BFBB3694C4BA600BFA2675 /* LinkdingError.swift */; };
 		5FB55C63AB0AD1B9DA2D26A7 /* DingmarkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3657C8BCA226CC0101228FF /* DingmarkApp.swift */; };
@@ -213,6 +215,7 @@
 		79D59C9FD0E42C9D4CA6E872 /* Signing.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Signing.xcconfig; sourceTree = "<group>"; };
 		7D7599D2E1DE33281AFACA24 /* DingmarkWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DingmarkWidgets.entitlements; sourceTree = "<group>"; };
 		80F15B6436F5A2CAD94B355A /* DingmarkWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DingmarkWidgets.swift; sourceTree = "<group>"; };
+		81C8BD7E887B8DCB007CC1F7 /* ReadingListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingListScreen.swift; sourceTree = "<group>"; };
 		83E65F65863963F435B24388 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		8D0D6E2076EDBB6FEB19B426 /* BookmarkDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkDetailView.swift; sourceTree = "<group>"; };
 		90776E42A6E741CD8A0B8248 /* AppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroup.swift; sourceTree = "<group>"; };
@@ -233,6 +236,7 @@
 		BADA777E2E7CE3D7BA4F0550 /* QuickFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickFilterBar.swift; sourceTree = "<group>"; };
 		BBA401EC5EC399A870A162C4 /* DingmarkTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = DingmarkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C205D0DEF42F56D756EC3497 /* BookmarkCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkCacheTests.swift; sourceTree = "<group>"; };
+		C3BFF6068986180DA02B9719 /* AppRouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouterTests.swift; sourceTree = "<group>"; };
 		C777482AE447EE4D8BC38C1A /* DingmarkUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = DingmarkUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C79685D7370451C074B9A285 /* TagChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagChip.swift; sourceTree = "<group>"; };
 		C9F570E7DF494CB2843C0D37 /* ShareSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheetView.swift; sourceTree = "<group>"; };
@@ -268,6 +272,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		068848BA8FC2E39A8C96CF32 /* Reading */ = {
+			isa = PBXGroup;
+			children = (
+				81C8BD7E887B8DCB007CC1F7 /* ReadingListScreen.swift */,
+			);
+			path = Reading;
+			sourceTree = "<group>";
+		};
 		1F1FD60D0C9F9E4C2B7AD78C /* API */ = {
 			isa = PBXGroup;
 			children = (
@@ -305,6 +317,7 @@
 				BD3084328946A8384CCAFF96 /* List */,
 				602858A00AC759D4AE29FAC3 /* Login */,
 				9F067356BC0FAEFB23EE4917 /* Pad */,
+				068848BA8FC2E39A8C96CF32 /* Reading */,
 				590EC98E1EDAEEA2E2256705 /* Settings */,
 				A568138E96741A514CBE77EC /* Tags */,
 			);
@@ -322,6 +335,7 @@
 		5B81E94B560E5377A5D4490A /* DingmarkTests */ = {
 			isa = PBXGroup;
 			children = (
+				C3BFF6068986180DA02B9719 /* AppRouterTests.swift */,
 				C205D0DEF42F56D756EC3497 /* BookmarkCacheTests.swift */,
 				F2D3AE8FFD84934AF03949CF /* BookmarkDecodingTests.swift */,
 				A484E54C6623B6A34018D0E6 /* BookmarkFilterTests.swift */,
@@ -762,6 +776,7 @@
 				5BF527193C5A0052D41FA86F /* LoginView.swift in Sources */,
 				8300A353A9FF9C822EF7116F /* MarkdownNotesView.swift in Sources */,
 				DB756919751557A961764BED /* QuickFilterBar.swift in Sources */,
+				59AE3AEA34739B1342D1DAFF /* ReadingListScreen.swift in Sources */,
 				650DF11997014C4117A94421 /* RelativeAge.swift in Sources */,
 				06FDB41BB5DB755474AE0CFD /* RibbonMark.swift in Sources */,
 				0568F310A6D655A3481A03C3 /* RootView.swift in Sources */,
@@ -783,6 +798,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40C7EB8F5F992AEF78D78D69 /* AppRouterTests.swift in Sources */,
 				F2741B0AD491F27121A297DE /* BookmarkCacheTests.swift in Sources */,
 				F8DAB2CE6753D0B79C4CD7F5 /* BookmarkDecodingTests.swift in Sources */,
 				D0C12316B931F6956E567584 /* BookmarkFilterTests.swift in Sources */,

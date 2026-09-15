@@ -44,6 +44,17 @@ struct BookmarkFilterTests {
         #expect(zip(list, list.dropFirst()).allSatisfy { $0.dateAdded >= $1.dateAdded })
     }
 
+    @Test("reading queue: unread active bookmarks, oldest first by default")
+    func readingList() {
+        let oldest = BookmarkFilter.readingList(fixtures, order: .oldestFirst)
+        #expect(oldest.allSatisfy { $0.unread && !$0.isArchived })
+        #expect(oldest.map(\.id) == [7, 4, 2, 1])
+        #expect(BookmarkFilter.readingList(fixtures, order: .newestFirst).map(\.id) == [1, 2, 4, 7])
+        var archivedUnread = fixtures[0]
+        archivedUnread.isArchived = true
+        #expect(!BookmarkFilter.readingList([archivedUnread], order: .oldestFirst).contains { $0.id == archivedUnread.id })
+    }
+
     @Test("tag usage counts, most used first")
     func tagCounts() {
         let counts = BookmarkFilter.tagCounts(fixtures)

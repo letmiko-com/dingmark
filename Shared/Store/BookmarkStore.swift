@@ -5,6 +5,11 @@ import WidgetKit
 struct Toast: Identifiable, Equatable {
     let id = UUID()
     let message: String
+    /// Optional follow-up offered in the banner ("Archiver" after reading).
+    var actionTitle: String? = nil
+    var action: (@MainActor () -> Void)? = nil
+
+    static func == (lhs: Toast, rhs: Toast) -> Bool { lhs.id == rhs.id }
 }
 
 /// Bookmarks in memory, cache on disk, server behind. Every mutation is
@@ -223,6 +228,25 @@ final class BookmarkStore {
 
     func show(_ message: String) {
         toast = Toast(message: message)
+    }
+
+    func show(_ message: String, actionTitle: String, action: @escaping @MainActor () -> Void) {
+        toast = Toast(message: message, actionTitle: actionTitle, action: action)
+    }
+
+    /// The page was closed from the reading queue. Marked read on open: offer
+    /// to archive. Not marked (preference off): offer to mark read.
+    func finishReading(_ bookmark: Bookmark, defaults: UserDefaults = AppGroup.defaults) {
+        guard let current = self.bookmark(id: bookmark.id) else { return }
+        if current.unread {
+            show(String(localized: "Terminé ?"), actionTitle: String(localized: "Marquer lu")) { [weak self] in
+                self?.setUnread(current, false)
+            }
+        } else if !current.isArchived {
+            show(String(localized: "Lu"), actionTitle: String(localized: "Archiver")) { [weak self] in
+                self?.setArchived(current, true)
+            }
+        }
     }
 
     // MARK: Private

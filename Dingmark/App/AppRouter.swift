@@ -1,10 +1,11 @@
 import Foundation
 import Observation
 
-/// Tab selection and deep links (`dingmark://add`, `dingmark://bookmark/<id>`).
+/// Tab selection and deep links (`dingmark://add`, `dingmark://bookmark/<id>`,
+/// `dingmark://reading`).
 @MainActor @Observable
 final class AppRouter {
-    enum Tab: Hashable { case bookmarks, tags, settings }
+    enum Tab: Hashable { case bookmarks, reading, tags, settings }
 
     struct AddRequest: Identifiable, Equatable {
         let id = UUID()
@@ -32,6 +33,8 @@ final class AppRouter {
                 tab = .bookmarks
                 pendingBookmarkID = id
             }
+        case "reading":
+            tab = .reading
         default:
             break
         }

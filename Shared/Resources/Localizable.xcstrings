@@ -1378,6 +1378,76 @@
           }
         }
       }
+    },
+    "À lire": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To Read"
+          }
+        }
+      }
+    },
+    "Plus anciens d’abord": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oldest First"
+          }
+        }
+      }
+    },
+    "Plus récents d’abord": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Newest First"
+          }
+        }
+      }
+    },
+    "Ordre de lecture": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reading Order"
+          }
+        }
+      }
+    },
+    "Détails": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Details"
+          }
+        }
+      }
+    },
+    "%lld à lire · le plus ancien attend depuis %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld to read · the oldest has waited %@"
+          }
+        }
+      }
+    },
+    "Terminé ?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done?"
+          }
+        }
+      }
     }
   }
 }
