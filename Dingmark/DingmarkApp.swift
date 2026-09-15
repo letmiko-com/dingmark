@@ -13,12 +13,23 @@ struct DingmarkApp: App {
         let demo = process.arguments.contains("-demo") || process.environment["DINGMARK_DEMO"] == "1"
         let session = Session(demo: demo)
         _session = State(initialValue: session)
-        // The demo keeps its cache to itself: the App Group file feeds the
-        // widgets and the offline list of the real server.
+        // The demo keeps its cache and its list preferences to itself: the
+        // App Group file feeds the widgets and the offline list of the real
+        // server, and a sort left by one demo run must not shape the next
+        // (screenshots and UI tests expect the default order).
         let cache = demo
             ? BookmarkCache(fileURL: FileManager.default.temporaryDirectory.appendingPathComponent("dingmark-demo-cache.json"))
             : BookmarkCache.shared
-        _store = State(initialValue: BookmarkStore(api: session.makeAPI(), cache: cache, cacheSessionID: session.cacheSessionID))
+        let defaults = demo ? Self.demoDefaults() : AppGroup.defaults
+        _store = State(initialValue: BookmarkStore(api: session.makeAPI(), cache: cache, cacheSessionID: session.cacheSessionID, defaults: defaults))
+    }
+
+    /// A suite emptied at every demo launch.
+    private static func demoDefaults() -> UserDefaults {
+        let name = "app.letmiko.dingmark.demo"
+        let defaults = UserDefaults(suiteName: name) ?? .standard
+        defaults.removePersistentDomain(forName: name)
+        return defaults
     }
 
     var body: some Scene {
