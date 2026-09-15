@@ -1,0 +1,56 @@
+{
+  "sourceLanguage" : "fr",
+  "strings" : {
+    "Ajouter à ${applicationName}" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add to ${applicationName}"
+          }
+        }
+      }
+    },
+    "Enregistrer dans ${applicationName}" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save to ${applicationName}"
+          }
+        }
+      }
+    },
+    "Ajouter ce lien à ${applicationName}" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add this link to ${applicationName}"
+          }
+        }
+      }
+    },
+    "Nouveau favori ${applicationName}" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New ${applicationName} bookmark"
+          }
+        }
+      }
+    },
+    "Ouvrir l’ajout dans ${applicationName}" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open add in ${applicationName}"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

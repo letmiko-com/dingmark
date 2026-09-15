@@ -1848,6 +1848,96 @@
           }
         }
       }
+    },
+    "Ajouter à Dingmark": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add to Dingmark"
+          }
+        }
+      }
+    },
+    "Enregistre un lien dans votre linkding avec vos tags par défaut. Une URL déjà enregistrée met à jour le favori existant.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saves a link to your linkding with your default tags. An already saved URL updates the existing bookmark."
+          }
+        }
+      }
+    },
+    "Ajouter ${url} à Dingmark": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add ${url} to Dingmark"
+          }
+        }
+      }
+    },
+    "Favori mis à jour : %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bookmark updated: %@"
+          }
+        }
+      }
+    },
+    "Enregistré dans Dingmark : %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved to Dingmark: %@"
+          }
+        }
+      }
+    },
+    "Nouveau favori ${url}": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New bookmark ${url}"
+          }
+        }
+      }
+    },
+    "Ouvre Dingmark sur le formulaire d’ajout.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opens Dingmark on the add form."
+          }
+        }
+      }
+    },
+    "Dingmark n’est pas connecté. Ouvrez l’app pour connecter votre instance linkding.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dingmark is not connected. Open the app to connect your linkding instance."
+          }
+        }
+      }
+    },
+    "URL": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "URL"
+          }
+        }
+      }
     }
   }
 }
