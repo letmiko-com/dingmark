@@ -128,7 +128,8 @@ struct BookmarkListScreen: View {
 }
 
 /// Plain list of rows with navigation, swipe actions and context menus. The
-/// selection only takes effect in edit mode (multiple selection).
+/// selection is bound in edit mode only: bound all the time, a tap on the
+/// phone selects the row (iOS 26) instead of following the navigation link.
 struct BookmarkRows: View {
     let bookmarks: [Bookmark]
     let density: ListDensity
@@ -136,9 +137,10 @@ struct BookmarkRows: View {
     @Binding var selection: Set<Int>
     var highlight: [String] = []
     @Environment(BookmarkStore.self) private var store
+    @Environment(\.editMode) private var editMode
 
     var body: some View {
-        List(bookmarks, selection: $selection) { bookmark in
+        List(bookmarks, selection: editMode?.wrappedValue.isEditing == true ? $selection : nil) { bookmark in
             NavigationLink(value: bookmark.id) {
                 BookmarkRow(bookmark: bookmark, density: density, highlight: highlight)
             }
