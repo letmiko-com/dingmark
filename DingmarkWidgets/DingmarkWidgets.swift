@@ -89,7 +89,7 @@ struct SmallUnreadView: View {
             Spacer(minLength: 4)
             if let first = entry.unread.first {
                 VStack(alignment: .leading, spacing: 3) {
-                    Circle().fill(Color.accentColor).frame(width: 8, height: 8)
+                    Circle().fill(Color.dingmarkAccent).frame(width: 8, height: 8)
                     Text(first.displayTitle).font(.footnote.weight(.semibold)).lineLimit(2)
                     Text(first.domain).font(.caption).foregroundStyle(.secondary).lineLimit(1)
                 }
@@ -104,8 +104,8 @@ struct SmallUnreadView: View {
                     .font(.footnote.weight(.semibold))
                     .frame(maxWidth: .infinity)
                     .frame(height: 30)
-                    .foregroundStyle(.white)
-                    .background(Color.accentColor, in: Capsule())
+                    .foregroundStyle(Color.onAccent)
+                    .background(Color.dingmarkAccent, in: Capsule())
             }
         }
         .widgetURL(entry.unread.isEmpty ? DeepLink.add : DeepLink.reading)
@@ -135,7 +135,7 @@ struct MediumUnreadView: View {
                     ForEach(entry.unread.prefix(3)) { bookmark in
                         Link(destination: DeepLink.bookmark(bookmark.id)) {
                             HStack(spacing: 8) {
-                                Circle().fill(Color.accentColor).frame(width: 6, height: 6)
+                                Circle().fill(Color.dingmarkAccent).frame(width: 6, height: 6)
                                 FaviconView(bookmark: bookmark, size: 20)
                                 Text(bookmark.displayTitle).font(.footnote.weight(.medium)).lineLimit(1)
                             }
@@ -151,8 +151,8 @@ struct MediumUnreadView: View {
                     Image(systemName: "plus")
                         .font(.title2.weight(.light))
                         .frame(width: 48, height: 48)
-                        .foregroundStyle(.white)
-                        .background(Color.accentColor, in: Circle())
+                        .foregroundStyle(Color.onAccent)
+                        .background(Color.dingmarkAccent, in: Circle())
                 }
                 .accessibilityLabel(Text("Ajouter"))
             }

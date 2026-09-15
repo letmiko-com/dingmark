@@ -141,7 +141,7 @@ The simulator reaches `127.0.0.1` directly. The tests run in name order: `test01
 
 ## Design
 
-The screens follow a design prototype made with Claude Design (clickable prototype, spec boards, the "Ribbon" icon). Tokens: teal accent `rgb(0,199,190)` in light and `rgb(0,210,224)` in dark, system semantic colours, Dynamic Type text styles, 16 pt margins, 26 pt group radius, 32 pt filter capsules, 50 pt filled buttons. The icon sources and their rendering script live in `design/icon/`.
+The screens follow a design prototype made with Claude Design (clickable prototype, spec boards, the "Ribbon" icon). Tokens: teal accent `rgb(0,199,190)` in light and `rgb(0,210,224)` in dark for fills, with black text on them and a darker `rgb(0,130,124)` tint for text on the light background (both at least 4.5:1, WCAG AA), system semantic colours, Dynamic Type text styles, 16 pt margins, 26 pt group radius, 32 pt filter capsules, 50 pt filled buttons. The icon sources and their rendering script live in `design/icon/`.
 
 ## Contributing
 

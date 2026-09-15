@@ -33,9 +33,9 @@ struct SettingsForm: View {
             Section("Serveur") {
                 HStack(spacing: 12) {
                     Image(systemName: "server.rack")
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.onAccent)
                         .frame(width: 40, height: 40)
-                        .background(Color.accentColor, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                        .background(Color.dingmarkAccent, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
                     VStack(alignment: .leading, spacing: 2) {
                         Text(session.host ?? "—")
                         Text(subtitle).font(.footnote).foregroundStyle(.secondary)

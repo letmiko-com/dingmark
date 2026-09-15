@@ -35,6 +35,7 @@ struct EmptyBookmarksView: View {
             Button("Ajouter un favori", action: onAdd)
                 .buttonStyle(.borderedProminent)
                 .buttonBorderShape(.capsule)
+                .accentProminent()
         }
     }
 }

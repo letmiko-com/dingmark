@@ -30,7 +30,7 @@ final class ShareViewController: UIViewController, UIAdaptivePresentationControl
         } onCancel: { [weak self] in
             self?.cancel()
         }
-        let host = UIHostingController(rootView: root.tint(.dingmarkAccent))
+        let host = UIHostingController(rootView: root.tint(.dingmarkTint))
         host.modalPresentationStyle = .pageSheet
         host.presentationController?.delegate = self
         if let sheet = host.sheetPresentationController {

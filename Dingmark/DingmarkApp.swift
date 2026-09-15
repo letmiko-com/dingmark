@@ -38,7 +38,7 @@ struct DingmarkApp: App {
                 .environment(session)
                 .environment(store)
                 .environment(router)
-                .tint(.dingmarkAccent)
+                .tint(.dingmarkTint)
                 .onOpenURL { router.handle($0) }
         }
     }

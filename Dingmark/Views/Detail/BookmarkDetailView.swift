@@ -84,6 +84,7 @@ struct BookmarkDetailView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .buttonBorderShape(.capsule)
+                    .accentProminent()
                     if let url = bookmark.resolvedURL {
                         Button {
                             UIPasteboard.general.url = url

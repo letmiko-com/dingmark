@@ -46,6 +46,7 @@ struct BookmarkFormView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .buttonBorderShape(.capsule)
+                    .accentProminent()
                     .disabled(!model.canSave || saving)
                 }
             }

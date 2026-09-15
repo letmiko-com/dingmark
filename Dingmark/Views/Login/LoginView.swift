@@ -82,7 +82,7 @@ struct LoginView: View {
             VStack(spacing: 12) {
                 Button(action: test) {
                     HStack(spacing: 8) {
-                        if phase == .testing { ProgressView().tint(.white) }
+                        if phase == .testing { ProgressView().tint(Color.onAccent) }
                         Text(buttonLabel).fontWeight(.semibold)
                     }
                     .frame(maxWidth: .infinity)
@@ -90,6 +90,7 @@ struct LoginView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .buttonBorderShape(.capsule)
+                .accentProminent()
                 .disabled(phase == .testing || phase == .connected || urlText.trimmingCharacters(in: .whitespaces).isEmpty || token.isEmpty)
                 Text("Letmiko").font(.caption).foregroundStyle(.tertiary)
             }

@@ -25,5 +25,5 @@ Tests contre un linkding réel (`RealServerTests`) : serveur Docker jetable, jet
 - Les chaînes visibles sont en français dans le code (clé) avec leur traduction anglaise dans `Shared/Resources/Localizable.xcstrings`. Une nouvelle chaîne = une entrée ajoutée au fichier.
 - `Shared/` est compilé dans l'app, la share extension et les widgets : pas de `SafariServices` ni de code spécifique à l'app dedans.
 - Un bug corrigé dans la logique (client, filtres, tags, dates) se prouve par un test dans `DingmarkTests/`.
-- Tokens visuels dans `Shared/UI/Theme.swift` (`Metrics`, `Color.dingmarkAccent`) : ne pas coder de valeurs en dur dans les vues.
+- Tokens visuels dans `Shared/UI/Theme.swift` (`Metrics`, couleurs) : ne pas coder de valeurs en dur dans les vues. Trois couleurs d'accent, pas une : `dingmarkAccent` pour les fonds (pilule, boutons pleins, points), toujours avec `onAccent` (noir) pour ce qui est écrit dessus ; `dingmarkTint` (teal assombri en clair) pour le texte et les contrôles teintés, posé par `.tint` à la racine. Jamais de blanc sur le teal : 2,1:1.
 - Icône : le paquet en couches `Dingmark/Resources/AppIcon.icon` est la seule source pour l'app (le système dérive sombre, teinté et Clear). Les PNG de `design/icon/out/` ne servent qu'au web et aux stores : voir `design/icon/README.md`.

@@ -73,6 +73,7 @@ struct ShareSheetView: View {
             }
             .buttonStyle(.borderedProminent)
             .buttonBorderShape(.capsule)
+            .accentProminent()
             .disabled(model?.canSave != true || saving)
         }
         .padding(.horizontal, 16)

@@ -5,7 +5,7 @@ enum TagChipStyle {
     case cell
     /// 26 pt, subheadline, tertiary fill, accent text (detail).
     case detail
-    /// 26 pt, subheadline medium, accent fill, white text, removable.
+    /// 26 pt, subheadline medium, accent fill, black text, removable.
     case editable
 }
 
@@ -49,8 +49,8 @@ struct TagChip: View {
             .padding(.leading, 10)
             .padding(.trailing, 2)
             .frame(height: 26)
-            .foregroundStyle(.white)
-            .background(Color.accentColor, in: Capsule())
+            .foregroundStyle(Color.onAccent)
+            .background(Color.dingmarkAccent, in: Capsule())
         }
     }
 }

@@ -94,8 +94,8 @@ struct TagField: View {
                                     .labelStyle(.titleAndIcon)
                                     .padding(.horizontal, 10)
                                     .frame(height: 28)
-                                    .foregroundStyle(.white)
-                                    .background(Color.accentColor, in: Capsule())
+                                    .foregroundStyle(Color.onAccent)
+                                    .background(Color.dingmarkAccent, in: Capsule())
                             }
                             .buttonStyle(.plain)
                         }

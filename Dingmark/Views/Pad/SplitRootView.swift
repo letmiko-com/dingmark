@@ -103,7 +103,7 @@ struct SplitRootView: View {
                             highlight: showsReadingQueue ? [] : store.searchTerms)
                     .tag(bookmark.id)
                     .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16))
-                    .listRowBackground(selectedID == bookmark.id ? Color.accentColor : Color.clear)
+                    .listRowBackground(selectedID == bookmark.id ? Color.dingmarkAccent : Color.clear)
                     .alignmentGuide(.listRowSeparatorLeading) { _ in 0 }
                     .bookmarkSwipeActions(bookmark)
                     .contextMenu {

@@ -72,6 +72,7 @@ struct BookmarkListScreen: View {
                     }
                     .buttonStyle(.glassProminent)
                     .buttonBorderShape(.circle)
+                    .accentProminent()
                     .padding(.trailing, 20)
                     .padding(.bottom, 16)
                     .accessibilityLabel(Text("Ajouter un favori"))

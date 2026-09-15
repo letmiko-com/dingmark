@@ -37,7 +37,7 @@ struct MarkdownNotesView: View {
                     // One element per item: the glyph alone would be a tiny
                     // selectable target and a meaningless VoiceOver stop.
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
-                        Text("•").foregroundStyle(.tertiary).accessibilityHidden(true)
+                        Text("•").foregroundStyle(.secondary).accessibilityHidden(true)
                         Text(inline(line.text))
                     }
                     .padding(.leading, 4)

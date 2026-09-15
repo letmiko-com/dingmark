@@ -11,9 +11,9 @@ struct BookmarkRow: View {
 
     @Environment(\.dynamicTypeSize) private var typeSize
 
-    private var primary: Color { selected ? .white : .primary }
-    private var secondary: Color { selected ? .white.opacity(0.75) : Color(.secondaryLabel) }
-    private var tertiary: Color { selected ? .white.opacity(0.6) : Color(.tertiaryLabel) }
+    private var primary: Color { selected ? .onAccent : .primary }
+    private var secondary: Color { selected ? .onAccent.opacity(0.7) : Color(.secondaryLabel) }
+    private var tertiary: Color { selected ? .onAccent.opacity(0.55) : Color(.tertiaryLabel) }
     private var showsDescription: Bool { density == .comfortable && !bookmark.displayDescription.isEmpty }
 
     var body: some View {
@@ -63,7 +63,7 @@ struct BookmarkRow: View {
     @ViewBuilder
     private var unreadDot: some View {
         Circle()
-            .fill(selected ? Color.white : Color.accentColor)
+            .fill(selected ? Color.onAccent : Color.dingmarkAccent)
             .frame(width: Metrics.unreadDot, height: Metrics.unreadDot)
             .opacity(bookmark.unread ? 1 : 0)
             .scaleEffect(bookmark.unread ? 1 : 0.01)

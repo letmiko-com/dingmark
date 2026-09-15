@@ -46,10 +46,10 @@ struct QuickFilterBar: View {
                         }
                         .padding(.horizontal, 14)
                         .frame(height: Metrics.filterHeight)
-                        .foregroundStyle(selected ? Color.white : Color.primary)
+                        .foregroundStyle(selected ? Color.onAccent : Color.primary)
                         .background {
                             if selected {
-                                Capsule().fill(Color.accentColor).matchedGeometryEffect(id: "pill", in: pill)
+                                Capsule().fill(Color.dingmarkAccent).matchedGeometryEffect(id: "pill", in: pill)
                             } else {
                                 Capsule().fill(Color(.tertiarySystemFill))
                             }
