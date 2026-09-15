@@ -9,6 +9,8 @@ struct BookmarkListScreen: View {
 
     @State private var path: [Int] = []
     @State private var searchText = ""
+    @State private var selection = Set<Int>()
+    @State private var editMode: EditMode = .inactive
     @Namespace private var zoom
 
     private var density: ListDensity { ListDensity(rawValue: densityRaw) ?? .comfortable }
@@ -26,9 +28,11 @@ struct BookmarkListScreen: View {
                 }
                 listBody
             }
-            .navigationTitle(title)
+            .navigationTitle(editMode.isEditing ? Text("\(selection.count) sélectionnés") : title)
+            .bulkSelection(selection: $selection, editMode: $editMode,
+                           visibleIDs: store.filtered.map(\.id), archivedContext: store.filter == .archived)
             .toolbar {
-                if let tag = store.tagFilter {
+                if let tag = store.tagFilter, !editMode.isEditing {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button {
                             withAnimation { store.tagFilter = nil }
@@ -53,18 +57,20 @@ struct BookmarkListScreen: View {
             }
             .navigationDestination(for: Int.self) { id in destination(id) }
             .overlay(alignment: .bottomTrailing) {
-                Button {
-                    router.showAdd()
-                } label: {
-                    Image(systemName: "plus")
-                        .font(.title2.weight(.semibold))
-                        .frame(width: Metrics.floatingButton, height: Metrics.floatingButton)
+                if !editMode.isEditing {
+                    Button {
+                        router.showAdd()
+                    } label: {
+                        Image(systemName: "plus")
+                            .font(.title2.weight(.semibold))
+                            .frame(width: Metrics.floatingButton, height: Metrics.floatingButton)
+                    }
+                    .buttonStyle(.glassProminent)
+                    .buttonBorderShape(.circle)
+                    .padding(.trailing, 20)
+                    .padding(.bottom, 16)
+                    .accessibilityLabel(Text("Ajouter un favori"))
                 }
-                .buttonStyle(.glassProminent)
-                .buttonBorderShape(.circle)
-                .padding(.trailing, 20)
-                .padding(.bottom, 16)
-                .accessibilityLabel(Text("Ajouter un favori"))
             }
             .sheet(item: $router.addRequest) { request in
                 AddBookmarkSheet(prefillURL: request.url, prefillTitle: request.title)
@@ -101,7 +107,7 @@ struct BookmarkListScreen: View {
         } else if list.isEmpty && store.hasLoadedOnce {
             FilteredEmptyView(filter: store.filter, tag: store.tagFilter)
         } else {
-            BookmarkRows(bookmarks: list, density: density, zoom: zoom)
+            BookmarkRows(bookmarks: list, density: density, zoom: zoom, selection: $selection)
         }
     }
 
@@ -116,15 +122,17 @@ struct BookmarkListScreen: View {
     }
 }
 
-/// Plain list of rows with navigation, swipe actions and context menus.
+/// Plain list of rows with navigation, swipe actions and context menus. The
+/// selection only takes effect in edit mode (multiple selection).
 struct BookmarkRows: View {
     let bookmarks: [Bookmark]
     let density: ListDensity
     let zoom: Namespace.ID
+    @Binding var selection: Set<Int>
     @Environment(BookmarkStore.self) private var store
 
     var body: some View {
-        List(bookmarks) { bookmark in
+        List(bookmarks, selection: $selection) { bookmark in
             NavigationLink(value: bookmark.id) {
                 BookmarkRow(bookmark: bookmark, density: density)
             }

@@ -147,6 +147,79 @@ struct BookmarkStoreTests {
         #expect(await api.requestCount == 1)
     }
 
+    @Test("bulk mark read only patches the unread bookmarks of the selection")
+    func bulkMarkRead() async throws {
+        let api = ControlledStoreAPI()
+        var events = api.events.makeAsyncIterator()
+        var unread = second
+        unread.unread = true
+        let (store, cache) = makeStore(api, bookmarks: [first, unread])
+        defer { cache.clear() }
+        let tasks = store.markRead(ids: [1, 2, 99])
+        #expect(tasks.count == 1)
+        #expect(store.bookmark(id: 2)?.unread == false)
+        #expect(store.toast?.message.hasPrefix("1") == true)
+        let request = try #require(await events.next())
+        #expect(request.kind == .patch(2, BookmarkPatch(unread: false)))
+        await api.succeed(request, with: .bookmark(second))
+        for task in tasks { _ = try await task.value }
+        #expect(await api.requestCount == 1)
+    }
+
+    @Test("bulk archive and delete send one write per bookmark")
+    func bulkArchiveDelete() async throws {
+        let api = ControlledStoreAPI()
+        var events = api.events.makeAsyncIterator()
+        let (store, cache) = makeStore(api, bookmarks: [first, second])
+        defer { cache.clear() }
+        let archived = store.setArchived(ids: [1, 2], true)
+        #expect(archived.count == 2)
+        #expect(store.bookmarks.allSatisfy { $0.isArchived })
+        let requests = [try #require(await events.next()), try #require(await events.next())]
+        #expect(Set(requests.map(\.kind)) == [.archive(1, true), .archive(2, true)])
+        for request in requests { await api.succeed(request) }
+        for task in archived { _ = try await task.value }
+        // Already archived: nothing to send, no banner.
+        store.toast = nil
+        #expect(store.setArchived(ids: [1, 2], true).isEmpty)
+        #expect(store.toast == nil)
+        let deleted = store.delete(ids: [1])
+        #expect(deleted.count == 1)
+        #expect(store.bookmarks.map(\.id) == [2])
+        let request = try #require(await events.next())
+        #expect(request.kind == .delete(1))
+        await api.succeed(request)
+        for task in deleted { _ = try await task.value }
+        #expect(cache.load()?.bookmarks.map(\.id) == [2])
+    }
+
+    @Test("bulk tags merge with the existing ones and skip unchanged bookmarks")
+    func bulkTags() async throws {
+        let api = ControlledStoreAPI()
+        var events = api.events.makeAsyncIterator()
+        var tagged = first
+        tagged.tagNames = ["docker", "swift"]
+        let (store, cache) = makeStore(api, bookmarks: [tagged, second])
+        defer { cache.clear() }
+        let tasks = store.addTags([" Swift", "#docker", "inbox"], to: [1, 2])
+        #expect(tasks.count == 2)
+        #expect(store.bookmark(id: 1)?.tagNames == ["docker", "swift", "inbox"])
+        #expect(store.bookmark(id: 2)?.tagNames == ["swift", "docker", "inbox"])
+        let requests = [try #require(await events.next()), try #require(await events.next())]
+        #expect(Set(requests.map(\.kind)) == [.patch(1, BookmarkPatch(tagNames: ["docker", "swift", "inbox"])),
+                                               .patch(2, BookmarkPatch(tagNames: ["swift", "docker", "inbox"]))])
+        for request in requests {
+            var saved = try #require(store.bookmark(id: request.kind == .patch(1, BookmarkPatch(tagNames: ["docker", "swift", "inbox"])) ? 1 : 2))
+            saved.dateModified = .now
+            await api.succeed(request, with: .bookmark(saved))
+        }
+        for task in tasks { _ = try await task.value }
+        // Everything already carried: no write.
+        #expect(store.addTags(["swift"], to: [1, 2]).isEmpty)
+        #expect(store.addTags([], to: [1]).isEmpty)
+        #expect(await api.requestCount == 2)
+    }
+
     @Test("failed deletion restores order and leaves the offline cache confirmed")
     func deletionCache() async throws {
         let api = ControlledStoreAPI()

@@ -24,4 +24,8 @@ enum Metrics {
     static let filterHeight: CGFloat = 32
     static let buttonHeight: CGFloat = 50
     static let floatingButton: CGFloat = 48
+    /// Banner distance from the bottom edge: above the floating tab bar on
+    /// the phone, a plain margin on the iPad.
+    static let toastBottomInset: CGFloat = 96
+    static let toastBottomInsetRegular: CGFloat = 24
 }

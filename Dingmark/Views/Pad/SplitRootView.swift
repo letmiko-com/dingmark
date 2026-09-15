@@ -9,7 +9,9 @@ struct SplitRootView: View {
     @AppStorage(SettingsKey.readingOrder, store: AppGroup.defaults) private var orderRaw = ReadingOrder.oldestFirst.rawValue
 
     @State private var columns: NavigationSplitViewVisibility = .all
-    @State private var selectedID: Int?
+    /// One element outside edit mode (drives the detail), any number inside.
+    @State private var selection = Set<Int>()
+    @State private var editMode: EditMode = .inactive
     @State private var showSettings = false
     @State private var searchText = ""
     /// The reading queue is a sidebar destination of its own, not a filter
@@ -26,6 +28,7 @@ struct SplitRootView: View {
     private var readingOrder: ReadingOrder { ReadingOrder(rawValue: orderRaw) ?? .oldestFirst }
     private var readingQueue: [Bookmark] { BookmarkFilter.readingList(store.bookmarks, order: readingOrder) }
     private var rows: [Bookmark] { showsReadingQueue ? readingQueue : store.filtered }
+    private var selectedID: Int? { editMode.isEditing || selection.count != 1 ? nil : selection.first }
 
     private var sidebarSelection: Binding<SidebarItem?> {
         Binding {
@@ -94,7 +97,7 @@ struct SplitRootView: View {
             }
             .navigationSplitViewColumnWidth(min: 240, ideal: 300)
         } content: {
-            List(rows, selection: $selectedID) { bookmark in
+            List(rows, selection: $selection) { bookmark in
                 BookmarkRow(bookmark: bookmark, density: density, selected: selectedID == bookmark.id)
                     .tag(bookmark.id)
                     .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16))
@@ -102,16 +105,18 @@ struct SplitRootView: View {
                     .alignmentGuide(.listRowSeparatorLeading) { _ in 0 }
                     .bookmarkSwipeActions(bookmark)
                     .contextMenu {
-                        BookmarkMenuItems(bookmark: bookmark) { if selectedID == bookmark.id { selectedID = nil } }
+                        BookmarkMenuItems(bookmark: bookmark) { selection.remove(bookmark.id) }
                     } preview: {
                         BookmarkPreview(bookmark: bookmark)
                     }
             }
             .listStyle(.plain)
-            .navigationTitle(listTitle)
+            .navigationTitle(editMode.isEditing ? Text("\(selection.count) sélectionnés") : listTitle)
             .navigationBarTitleDisplayMode(.inline)
+            .bulkSelection(selection: $selection, editMode: $editMode,
+                           visibleIDs: rows.map(\.id), archivedContext: !showsReadingQueue && store.filter == .archived)
             .toolbar {
-                if showsReadingQueue {
+                if showsReadingQueue, !editMode.isEditing {
                     ToolbarItem(placement: .topBarTrailing) {
                         ReadingOrderMenu(selection: $orderRaw)
                     }
@@ -169,7 +174,8 @@ struct SplitRootView: View {
     private func consumePendingBookmark() {
         guard let id = router.pendingBookmarkID else { return }
         showsReadingQueue = false
-        selectedID = id
+        editMode = .inactive
+        selection = [id]
         router.pendingBookmarkID = nil
     }
 

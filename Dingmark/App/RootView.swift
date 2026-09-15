@@ -39,7 +39,9 @@ struct RootView: View {
                 Task { await store.refresh() }
             }
         }
-        .overlay(alignment: .top) { ToastView() }
+        .overlay(alignment: .bottom) {
+            ToastView().padding(.bottom, sizeClass == .regular ? Metrics.toastBottomInsetRegular : Metrics.toastBottomInset)
+        }
         .sensoryFeedback(.success, trigger: store.successCount)
         .sensoryFeedback(.impact(weight: .medium), trigger: store.destructiveCount)
     }
@@ -72,6 +74,8 @@ struct PhoneRootView: View {
 
 /// Discreet confirmation banner (saved, archived, deleted, URL copied), with
 /// an optional follow-up button that keeps it on screen a little longer.
+/// Shown above the tab bar: the top of the screen now carries toolbar
+/// buttons on every tab.
 struct ToastView: View {
     @Environment(BookmarkStore.self) private var store
 
@@ -93,8 +97,7 @@ struct ToastView: View {
             .padding(.trailing, 18)
             .frame(height: 44)
             .glassEffect(.regular, in: Capsule())
-            .padding(.top, 8)
-            .transition(.scale(scale: 0.96).combined(with: .opacity))
+            .transition(.move(edge: .bottom).combined(with: .opacity))
             .task(id: toast.id) {
                 try? await Task.sleep(for: .seconds(toast.actionTitle == nil ? 1.8 : 4))
                 if store.toast?.id == toast.id {

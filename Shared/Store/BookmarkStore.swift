@@ -226,6 +226,61 @@ final class BookmarkStore {
         return enqueue(.delete(bookmark.id))
     }
 
+    // MARK: Bulk mutations
+
+    /// One ordered write per bookmark (linkding has no bulk endpoint); a
+    /// single banner and haptic for the whole selection.
+    @discardableResult
+    func markRead(ids: Set<Int>) -> [Task<Bookmark?, Error>] {
+        let tasks = ids.compactMap { id in bookmark(id: id).flatMap { setUnread($0, false) } }
+        if !tasks.isEmpty {
+            successCount += 1
+            show(String(localized: "\(tasks.count) marqués lus"))
+        }
+        return tasks
+    }
+
+    @discardableResult
+    func setArchived(ids: Set<Int>, _ archived: Bool) -> [Task<Bookmark?, Error>] {
+        guard api != nil else { return [] }
+        let targets = ids.compactMap { bookmark(id: $0) }.filter { $0.isArchived != archived }
+        guard !targets.isEmpty else { return [] }
+        destructiveCount += 1
+        show(archived ? String(localized: "\(targets.count) archivés") : String(localized: "\(targets.count) désarchivés"))
+        return targets.map { enqueue(.archive($0.id, archived)) }
+    }
+
+    @discardableResult
+    func delete(ids: Set<Int>) -> [Task<Bookmark?, Error>] {
+        guard api != nil else { return [] }
+        let targets = ids.compactMap { bookmark(id: $0) }
+        guard !targets.isEmpty else { return [] }
+        destructiveCount += 1
+        show(String(localized: "\(targets.count) supprimés"))
+        return targets.map { enqueue(.delete($0.id)) }
+    }
+
+    /// Adds tags to every selected bookmark, keeping the ones they have.
+    /// Bookmarks that already carry all of them are left alone.
+    @discardableResult
+    func addTags(_ tags: [String], to ids: Set<Int>) -> [Task<Bookmark?, Error>] {
+        guard api != nil else { return [] }
+        let clean = TagList.parse(tags.joined(separator: ","))
+        guard !clean.isEmpty else { return [] }
+        var tasks: [Task<Bookmark?, Error>] = []
+        for id in ids.sorted() {
+            guard let current = bookmark(id: id) else { continue }
+            let merged = TagList.parse((current.tagNames + clean).joined(separator: ","))
+            guard merged != current.tagNames else { continue }
+            tasks.append(enqueue(.patch(current.id, BookmarkPatch(tagNames: merged))))
+        }
+        if !tasks.isEmpty {
+            successCount += 1
+            show(String(localized: "Tags ajoutés à \(tasks.count) favoris"))
+        }
+        return tasks
+    }
+
     func show(_ message: String) {
         toast = Toast(message: message)
     }
