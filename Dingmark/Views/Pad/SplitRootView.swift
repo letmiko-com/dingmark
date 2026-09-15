@@ -55,6 +55,7 @@ struct SplitRootView: View {
 
     var body: some View {
         @Bindable var router = router
+        @Bindable var store = store
         NavigationSplitView(columnVisibility: $columns) {
             List(selection: sidebarSelection) {
                 Section {
@@ -98,7 +99,8 @@ struct SplitRootView: View {
             .navigationSplitViewColumnWidth(min: 240, ideal: 300)
         } content: {
             List(rows, selection: $selection) { bookmark in
-                BookmarkRow(bookmark: bookmark, density: density, selected: selectedID == bookmark.id)
+                BookmarkRow(bookmark: bookmark, density: density, selected: selectedID == bookmark.id,
+                            highlight: showsReadingQueue ? [] : store.searchTerms)
                     .tag(bookmark.id)
                     .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16))
                     .listRowBackground(selectedID == bookmark.id ? Color.accentColor : Color.clear)
@@ -116,9 +118,13 @@ struct SplitRootView: View {
             .bulkSelection(selection: $selection, editMode: $editMode,
                            visibleIDs: rows.map(\.id), archivedContext: !showsReadingQueue && store.filter == .archived)
             .toolbar {
-                if showsReadingQueue, !editMode.isEditing {
+                if !editMode.isEditing {
                     ToolbarItem(placement: .topBarTrailing) {
-                        ReadingOrderMenu(selection: $orderRaw)
+                        if showsReadingQueue {
+                            ReadingOrderMenu(selection: $orderRaw)
+                        } else {
+                            SortMenu(selection: $store.sort)
+                        }
                     }
                 }
             }

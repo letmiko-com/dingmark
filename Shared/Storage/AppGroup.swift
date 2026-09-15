@@ -27,6 +27,7 @@ enum SettingsKey {
     static let readerMode = "readerMode"
     static let markReadOnOpen = "markReadOnOpen"
     static let readingOrder = "readingOrder"
+    static let sortByFilter = "sortByFilter"
 }
 
 /// Reading preferences with their defaults, for code that has no

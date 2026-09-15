@@ -28,9 +28,76 @@ struct FilterCounts: Equatable, Sendable {
     }
 }
 
+/// linkding's search syntax: free terms, `#tag` restricts to a tag, and the
+/// `!unread`, `!untagged`, `!shared`, `!unshared` commands. Other `!` words
+/// are dropped, as linkding does.
+struct SearchQuery: Equatable, Sendable {
+    var terms: [String] = []
+    var tags: [String] = []
+    var unread = false
+    var untagged = false
+    var shared: Bool? = nil
+
+    static func parse(_ raw: String) -> SearchQuery {
+        var query = SearchQuery()
+        for word in raw.split(whereSeparator: \.isWhitespace) {
+            let token = String(word)
+            if token.hasPrefix("#") {
+                let tag = TagNormalizer.normalize(token)
+                if !tag.isEmpty, !query.tags.contains(tag) { query.tags.append(tag) }
+            } else if token.hasPrefix("!") {
+                switch token.lowercased() {
+                case "!unread": query.unread = true
+                case "!untagged": query.untagged = true
+                case "!shared": query.shared = true
+                case "!unshared": query.shared = false
+                default: break
+                }
+            } else {
+                query.terms.append(token)
+            }
+        }
+        return query
+    }
+
+    var isEmpty: Bool { terms.isEmpty && tags.isEmpty && !unread && !untagged && shared == nil }
+
+    func matches(_ bookmark: Bookmark) -> Bool {
+        if unread, !bookmark.unread { return false }
+        if untagged, !bookmark.tagNames.isEmpty { return false }
+        if let shared, bookmark.shared != shared { return false }
+        if !tags.isEmpty {
+            let carried = Set(bookmark.tagNames.map(TagNormalizer.normalize))
+            guard tags.allSatisfy(carried.contains) else { return false }
+        }
+        return terms.isEmpty || BookmarkFilter.matches(bookmark, terms: terms)
+    }
+}
+
+/// Order of the library list, remembered per filter.
+enum BookmarkSort: String, CaseIterable, Identifiable, Sendable {
+    case newestAdded, oldestAdded, recentlyModified, title, domain
+    var id: String { rawValue }
+
+    func apply(_ list: [Bookmark]) -> [Bookmark] {
+        switch self {
+        case .newestAdded: list.sorted { $0.dateAdded > $1.dateAdded }
+        case .oldestAdded: list.sorted { $0.dateAdded < $1.dateAdded }
+        case .recentlyModified: list.sorted { $0.dateModified > $1.dateModified }
+        case .title: list.sorted { $0.displayTitle.localizedStandardCompare($1.displayTitle) == .orderedAscending }
+        case .domain:
+            list.sorted {
+                let order = $0.domain.localizedStandardCompare($1.domain)
+                return order == .orderedSame ? $0.dateAdded > $1.dateAdded : order == .orderedAscending
+            }
+        }
+    }
+}
+
 /// Pure list logic, shared by the store, the iPad sidebar and the tests.
 enum BookmarkFilter {
-    static func apply(_ bookmarks: [Bookmark], filter: QuickFilter, tag: String?, query: String) -> [Bookmark] {
+    static func apply(_ bookmarks: [Bookmark], filter: QuickFilter, tag: String?, query: String,
+                      sort: BookmarkSort = .newestAdded) -> [Bookmark] {
         var list: [Bookmark]
         switch filter {
         case .all: list = bookmarks.filter { !$0.isArchived }
@@ -42,18 +109,25 @@ enum BookmarkFilter {
             let wanted = TagNormalizer.normalize(tag)
             list = list.filter { $0.tagNames.contains { TagNormalizer.normalize($0) == wanted } }
         }
-        let q = query.trimmingCharacters(in: .whitespaces)
-        if !q.isEmpty {
-            list = list.filter { matches($0, query: q) }
+        let search = SearchQuery.parse(query)
+        if !search.isEmpty {
+            list = list.filter(search.matches)
         }
-        return list.sorted { $0.dateAdded > $1.dateAdded }
+        return sort.apply(list)
     }
 
+    static let searchOptions: String.CompareOptions = [.caseInsensitive, .diacriticInsensitive]
+
     static func matches(_ bookmark: Bookmark, query: String) -> Bool {
+        SearchQuery.parse(query).matches(bookmark)
+    }
+
+    /// Every term must appear in one of the searched fields (title,
+    /// description, URL, notes, tags).
+    static func matches(_ bookmark: Bookmark, terms: [String]) -> Bool {
         let haystack = [bookmark.displayTitle, bookmark.displayDescription, bookmark.url, bookmark.notes, bookmark.tagNames.joined(separator: " ")]
-        let options: String.CompareOptions = [.caseInsensitive, .diacriticInsensitive]
-        return query.split(separator: " ").allSatisfy { term in
-            haystack.contains { $0.range(of: term, options: options) != nil }
+        return terms.allSatisfy { term in
+            haystack.contains { $0.range(of: term, options: searchOptions) != nil }
         }
     }
 

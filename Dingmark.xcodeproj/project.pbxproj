@@ -58,7 +58,9 @@
 		6E59AFDE59410517C2D78ADD /* ExploratoryPadTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F41264DD11F339B0E5E7B2 /* ExploratoryPadTests.swift */; };
 		7524157C5FF1BF723C2411F1 /* BookmarkListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534D578A11FA7C389A7329EB /* BookmarkListScreen.swift */; };
 		75A42D6D348EB67EE0E8C95C /* TagField.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB309178A235941609312DBB /* TagField.swift */; };
+		770BDB12A997DFD6FC7FA6B6 /* HighlightedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94040B506B33BC0DE448B6A0 /* HighlightedText.swift */; };
 		771AC78579D4EFB63A9110F5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6D37695D7C82B0E9028F0A50 /* Assets.xcassets */; };
+		79D511F42E3F495944E38E12 /* HighlightedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94040B506B33BC0DE448B6A0 /* HighlightedText.swift */; };
 		7A8FD5920DE575DF5D914611 /* BookmarkFormModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC8685870B3AB7A1893667A /* BookmarkFormModel.swift */; };
 		7DF7BA2621D80157B9DB35CD /* BookmarkFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4088245021E70357117E91E3 /* BookmarkFilter.swift */; };
 		8300A353A9FF9C822EF7116F /* MarkdownNotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC53D83DA3D35DAD1207D96 /* MarkdownNotesView.swift */; };
@@ -85,6 +87,7 @@
 		B066C29207352AAA29DBD9FF /* ScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFA869864AB50282B6ED9977 /* ScreenshotTests.swift */; };
 		B1C9A6B4D8227F60F0B22E16 /* LinkdingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25BFBB3694C4BA600BFA2675 /* LinkdingError.swift */; };
 		B2AF402C1DCA5870CBFCE37C /* URLDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEE3EE65655972E72D66623E /* URLDomain.swift */; };
+		B4F38DFA7176448819784173 /* HighlightedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94040B506B33BC0DE448B6A0 /* HighlightedText.swift */; };
 		B64ABF980B718A141A0949BA /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707EA9E4327E2C113ED58098 /* Session.swift */; };
 		BEC663CB77283731F245AABC /* LinkdingAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F719AFF336541A96693F2DA3 /* LinkdingAPI.swift */; };
 		C1682D9ADA8ECB4B9F048D1B /* TagChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79685D7370451C074B9A285 /* TagChip.swift */; };
@@ -222,6 +225,7 @@
 		90776E42A6E741CD8A0B8248 /* AppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroup.swift; sourceTree = "<group>"; };
 		913317F994BE073BCFEF0E7B /* Dingmark.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Dingmark.entitlements; sourceTree = "<group>"; };
 		915572A4448D633ACE2B3826 /* FaviconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaviconView.swift; sourceTree = "<group>"; };
+		94040B506B33BC0DE448B6A0 /* HighlightedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightedText.swift; sourceTree = "<group>"; };
 		944F1FA2EFD69C9A46AC4D97 /* Dingmark.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Dingmark.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		95188A60C1D5B96B4F473627 /* ListStates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListStates.swift; sourceTree = "<group>"; };
 		95E772800E1DE5C400AE05E0 /* ExploratoryDemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploratoryDemoTests.swift; sourceTree = "<group>"; };
@@ -436,6 +440,7 @@
 				3CC3A32CF87F344204B0261B /* BookmarkFormView.swift */,
 				915572A4448D633ACE2B3826 /* FaviconView.swift */,
 				AE96CD74A4833EC69E348430 /* FlowLayout.swift */,
+				94040B506B33BC0DE448B6A0 /* HighlightedText.swift */,
 				FAC53D83DA3D35DAD1207D96 /* MarkdownNotesView.swift */,
 				D4C7BCF58BFB2B378EF6EF62 /* RelativeAge.swift */,
 				A153D5781287DD09D170BF54 /* RibbonMark.swift */,
@@ -771,6 +776,7 @@
 				5FB55C63AB0AD1B9DA2D26A7 /* DingmarkApp.swift in Sources */,
 				CB1775A287DA38BCB6A87912 /* FaviconView.swift in Sources */,
 				50203379871F4C32B13FD2F9 /* FlowLayout.swift in Sources */,
+				B4F38DFA7176448819784173 /* HighlightedText.swift in Sources */,
 				F0A9EAF8BF1A07FB4FD07CA1 /* KeychainStore.swift in Sources */,
 				18752EA9B23F80FC428DAC39 /* LinkdingAPI.swift in Sources */,
 				AD0C55DA182AD2781CED60EC /* LinkdingClient.swift in Sources */,
@@ -832,6 +838,7 @@
 				87ACDC5FB8873A0B9C1B8EE0 /* DemoLinkdingClient.swift in Sources */,
 				3AB46FD5293F0348E2F21AEC /* FaviconView.swift in Sources */,
 				AFB1620350EBB42C2BEC3FDA /* FlowLayout.swift in Sources */,
+				770BDB12A997DFD6FC7FA6B6 /* HighlightedText.swift in Sources */,
 				64AC526A8612BACD3A5320FB /* KeychainStore.swift in Sources */,
 				BEC663CB77283731F245AABC /* LinkdingAPI.swift in Sources */,
 				B05676302853F9C14CEB39A8 /* LinkdingClient.swift in Sources */,
@@ -879,6 +886,7 @@
 				FF7DCB485F2340C7AD00AD7E /* DingmarkWidgets.swift in Sources */,
 				9968EBB9EF6F2C90CCC16831 /* FaviconView.swift in Sources */,
 				FCFC1EB49018832DB3317301 /* FlowLayout.swift in Sources */,
+				79D511F42E3F495944E38E12 /* HighlightedText.swift in Sources */,
 				EF7C50732C02ADCEC35F3D13 /* KeychainStore.swift in Sources */,
 				05FF8C551E797ABF3F16CE90 /* LinkdingAPI.swift in Sources */,
 				93F22F93E77340652EA4B23F /* LinkdingClient.swift in Sources */,

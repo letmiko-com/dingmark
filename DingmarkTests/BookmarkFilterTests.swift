@@ -37,6 +37,55 @@ struct BookmarkFilterTests {
         #expect(BookmarkFilter.apply(fixtures, filter: .all, tag: nil, query: "restic.net").map(\.id) == [5])
     }
 
+    @Test("linkding syntax: #tag, !unread, !untagged, !shared, unknown ! words dropped")
+    func searchSyntax() {
+        let parsed = SearchQuery.parse("  #SelfHosting tailscale !unread !bogus  #docker ")
+        #expect(parsed.tags == ["selfhosting", "docker"])
+        #expect(parsed.terms == ["tailscale"])
+        #expect(parsed.unread)
+        #expect(!parsed.untagged)
+        #expect(parsed.shared == nil)
+        #expect(SearchQuery.parse("!unshared").shared == false)
+        #expect(SearchQuery.parse("").isEmpty)
+        #expect(SearchQuery.parse("#").isEmpty)
+
+        func ids(_ query: String, filter: QuickFilter = .all) -> [Int] {
+            BookmarkFilter.apply(fixtures, filter: filter, tag: nil, query: query).map(\.id).sorted()
+        }
+        #expect(ids("#selfhosting") == [1, 2, 5])
+        #expect(ids("#selfhosting", filter: .archived) == [9])
+        #expect(ids("!unread") == [1, 2, 4, 7])
+        #expect(ids("!untagged") == [7, 11])
+        #expect(ids("!shared") == [2, 11])
+        #expect(ids("!unshared #selfhosting") == [1, 5])
+        #expect(ids("#docker !unread") == [2])
+        #expect(ids("#docker photo") == [2])
+        #expect(ids("#nothing").isEmpty)
+    }
+
+    @Test("sort orders: added, modified, title, domain")
+    func sorts() {
+        let active = fixtures.filter { !$0.isArchived }
+        #expect(BookmarkSort.oldestAdded.apply(active).first?.id == 11)
+        #expect(BookmarkSort.newestAdded.apply(active).first?.id == 1)
+        #expect(BookmarkSort.recentlyModified.apply(fixtures).map(\.id).prefix(3) == [1, 2, 3])
+        let titles = BookmarkSort.title.apply(active).map(\.displayTitle)
+        #expect(titles == titles.sorted { $0.localizedStandardCompare($1) == .orderedAscending })
+        let domains = BookmarkSort.domain.apply(active).map(\.domain)
+        #expect(domains == domains.sorted { $0.localizedStandardCompare($1) == .orderedAscending })
+        #expect(BookmarkFilter.apply(fixtures, filter: .all, tag: nil, query: "", sort: .oldestAdded).first?.id == 11)
+    }
+
+    @Test("highlighting marks every case-insensitive occurrence and nothing else")
+    func highlighting() {
+        let marked = AttributedString.highlighting("Tailscale SSH — SSH docs", terms: ["ssh", "TAIL"])
+        let runs = marked.runs.map { "\(String(marked[$0.range].characters))|\($0.backgroundColor != nil)" }
+        #expect(runs == ["Tail|true", "scale |false", "SSH|true", " — |false", "SSH|true", " docs|false"])
+        #expect(AttributedString.highlighting("Réseau", terms: ["reseau"]).runs.first?.backgroundColor != nil)
+        let plain = AttributedString.highlighting("Nothing", terms: [])
+        #expect(plain.runs.allSatisfy { $0.backgroundColor == nil })
+    }
+
     @Test("newest first")
     func sorting() {
         let list = BookmarkFilter.apply(fixtures, filter: .all, tag: nil, query: "")

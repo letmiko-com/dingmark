@@ -32,6 +32,11 @@ struct BookmarkListScreen: View {
             .bulkSelection(selection: $selection, editMode: $editMode,
                            visibleIDs: store.filtered.map(\.id), archivedContext: store.filter == .archived)
             .toolbar {
+                if !editMode.isEditing {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        SortMenu(selection: $store.sort)
+                    }
+                }
                 if let tag = store.tagFilter, !editMode.isEditing {
                     ToolbarItem(placement: .topBarTrailing) {
                         Button {
@@ -107,7 +112,7 @@ struct BookmarkListScreen: View {
         } else if list.isEmpty && store.hasLoadedOnce {
             FilteredEmptyView(filter: store.filter, tag: store.tagFilter)
         } else {
-            BookmarkRows(bookmarks: list, density: density, zoom: zoom, selection: $selection)
+            BookmarkRows(bookmarks: list, density: density, zoom: zoom, selection: $selection, highlight: store.searchTerms)
         }
     }
 
@@ -129,12 +134,13 @@ struct BookmarkRows: View {
     let density: ListDensity
     let zoom: Namespace.ID
     @Binding var selection: Set<Int>
+    var highlight: [String] = []
     @Environment(BookmarkStore.self) private var store
 
     var body: some View {
         List(bookmarks, selection: $selection) { bookmark in
             NavigationLink(value: bookmark.id) {
-                BookmarkRow(bookmark: bookmark, density: density)
+                BookmarkRow(bookmark: bookmark, density: density, highlight: highlight)
             }
             .listRowInsets(EdgeInsets(top: density == .compact ? Metrics.cellPaddingCompact : Metrics.cellPadding,
                                       leading: Metrics.screenMargin,

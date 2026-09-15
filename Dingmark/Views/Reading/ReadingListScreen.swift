@@ -141,6 +141,36 @@ struct ReadingQueueHeader: View {
     }
 }
 
+extension BookmarkSort {
+    var title: LocalizedStringKey {
+        switch self {
+        case .newestAdded: "Plus récents d’abord"
+        case .oldestAdded: "Plus anciens d’abord"
+        case .recentlyModified: "Modifiés récemment"
+        case .title: "Titre"
+        case .domain: "Domaine"
+        }
+    }
+}
+
+/// Order of the library list, one memory per filter.
+struct SortMenu: View {
+    @Binding var selection: BookmarkSort
+
+    var body: some View {
+        Menu {
+            Picker("Trier", selection: $selection) {
+                ForEach(BookmarkSort.allCases) { sort in
+                    Text(sort.title).tag(sort)
+                }
+            }
+        } label: {
+            Image(systemName: "arrow.up.arrow.down")
+        }
+        .accessibilityLabel(Text("Trier"))
+    }
+}
+
 /// Oldest or newest first, remembered across launches.
 struct ReadingOrderMenu: View {
     @Binding var selection: String

@@ -35,6 +35,9 @@ final class BookmarkStore {
 
     private var api: LinkdingAPI?
     private let cache: BookmarkCache
+    private let defaults: UserDefaults
+    /// Sort per filter key (`all`, `archived`, ..., `tag`), persisted.
+    private var sortByFilter: [String: String]
     private var cacheSessionID: UUID?
     private var refreshTask: Task<Void, Never>?
     private var refreshID: UUID?
@@ -95,10 +98,13 @@ final class BookmarkStore {
         let date = Date.now
     }
 
-    init(api: LinkdingAPI?, cache: BookmarkCache = .shared, cacheSessionID: UUID? = nil) {
+    init(api: LinkdingAPI?, cache: BookmarkCache = .shared, cacheSessionID: UUID? = nil,
+         defaults: UserDefaults = AppGroup.defaults) {
         self.api = api
         self.cache = cache
         self.cacheSessionID = cacheSessionID
+        self.defaults = defaults
+        sortByFilter = defaults.dictionary(forKey: SettingsKey.sortByFilter) as? [String: String] ?? [:]
     }
 
     func configure(api: LinkdingAPI?, cacheSessionID: UUID? = nil) {
@@ -118,7 +124,22 @@ final class BookmarkStore {
 
     var counts: FilterCounts { BookmarkFilter.counts(bookmarks) }
 
-    var filtered: [Bookmark] { BookmarkFilter.apply(bookmarks, filter: filter, tag: tagFilter, query: query) }
+    var filtered: [Bookmark] { BookmarkFilter.apply(bookmarks, filter: filter, tag: tagFilter, query: query, sort: sort) }
+
+    /// Free search terms of the current query, for highlighting.
+    var searchTerms: [String] { SearchQuery.parse(query).terms }
+
+    private var sortKey: String { tagFilter == nil ? filter.rawValue : "tag" }
+
+    /// The order of the current list. Each quick filter, and the tag
+    /// filters as a whole, remember their own.
+    var sort: BookmarkSort {
+        get { sortByFilter[sortKey].flatMap(BookmarkSort.init(rawValue:)) ?? .newestAdded }
+        set {
+            sortByFilter[sortKey] = newValue.rawValue
+            defaults.set(sortByFilter, forKey: SettingsKey.sortByFilter)
+        }
+    }
 
     /// Tags of the active bookmarks with their counts: what the Tags screen and
     /// the iPad sidebar list. A tag filter shows active bookmarks, so a tag

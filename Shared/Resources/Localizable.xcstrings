@@ -1818,6 +1818,36 @@
           }
         }
       }
+    },
+    "Trier": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sort"
+          }
+        }
+      }
+    },
+    "Modifiés récemment": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recently Modified"
+          }
+        }
+      }
+    },
+    "Domaine": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Domain"
+          }
+        }
+      }
     }
   }
 }

@@ -6,6 +6,8 @@ struct BookmarkRow: View {
     let bookmark: Bookmark
     var density: ListDensity = .comfortable
     var selected = false
+    /// Search terms to mark in the title and the description.
+    var highlight: [String] = []
 
     @Environment(\.dynamicTypeSize) private var typeSize
 
@@ -69,7 +71,7 @@ struct BookmarkRow: View {
     }
 
     private var titleText: some View {
-        Text(bookmark.displayTitle)
+        Text(AttributedString.highlighting(bookmark.displayTitle, terms: highlight))
             .font(.body.weight(bookmark.unread ? .semibold : .regular))
             .foregroundStyle(primary)
             .multilineTextAlignment(.leading)
@@ -85,7 +87,7 @@ struct BookmarkRow: View {
     }
 
     private var descriptionText: some View {
-        Text(bookmark.displayDescription)
+        Text(AttributedString.highlighting(bookmark.displayDescription, terms: highlight))
             .font(.subheadline)
             .foregroundStyle(secondary)
             .lineLimit(2)

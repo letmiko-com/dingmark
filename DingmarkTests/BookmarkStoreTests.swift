@@ -147,6 +147,27 @@ struct BookmarkStoreTests {
         #expect(await api.requestCount == 1)
     }
 
+    @Test("the sort is remembered per filter, tag filters share one")
+    func sortPreference() throws {
+        let defaults = try #require(UserDefaults(suiteName: "sort-\(UUID())"))
+        let cache = BookmarkCache(fileURL: FileManager.default.temporaryDirectory.appendingPathComponent("sort-\(UUID()).json"))
+        defer { cache.clear() }
+        let store = BookmarkStore(api: nil, cache: cache, defaults: defaults)
+        #expect(store.sort == .newestAdded)
+        store.sort = .title
+        store.filter = .archived
+        #expect(store.sort == .newestAdded)
+        store.sort = .oldestAdded
+        store.tagFilter = "swift"
+        store.sort = .domain
+        store.tagFilter = "docker"
+        #expect(store.sort == .domain)
+        let reloaded = BookmarkStore(api: nil, cache: cache, defaults: defaults)
+        #expect(reloaded.sort == .title)
+        reloaded.filter = .archived
+        #expect(reloaded.sort == .oldestAdded)
+    }
+
     @Test("bulk mark read only patches the unread bookmarks of the selection")
     func bulkMarkRead() async throws {
         let api = ControlledStoreAPI()
